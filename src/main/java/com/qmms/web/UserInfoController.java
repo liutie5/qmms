@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -37,10 +38,11 @@ public class UserInfoController {
     @RequestMapping("/getUserList")
     @ResponseBody
     public Page<SysUserInfo> getUserList(int page, int pageSize){
-        System.out.println("/getUserList");
-        Map<String,String> rs = new HashMap<>();
-        rs.put("aa","ddd");
-        Page p1 = sysUserInfoService.getUserList(page,pageSize);
+        String username = "admin1";
+        Page p1 = sysUserInfoService.getUserListWithCondition(page,pageSize,username);
+        for(SysUserInfo u:(List<SysUserInfo>)p1.getContent()){
+            u.setPermissionList(null);
+        }
         return p1;
     }
 

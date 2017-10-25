@@ -8,4 +8,6 @@ public interface SysUserInfoService {
     public SysUserInfo findByUsername(String username);
 
     Page<SysUserInfo> getUserList(int page,int pageSize);
+
+    Page<SysUserInfo> getUserListWithCondition(int page,int pageSize,String username);
 }

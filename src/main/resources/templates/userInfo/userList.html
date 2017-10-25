@@ -32,101 +32,16 @@
                 <div class="no-move"></div>
             </div>
             <div class="box-content no-padding">
-                <table class="table table-bordered table-striped table-hover table-heading table-datatable" id="datatable-1">
+                <table class="table table-bordered table-striped table-hover table-heading table-datatable" id="userListTable">
                     <thead>
                     <tr>
                         <th>用户名</th>
                         <th>用户类型</th>
                         <th>用户描述</th>
                         <th>操作</th>
-                        <th>Source</th>
-                        <th>Country of Citizenship</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- Start: list_row -->
-                    <tr>
-                        <td>1</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/carlos-slim-helu_50x50.jpg" alt="">Carlos Slim Helu & family</td>
-                        <td>$73 B</td>
-                        <td>74</td>
-                        <td>telecom</td>
-                        <td>Mexico</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/bill-gates_50x50.jpg" alt="">Bill Gates</td>
-                        <td>$67 B</td>
-                        <td>58</td>
-                        <td>Microsoft</td>
-                        <td>United States</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/amancio-ortega_50x50.jpg" alt="">Amancio Ortega</td>
-                        <td>$57 B</td>
-                        <td>77</td>
-                        <td>Zara</td>
-                        <td>Spain</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/warren-buffett_50x50.jpg" alt="">Warren Buffett</td>
-                        <td>$53.5 B</td>
-                        <td>83</td>
-                        <td>Berkshire Hathaway</td>
-                        <td>United States</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/larry-ellison_50x50.jpg" alt="">Larry Ellison</td>
-                        <td>$43 B</td>
-                        <td>69</td>
-                        <td>Oracle</td>
-                        <td>United States</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/charles-koch_50x50.jpg" alt="">Charles Koch</td>
-                        <td>$34 B</td>
-                        <td>78</td>
-                        <td>diversified</td>
-                        <td>United States</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/david-koch_50x50.jpg" alt="">David Koch</td>
-                        <td>$34 B</td>
-                        <td>73</td>
-                        <td>diversified</td>
-                        <td>United States</td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/li-ka-shing_50x50.jpg" alt="">Li Ka-shing</td>
-                        <td>$31 B</td>
-                        <td>85</td>
-                        <td>diversified</td>
-                        <td>Hong Kong</td>
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/liliane-bettencourt_50x50.jpg" alt="">Liliane Bettencourt & family</td>
-                        <td>$30 B</td>
-                        <td>91</td>
-                        <td>L'Oreal</td>
-                        <td>France</td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td><img class="img-rounded" src="http://i.forbesimg.com/media/lists/people/bernard-arnault_50x50.jpg" alt="">Bernard Arnault & family</td>
-                        <td>$29 B</td>
-                        <td>64</td>
-                        <td>LVMH</td>
-                        <td>France</td>
-                    </tr>
-
-                    <!-- End: list_row -->
                     </tbody>
                 </table>
             </div>
@@ -137,11 +52,95 @@
 <script type="text/javascript">
     // Run Datables plugin and create 3 variants of settings
     function AllTables(){
-        TestTable1();
-        TestTable2();
-        TestTable3();
+        userListTable();
         LoadSelect2Script(MakeSelect2);
     }
+
+    var lang = {
+        "sProcessing": "处理中...",
+        "sLengthMenu": "_MENU_",
+        "sZeroRecords": "没有匹配结果",
+        "sInfo": "当前显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项。",
+        "sInfoEmpty": "当前显示第 0 至 0 项，共 0 项",
+        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+        "sInfoPostFix": "",
+        "sSearch": "搜索:",
+        "sUrl": "",
+        "sEmptyTable": "表中数据为空",
+        "sLoadingRecords": "载入中...",
+        "sInfoThousands": ",",
+        "oPaginate": {
+            "sFirst": "首页",
+            "sPrevious": "上页",
+            "sNext": "下页",
+            "sLast": "末页",
+            "sJump": "跳转"
+        },
+        "oAria": {
+            "sSortAscending": ": 以升序排列此列",
+            "sSortDescending": ": 以降序排列此列"
+        }
+    };
+    function userListTable(){
+        $('#userListTable').dataTable({
+            "aaSorting": [[ 0, "asc" ]],
+            "sDom": "<'box-content'<'col-sm-6'f><'col-sm-6 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
+            "sPaginationType": "bootstrap",
+            "oLanguage": lang,
+            ordering:false,
+            serverSide: true,  //启用服务器端分页
+            ajax: function (data, callback, settings) {
+                for(i in data){
+                    console.log(i)
+                }
+                //封装请求参数
+                var param = {};
+                param.pageSize= data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+//                param.page = data.start;//开始的记录序号
+                param.page = (data.start / data.length);//当前页码
+                //ajax请求数据方法
+                $.ajax({
+                    type: "GET",
+                    url: "userInfo/getUserList",//url请求的地址
+                    cache: false,  //禁用缓存
+                    data: param,  //传入组装的参数
+                    dataType: "json",
+                    success: function (result) {
+                        //封装返回数据重要
+                        var returnData = {};
+                        //这里直接自行返回了draw计数器,应该由后台返回
+                        returnData.draw = data.draw;
+                        //返回数据全部记录
+                        returnData.recordsTotal = result.totalElements;
+                        //后台不实现过滤功能，每次查询均视作全部结果
+                        returnData.recordsFiltered = result.totalElements;
+                        //返回的数据列表
+                        returnData.data = result.content;
+
+                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                        callback(returnData);
+                    }
+                });
+            },
+            columns: [
+                { "data": "username" },
+                { "data": "name" },
+                { "data": "uid" },
+                //新建列的 定义
+                {
+                    className : "td-operation text-center",
+                    data: null,
+                    defaultContent:"xx",
+                    orderable : false,
+                    width : "160px"
+                }
+            ]
+        }).api();
+
+    }
+
+
     function MakeSelect2(){
         $('select').select2();
         $('.dataTables_filter').each(function(){
