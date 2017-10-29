@@ -17,7 +17,7 @@ public class HomeController {
     public String index(Model model){
 
         SysUserInfo sysUserInfo = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-        String userName = sysUserInfo.getUsername();
+        String userName = sysUserInfo.getUserName();
         model.addAttribute("userName",userName);
         return"/index";
     }
@@ -25,11 +25,12 @@ public class HomeController {
     @RequestMapping("/login")
     public String login(HttpServletRequest request, Map<String, Object> map) throws Exception{
         System.out.println("HomeController.login()");
-        Long currentUserId = (Long) SecurityUtils.getSubject().getSession().getAttribute("currentUserId");
-
-        SysUserInfo sysUserInfo = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-        String userName = (String) request.getAttribute("username");
-        String password = (String) request.getAttribute("password");
+        SysUserInfo sysUserInfo = null;
+        try{
+            sysUserInfo = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         // 登录失败从request中获取shiro处理的异常信息。
         // shiroLoginFailure:就是shiro异常类的全类名.
         String exception = (String) request.getAttribute("shiroLoginFailure");

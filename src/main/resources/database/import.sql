@@ -20,14 +20,13 @@ CREATE TABLE `sys_permission` (
 CREATE TABLE `sys_user_info` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `salt` varchar(255) DEFAULT NULL,
   `state` tinyint(4) NOT NULL,
   `user_type` tinyint(4) not null DEFAULT '2',
   `remark` varchar(255) not null DEFAULT ''
   PRIMARY KEY (`uid`),
-  UNIQUE KEY `UK_f2ksd6h8hsjtd57ipfq9myr64` (`username`)
+  UNIQUE KEY `uk_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
 
 

@@ -17,7 +17,7 @@ public class SysPermission implements Serializable {
     private String parentIds; //父编号列表
     private Boolean available = Boolean.FALSE;
     @ManyToMany
-    @JoinTable(name="SysUserPermission",joinColumns={@JoinColumn(name="permissionId")},inverseJoinColumns={@JoinColumn(name="uid")})
+    @JoinTable(name="SysUserPermission",joinColumns={@JoinColumn(name="permissionId")},inverseJoinColumns={@JoinColumn(name="userId")})
     private List<SysUserInfo> sysUserInfoList;
 
     public Integer getId() {

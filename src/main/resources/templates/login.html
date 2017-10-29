@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <meta charset="utf-8">
     <title>QMMS</title>
@@ -34,10 +34,10 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">密码</label>
-                            <input type="password" class="form-control" name="password" />
+                            <input type="password" id="password" class="form-control" name="password" />
                         </div>
                         <div class="text-center">
-                            <input type="submit" value="Sign in" class="btn btn-primary">
+                            <input type="submit" id="loginSubmit" value="Sign in" class="btn btn-primary">
                         </div>
                     </form>
                 </div>
@@ -45,5 +45,16 @@
         </div>
     </div>
 </div>
+<script src="plugins/jquery/jquery.min.js"></script>
+<script src="plugins/jquery/jquery.md5.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#loginSubmit").click(function(){
+            var password = $("#password").val();
+            $("#password").val($.md5(password));
+            $("#loginSubmit").submit();
+        })
+    })
+</script>
 </body>
 </html>

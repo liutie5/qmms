@@ -31,12 +31,13 @@
                 </div>
                 <div class="no-move"></div>
             </div>
-            <div class="box-content no-padding">
+            <div class="box-content">
                 <table class="table table-bordered table-striped table-hover table-heading table-datatable" id="userListTable">
                     <thead>
                     <tr>
                         <th>用户名</th>
                         <th>用户类型</th>
+                        <th>用户状态</th>
                         <th>用户描述</th>
                         <th>操作</th>
                     </tr>
@@ -49,6 +50,18 @@
     </div>
 </div>
 
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     // Run Datables plugin and create 3 variants of settings
     function AllTables(){
@@ -64,7 +77,7 @@
         "sInfoEmpty": "当前显示第 0 至 0 项，共 0 项",
         "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
         "sInfoPostFix": "",
-        "sSearch": "搜索:",
+        "sSearch": "用户名:",
         "sUrl": "",
         "sEmptyTable": "表中数据为空",
         "sLoadingRecords": "载入中...",
@@ -84,20 +97,19 @@
     function userListTable(){
         $('#userListTable').dataTable({
             "aaSorting": [[ 0, "asc" ]],
-            "sDom": "<'box-content'<'col-sm-6'f><'col-sm-6 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
+            "sDom": "<'box-content'<'col-sm-6'f><'#addUserBtn.col-sm-2'><'col-sm-3 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
             "sPaginationType": "bootstrap",
             "oLanguage": lang,
             ordering:false,
             serverSide: true,  //启用服务器端分页
-            ajax: function (data, callback, settings) {
-                for(i in data){
-                    console.log(i)
-                }
-                //封装请求参数
+            ajax: function (data, callback, settings) {//封装请求参数
+
                 var param = {};
                 param.pageSize= data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
 //                param.page = data.start;//开始的记录序号
                 param.page = (data.start / data.length);//当前页码
+                param.userName = data.search.value;
+                //ajax请求数据方法
                 //ajax请求数据方法
                 $.ajax({
                     type: "GET",
@@ -124,20 +136,93 @@
                 });
             },
             columns: [
-                { "data": "username" },
-                { "data": "name" },
-                { "data": "uid" },
-                //新建列的 定义
+                { "data": "userName" },
                 {
-                    className : "td-operation text-center",
-                    data: null,
-                    defaultContent:"xx",
-                    orderable : false,
-                    width : "160px"
-                }
-            ]
+                    "data": "userType",
+                    render:function(data,type,row,meta){
+                        if(data==1){
+                            return "普通用户";
+                        }else if(data==2){
+                            return "管理员";
+                        }else{
+                            return "未知";
+                        }
+                    }
+                },
+                {
+                    "data": "state",
+                    render:function(data,type,row,meta){
+                        if(data==0){
+                            return "未启用";
+                        }else if(data==1){
+                            return "已启用";
+                        }else{
+                            return "未知";
+                        }
+                    }
+                },
+                { "data": "remark" },
+                {
+                    "data": "userId",
+                    render:function(data,type,row,meta){
+
+                        return '<a href="#" onclick=toEdit("'+data+'")><span class="glyphicon glyphicon-edit">编辑</span></a> &nbsp;&nbsp;<a href="#" onclick=toDel("'+data+'","'+row.userName+'")><span class="glyphicon glyphicon-remove-sign">删除</span></a>'
+//                        return '<button class="btn btn-primary btn-sm" type="button" onclick="alert('+data+')">编&nbsp;&nbsp;辑</button> &nbsp;&nbsp;<button class="btn btn-primary" type="button">删  除</button>'
+                    }
+                },
+
+            ],
+            initComplete: function () {
+
+                $("#addUserBtn").append('<button id="addUser" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>添加</button>');
+                $("#addUser").on("click", toAddUser);
+            }
         }).api();
 
+    }
+
+    function toAddUser(){
+        $("#addModal").modal({
+            remote: "userInfo/toUserAdd",
+            show:true,
+            backdrop:"static"
+        });
+    }
+    
+    function toEdit(id) {
+        $("#editModal").modal({
+            remote: "userInfo/toUserEdit?userId="+id+"&_"+new Date().getTime(),
+            show:true
+        });
+
+    }
+
+    $("#addModal").on("hidden.bs.modal", function() {
+        $(this).removeData("bs.modal");
+    });
+
+    $("#editModal").on("hidden.bs.modal", function() {
+        $(this).removeData("bs.modal");
+    });
+
+//    $("#addModal").on("shown.bs.modal", function() {
+//        userAddValidator();
+//    });
+
+    function toDel(id,name) {
+        if(confirm("确定删除用户："+name)){
+            var param={}
+            param.userId = id;
+            $.post("userInfo/userDel",param,function(data){
+                if(data.success){
+                    alert("删除成功")
+                }else{
+                    alert("删除失败")
+                }
+                LoadAjaxContent("userInfo/userList");
+
+            },"json");
+        }
     }
 
 

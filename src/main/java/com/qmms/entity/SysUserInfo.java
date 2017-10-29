@@ -8,39 +8,36 @@ import java.util.List;
 public class SysUserInfo implements Serializable {
     @Id
     @GeneratedValue
-    private Integer uid;
+    private Integer userId;
     @Column(unique =true)
-    private String username;//帐号
-    private String name;//名称（昵称或者真实姓名，不同系统不同定义）
+    private String userName;//帐号
     private String password; //密码;
     private String salt;//加密密码的盐
-    private byte state;//用户状态,0:创建未认证（比如没有激活，没有输入验证码等等）--等待验证的用户 , 1:正常状态,2：用户被锁定.
+    private Byte state;//用户状态 0：未启用 1启用
+    private Byte userType;//用户类型
+    private String remark;
+    private Integer addUserId;
+    private Integer addTime;
+    private Integer updateUserId;
+    private Integer updateTime;
     @ManyToMany(fetch= FetchType.EAGER)//立即从数据库中进行加载数据;
-    @JoinTable(name = "SysUserPermission", joinColumns = { @JoinColumn(name = "uid") }, inverseJoinColumns ={@JoinColumn(name = "permissionId") })
+    @JoinTable(name = "SysUserPermission", joinColumns = { @JoinColumn(name = "userId") }, inverseJoinColumns ={@JoinColumn(name = "permissionId") })
     private List<SysPermission> permissionList;// 一个用户具有多个权限
 
-    public Integer getUid() {
-        return uid;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPassword() {
@@ -59,12 +56,60 @@ public class SysUserInfo implements Serializable {
         this.salt = salt;
     }
 
-    public byte getState() {
+    public Byte getState() {
         return state;
     }
 
-    public void setState(byte state) {
+    public void setState(Byte state) {
         this.state = state;
+    }
+
+    public Byte getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Byte userType) {
+        this.userType = userType;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Integer getAddUserId() {
+        return addUserId;
+    }
+
+    public void setAddUserId(Integer addUserId) {
+        this.addUserId = addUserId;
+    }
+
+    public Integer getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Integer addTime) {
+        this.addTime = addTime;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public Integer getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Integer updateTime) {
+        this.updateTime = updateTime;
     }
 
     public List<SysPermission> getPermissionList() {
@@ -80,7 +125,7 @@ public class SysUserInfo implements Serializable {
      * @return
      */
     public String getCredentialsSalt(){
-        return this.username+this.salt;
+        return this.userName+this.salt;
     }
     //重新对盐重新进行了定义，用户名+salt，这样就更加不容易被破解
 }

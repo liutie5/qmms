@@ -6,8 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
-public interface SysUserInfoDao extends JpaRepository<SysUserInfo,Long>,JpaSpecificationExecutor<SysUserInfo> {
+public interface SysUserInfoDao extends CrudRepository<SysUserInfo,Integer>,JpaRepository<SysUserInfo,Integer>,JpaSpecificationExecutor<SysUserInfo> {
     /**通过username查找用户信息;*/
-    public SysUserInfo findByUsername(String username);
+    public SysUserInfo findByUserName(String userName);
+
+    public SysUserInfo findByUserId(int userId);
+
+    public int deleteByUserId(int userId);
 
 }

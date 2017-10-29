@@ -10,6 +10,12 @@
 // homepage: http://arshaw.com/fullcalendar
 // require moment.js
 //
+
+//add bu liutie
+function LoadBootstrapScript(callback){
+    $.getScript('plugins/bootstrap/bootstrap.js', callback);
+}
+
 function LoadCalendarScript(callback){
 	function LoadFullCalendarScript(){
 		if(!$.fn.fullCalendar){
@@ -1149,6 +1155,7 @@ function LoadAjaxContent(url){
 		dataType: "html",
 		async: false
 	});
+    $(".modal-backdrop").remove();
 }
 //
 //  Function maked all .box selector is draggable, to disable for concrete element add class .no-drop
