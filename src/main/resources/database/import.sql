@@ -1,37 +1,61 @@
-INSERT INTO `user_info` (`uid`,`username`,`name`,`password`,`salt`,`state`) VALUES ('1', 'admin', '管理员', 'd3c59d25033dbf980d29554025c23a75', '8d78869f470951332959580424d4bf4f', 0);
-INSERT INTO `sys_permission` (`id`,`available`,`name`,`parent_id`,`parent_ids`,`permission`,`resource_type`,`url`) VALUES (1,0,'用户管理',0,'0/','userInfo:view','menu','userInfo/userList');
-INSERT INTO `sys_permission` (`id`,`available`,`name`,`parent_id`,`parent_ids`,`permission`,`resource_type`,`url`) VALUES (2,0,'用户添加',1,'0/1','userInfo:add','button','userInfo/userAdd');
-INSERT INTO `sys_permission` (`id`,`available`,`name`,`parent_id`,`parent_ids`,`permission`,`resource_type`,`url`) VALUES (3,0,'用户删除',1,'0/1','userInfo:del','button','userInfo/userDel');
-INSERT INTO `sys_user_permission` (`permission_id`,`uid`) VALUES (1,1);
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : localhost
+ Source Server Type    : MySQL
+ Source Server Version : 50719
+ Source Host           : localhost
+ Source Database       : test
+
+ Target Server Type    : MySQL
+ Target Server Version : 50719
+ File Encoding         : utf-8
+
+ Date: 10/30/2017 08:05:36 AM
+*/
+
+SET NAMES utf8;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+--  Table structure for `sys_user_info`
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_user_info`;
+CREATE TABLE `sys_user_info` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `user_name` varchar(32) NOT NULL COMMENT '用户名',
+  `password` varchar(255) NOT NULL COMMENT '密码',
+  `salt` varchar(255) NOT NULL COMMENT '加密盐',
+  `state` tinyint(4) NOT NULL COMMENT '状态 0：未启用  1：已启用',
+  `user_type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '用户类型：2：管理员  1：普通用户',
+  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `add_user_id` int(11) NOT NULL COMMENT '添加人员ID',
+  `add_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `update_user_id` int(11) NOT NULL COMMENT '修改人ID',
+  `update_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `UK_f2ksd6h8hsjtd57ipfq9myr64` (`user_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Records of `sys_user_info`
+-- ----------------------------
+BEGIN;
+INSERT INTO `sys_user_info` VALUES ('1', 'admin', '6a56e0a0ecf379249be0defc93f77eb7', '099BMBUsSWfJ2BNP', '1', '2', '管理员', '0', '0', '1', '1509266376'), ('24', 'liutie5', '23de75f403ecd2d3193641b96d866fa9', 'zn3Ns3VPpcIuHJHt', '1', '1', '', '23', '1509257672', '1', '1509283700');
+COMMIT;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
 
 CREATE TABLE `sys_permission` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `available` bit(1) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `parent_id` bigint(20) DEFAULT NULL,
-  `parent_ids` varchar(255) DEFAULT NULL,
-  `permission` varchar(255) DEFAULT NULL,
-  `resource_type` enum('menu','button') DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '权限ID',
+  `name` varchar(255) NOT NULL COMMENT '权限名称',
+  `permission` varchar(255) NOT NULL COMMENT '权限字符串',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
-
-
-CREATE TABLE `sys_user_info` (
-  `uid` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `salt` varchar(255) DEFAULT NULL,
-  `state` tinyint(4) NOT NULL,
-  `user_type` tinyint(4) not null DEFAULT '2',
-  `remark` varchar(255) not null DEFAULT ''
-  PRIMARY KEY (`uid`),
-  UNIQUE KEY `uk_username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
-
-
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8
 
 CREATE TABLE `sys_user_permission` (
-  `uid` int(11) NOT NULL ,
+  `user_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8sys_user_permission
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
