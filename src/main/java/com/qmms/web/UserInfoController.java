@@ -116,4 +116,15 @@ public class UserInfoController {
         data.put("success","1");
         return data;
     }
+
+    /**
+     * 权限配置页面
+     */
+    @RequestMapping("/userPermission")
+    public String userPermission(Model model){
+        List<SysUserInfo> userInfoList = sysUserInfoService.getAllUserList();
+        model.addAttribute("userInfos",userInfoList);
+        return "/userInfo/userPermission";
+    }
+
 }

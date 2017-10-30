@@ -3,6 +3,8 @@ package com.qmms.sevice;
 import com.qmms.entity.SysUserInfo;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface SysUserInfoService {
     /**通过username查找用户信息;*/
     public SysUserInfo findByUserName(String userName);
@@ -19,4 +21,7 @@ public interface SysUserInfoService {
     public void updateUser(SysUserInfo sysUserInfo);
 
     public void delUser(int userId);
+
+    public List<SysUserInfo> getAllUserList();
+
 }

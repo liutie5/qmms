@@ -144,4 +144,13 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
         }
 
     }
+
+    /**
+     * 获取所有用户列表
+     * @return
+     */
+    @Override
+    public List<SysUserInfo> getAllUserList() {
+        return userInfoDao.findAll();
+    }
 }
