@@ -1,9 +1,9 @@
 package com.qmms.sevice.impl;
 
 import com.qmms.dao.SysUserInfoDao;
+import com.qmms.entity.SysPermission;
 import com.qmms.entity.SysUserInfo;
 import com.qmms.sevice.SysUserInfoService;
-import com.qmms.utils.UpdateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -15,10 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @Service
 public class SysUserInfoServiceImpl implements SysUserInfoService {
@@ -152,5 +150,25 @@ public class SysUserInfoServiceImpl implements SysUserInfoService {
     @Override
     public List<SysUserInfo> getAllUserList() {
         return userInfoDao.findAll();
+    }
+
+    @Transactional
+    @Override
+    public void addPermission(int userId, String permission) {
+        SysUserInfo userInfo = userInfoDao.findByUserId(userId);
+        Set<String> pset = new HashSet<>();
+        String[] arr = permission.split(",");
+        List<SysPermission> permissions = new ArrayList<>();
+        for(String p:arr){
+            pset.add(p);
+            permissions.add(new SysPermission(p,""));
+        }
+        userInfo.setPermissionList(permissions);
+        try{
+            userInfoDao.save(userInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

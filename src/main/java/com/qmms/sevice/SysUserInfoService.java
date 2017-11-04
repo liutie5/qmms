@@ -24,4 +24,6 @@ public interface SysUserInfoService {
 
     public List<SysUserInfo> getAllUserList();
 
+    public void addPermission(int userId,String permission);
+
 }

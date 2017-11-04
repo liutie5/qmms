@@ -24,16 +24,21 @@
                 <div class="no-move"></div>
             </div>
             <div class="box-content">
-                <form id="userAddForm" method="post"  class="form-horizontal">
+                <form id="userPermissionForm" method="post"  class="form-horizontal">
                     <fieldset>
                         <div class="page-header">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">用户：</label>
                                 <div class="col-sm-5">
-                                    <select class="populate placeholder" name="用户">
-                                        <option>请选择用户</option>
-                                        <option  th:each="user:${userInfos}" th:value="${user.userId}" th:text="${user.userName }"></option>
+                                    <select class="populate placeholder" id="userSelect" name="userId">
+                                        <option value="">请选择用户</option>
+                                        <option  th:each="user:${userInfos}" th:value="${user.userId}" th:text="${user.userName}" th:selected="${user.userId}==${userId}"></option>
                                     </select>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button id="userSubmit" type="button" class="btn btn-primary">保存</button>
+                                </div>
+                                <div class="col-sm-3">
+
                                 </div>
 
                             </div>
@@ -48,24 +53,141 @@
                             <div class="col-sm-4">
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" checked> 系统管理
-                                        <i class="fa fa-square-o"></i>
+                                        系统管理
                                     </label>
                                 </div>
                                 <div class="checkbox">
-                                    <label>
-
-                                        <input type="checkbox" >用户管理
-                                        <i class="fa fa-square-o small" style="margin-left: 10px"></i>
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="userManage" th:checked="${#sets.contains(permissionSet,'userManage')}">用户管理
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" >权限配置
-                                        <i class="fa fa-square-o small" style="margin-left: 10px"></i>
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="permissionConf" th:checked="${#sets.contains(permissionSet,'permissionConf')}">权限配置
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <div class="checkbox">
+                                    <label>
+                                        渠道管理
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="channelConf"  th:checked="${#sets.contains(permissionSet,'channelConf')}">渠道配置
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <div class="checkbox">
+                                    <label>
+                                        贷款管理
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox"  name="permission" value="loanType"  th:checked="${#sets.contains(permissionSet,'loanType')}">贷款类型
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox"  name="permission" value="loanProduct"  th:checked="${#sets.contains(permissionSet,'loanProduct')}">贷款产品
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="loanAd"  th:checked="${#sets.contains(permissionSet,'loanAd')}" >贷款广告
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox"  name="permission" value="loanOther"   th:checked="${#sets.contains(permissionSet,'loanOther')}">其他配置
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <div class="checkbox">
+                                    <label>
+                                        信用卡管理
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="creditBank"  th:checked="${#sets.contains(permissionSet,'creditBank')}">信用卡银行
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="creditType"  th:checked="${#sets.contains(permissionSet,'creditType')}">信用卡类型
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="creditProduct"  th:checked="${#sets.contains(permissionSet,'creditProduct')}">信用卡产品
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="creditAd"  th:checked="${#sets.contains(permissionSet,'creditAd')}">信用卡广告
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox"  name="permission" value="creditOther"  th:checked="${#sets.contains(permissionSet,'creditOther')}">其他配置
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <div class="checkbox">
+                                    <label>
+                                        信息统计
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="loanUv"  th:checked="${#sets.contains(permissionSet,'loanUv')}" >贷款UV统计
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="creditUv"  th:checked="${#sets.contains(permissionSet,'creditUv')}" >信用卡UV统计
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label style="margin-left: 80px">
+
+                                </label>
+                            </div>
+
                         </div>
                     </fieldset>
                 </form>
@@ -73,4 +195,31 @@
         </div>
     </div>
 </div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function(){
+        $('#userSelect').change(function(){
+            var param = $("#userPermissionForm").serialize();
+            console.log(param);
+            LoadAjaxContent("/userInfo/userPermission",param);
+        });
+        $('#userSubmit').click(function () {
+            var userId = $('#userSelect').children('option:selected').val();
+            if(userId == ''){
+                alert('请选择用户');
+                return;
+            }
+
+            var param = $("#userPermissionForm").serialize();
+            $.post("userInfo/addPermission",param,function(data){
+                if(data.success){
+                    alert("保存成功");
+                    LoadAjaxContent("userInfo/userPermission",param);
+                }else{
+                    alert(data.msg);
+                }
+            },"json");
+
+        })
+    })
+</script>
 </html>

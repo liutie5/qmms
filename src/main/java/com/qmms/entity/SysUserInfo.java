@@ -21,7 +21,7 @@ public class SysUserInfo implements Serializable {
     private Integer updateUserId;
     private Integer updateTime;
     @ManyToMany(fetch= FetchType.EAGER)//立即从数据库中进行加载数据;
-    @JoinTable(name = "SysUserPermission", joinColumns = { @JoinColumn(name = "userId") }, inverseJoinColumns ={@JoinColumn(name = "permissionId") })
+    @JoinTable(name = "SysUserPermission", joinColumns = { @JoinColumn(name = "userId") }, inverseJoinColumns ={@JoinColumn(name = "permission") })
     private List<SysPermission> permissionList;// 一个用户具有多个权限
 
     public Integer getUserId() {

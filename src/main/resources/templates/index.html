@@ -4,12 +4,12 @@
 		<meta charset="utf-8">
 		<title>QMMS</title>
 		<meta name="description" content="description">
-		<meta name="author" content="DevOOPS">
+		<meta name="author" content="QMMS">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="plugins/bootstrap/bootstrap.css" rel="stylesheet">
 		<link href="plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet">
 		<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-		<link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'>
+		<!--<link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'>-->
 		<link href="plugins/fancybox/jquery.fancybox.css" rel="stylesheet">
 		<link href="plugins/fullcalendar/fullcalendar.css" rel="stylesheet">
 		<link href="plugins/xcharts/xcharts.min.css" rel="stylesheet">
@@ -95,16 +95,22 @@
 	<div class="row">
 		<div id="sidebar-left" class="col-xs-2 col-sm-2">
 			<ul class="nav main-menu">
+				<shiro:hasAnyRoles name="userManage,permissionConf">
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle">
-						<i class="fa fa-bar-chart-o"></i>
-						<span class="hidden-xs">系统管理</span>
-					</a>
+					<shiro:hasPermission name="userManage">
+						<a href="#" class="dropdown-toggle">
+							<i class="fa fa-bar-chart-o fa-at"></i>
+							<span class="hidden-xs">系统管理</span>
+						</a>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="permissionConf">
 					<ul class="dropdown-menu">
 						<li><a class="ajax-link" href="userInfo/userList">用户管理</a></li>
 						<li><a class="ajax-link" href="userInfo/userPermission">权限配置</a></li>
 					</ul>
+					</shiro:hasPermission>
 				</li>
+				</shiro:hasAnyRoles>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle">
 						<i class="fa fa-bar-chart-o"></i>

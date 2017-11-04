@@ -1,5 +1,6 @@
 package com.qmms.web;
 
+import com.qmms.entity.SysPermission;
 import com.qmms.entity.SysUserInfo;
 import com.qmms.sevice.SysUserInfoService;
 import com.sun.org.apache.xpath.internal.operations.Bool;
@@ -17,9 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/userInfo")
@@ -121,10 +120,43 @@ public class UserInfoController {
      * 权限配置页面
      */
     @RequestMapping("/userPermission")
-    public String userPermission(Model model){
+    public String userPermission(Integer userId,String permission,Model model){
         List<SysUserInfo> userInfoList = sysUserInfoService.getAllUserList();
         model.addAttribute("userInfos",userInfoList);
+        Set<String> permissionSet = new HashSet<String>();
+        if(userId != null && userId != 0){
+            SysUserInfo selectecUser = sysUserInfoService.findByUserId(userId);
+            model.addAttribute("selectUser",selectecUser);
+            for(SysPermission p:selectecUser.getPermissionList()){
+                permissionSet.add(p.getPermission());
+            }
+        }
+        model.addAttribute("permissionSet",permissionSet);
+        if(userId == null){
+            userId = -1;
+        }
+        model.addAttribute("userId",userId);
         return "/userInfo/userPermission";
     }
+
+
+    /**
+     * 权限配置页面
+     */
+    @RequestMapping("/addPermission")
+    @ResponseBody
+    public Map<String,String> addPermission(String userId,String permission,Model model){
+        Map<String,String> data = new HashMap<>();
+        if(StringUtils.isNotBlank(userId)){
+            sysUserInfoService.addPermission(Integer.parseInt(userId),permission);
+            data.put("success","1");
+        }else{
+            data.put("msg","请选择用户");
+        }
+        return data;
+
+    }
+
+
 
 }
