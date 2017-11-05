@@ -9,7 +9,7 @@ import java.util.List;
 public class SerCfgMarket implements Serializable {
     @Id
     private String key;
-    private String name;
+    private String value;
     private Integer orderKey;
 
     public String getKey() {
@@ -20,12 +20,12 @@ public class SerCfgMarket implements Serializable {
         this.key = key;
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public Integer getOrderKey() {

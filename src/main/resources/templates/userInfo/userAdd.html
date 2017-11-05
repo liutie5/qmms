@@ -163,7 +163,6 @@
         });
 
         $("#userSubmit").click(function(){
-
             var bootstrapValidator = $("#userAddForm").data('bootstrapValidator');
             bootstrapValidator.validate();
             if(bootstrapValidator.isValid()){
@@ -176,7 +175,6 @@
                     }
                 }
                 var param = $.param(paramArr);
-                console.log(param)
                 $.post("userInfo/userAdd",param,function(data){
                     if(data.success){
                         alert("添加成功")
@@ -187,10 +185,6 @@
                         return false;
                     }
                 },"json");
-
-
-//
-
 
             }else{
                 return false;

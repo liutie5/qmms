@@ -1,0 +1,202 @@
+<div class="row">
+    <div id="breadcrumb" class="col-xs-12">
+        <a href="#" class="show-sidebar">
+            <i class="fa fa-bars"></i>
+        </a>
+        <ol class="breadcrumb pull-left">
+            <li><a href="#">渠道管理</a></li>
+            <li><a href="#">渠道配置</a></li>
+        </ol>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="fa"></i>
+                    <span>渠道列表</span>
+                </div>
+
+                <div class="no-move"></div>
+            </div>
+            <div class="box-content">
+                <table class="table table-bordered table-striped table-hover table-heading table-datatable" id="channelListTable">
+                    <thead>
+                    <tr>
+                        <th>渠道ID</th>
+                        <th>渠道名称</th>
+                        <th>渠道描述</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    // Run Datables plugin and create 3 variants of settings
+    function AllTables(){
+        channelListTable();
+        LoadSelect2Script(MakeSelect2);
+    }
+
+    var lang = {
+        "sProcessing": "处理中...",
+        "sLengthMenu": "_MENU_",
+        "sZeroRecords": "没有匹配结果",
+        "sInfo": "当前显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项。",
+        "sInfoEmpty": "当前显示第 0 至 0 项，共 0 项",
+        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+        "sInfoPostFix": "",
+        "sSearch": "渠道名:",
+        "sUrl": "",
+        "sEmptyTable": "表中数据为空",
+        "sLoadingRecords": "载入中...",
+        "sInfoThousands": ",",
+        "oPaginate": {
+            "sFirst": "首页",
+            "sPrevious": "上页",
+            "sNext": "下页",
+            "sLast": "末页",
+            "sJump": "跳转"
+        },
+        "oAria": {
+            "sSortAscending": ": 以升序排列此列",
+            "sSortDescending": ": 以降序排列此列"
+        }
+    };
+    function channelListTable(){
+        $('#channelListTable').dataTable({
+            "aaSorting": [[ 0, "asc" ]],
+            "sDom": "<'box-content'<'col-sm-6'f><'#addBtn.col-sm-2'><'col-sm-3 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
+            "sPaginationType": "bootstrap",
+            "oLanguage": lang,
+            ordering:false,
+            serverSide: true,  //启用服务器端分页
+            ajax: function (data, callback, settings) {//封装请求参数
+
+                var param = {};
+                param.pageSize= data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+//                param.page = data.start;//开始的记录序号
+                param.page = (data.start / data.length);//当前页码
+                param.channelName = data.search.value;
+                //ajax请求数据方法
+                //ajax请求数据方法
+                $.ajax({
+                    type: "GET",
+                    url: "channel/getChannelList",//url请求的地址
+                    cache: false,  //禁用缓存
+                    data: param,  //传入组装的参数
+                    dataType: "json",
+                    success: function (result) {
+                        //封装返回数据重要
+                        var returnData = {};
+                        //这里直接自行返回了draw计数器,应该由后台返回
+                        returnData.draw = data.draw;
+                        //返回数据全部记录
+                        returnData.recordsTotal = result.totalElements;
+                        //后台不实现过滤功能，每次查询均视作全部结果
+                        returnData.recordsFiltered = result.totalElements;
+                        //返回的数据列表
+                        returnData.data = result.content;
+
+                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                        callback(returnData);
+                    }
+                });
+            },
+            columns: [
+                { "data": "id" },
+                {"data": "name"},
+                {"data": "desc"},
+                {
+                    "data": "id",
+                    render:function(data,type,row,meta){
+                        return '<a href="#" onclick=toEdit("'+data+'")><span class="glyphicon glyphicon-edit">编辑</span></a> &nbsp;&nbsp;<a href="#" onclick=toDel("'+data+'","'+row.name+'")><span class="glyphicon glyphicon-remove-sign">删除</span></a>'
+                    }
+                },
+
+            ],
+            initComplete: function () {
+
+                $("#addBtn").append('<button id="addChannel" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>添加</button>');
+                $("#addChannel").on("click", toAdd);
+            }
+        }).api();
+
+    }
+
+    function toAdd(){
+        $("#addModal").modal({
+            remote: "channel/toChannelAdd",
+            show:true,
+            backdrop:"static"
+        });
+    }
+    
+    function toEdit(id) {
+        $("#editModal").modal({
+            remote: "channel/toChannelEdit?id="+id,
+            show:true
+        });
+
+    }
+
+    $("#addModal").on("hidden.bs.modal", function() {
+        $(this).removeData("bs.modal");
+    });
+
+    $("#editModal").on("hidden.bs.modal", function() {
+        $(this).removeData("bs.modal");
+    });
+
+
+    function toDel(id,name) {
+        if(confirm("确定删除渠道："+name)){
+            var param={}
+            param.id = id;
+            $.post("channel/channelDel",param,function(data){
+                if(data.success){
+                    alert("删除成功")
+                }else{
+                    alert("删除失败")
+                }
+                LoadAjaxContent("channel/channelList");
+
+            },"json");
+        }
+    }
+
+
+    function MakeSelect2(){
+        $('select').select2();
+        $('.dataTables_filter').each(function(){
+            $(this).find('label input[type=text]').attr('placeholder', '搜索');
+        });
+    }
+    $(document).ready(function() {
+        // Load Datatables and run plugin on tables
+        LoadDataTablesScripts(AllTables);
+        // Add Drag-n-Drop feature
+        WinMove();
+    });
+</script>

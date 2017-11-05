@@ -1,0 +1,207 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<form id="addForm" name="addForm" method="post"  class="form-horizontal">
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>添加渠道</span>
+                </div>
+                <div class="box-icons">
+                    <a class="close-link" data-dismiss="modal" aria-hidden="true">
+                        x
+                    </a>
+                </div>
+                <div class="no-move"></div>
+            </div>
+
+            <div class="box-content">
+                    <fieldset>
+                        <legend>添加渠道</legend>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">渠道名称:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="name" name="name" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">渠道描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="desc" name="desc" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">渠道映射:</label>
+                            <div class="col-sm-6">
+                                <input type="hidden" id="umengmarket" name="umengmarket" value="">
+                                <div id="mapping" style="min-height:50px; height:auto!important; height:50px;overflow:auto;background-color: white">
+
+                                </div>
+                                <div style="clear:both"></div>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="form-inline">
+                                    <label class="form-inline">umengKey:</label>
+                                    <input type="text" class="form-control" id="umengkey" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="form-inline">
+                                <div class="form-inline">
+                                    <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市场ID:</label>
+                                    <select class="populate placeholder" id="marketSelect">
+                                        <option value="">全部市场</option>
+                                        <option  th:each="market:${markets}" th:value="${market.key}" th:text="${market.value}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-inline" style="float:right;margin-right: 200px;">
+                                    <button id="mappingBtn" type="button" class="btn-primary btn-sm" onclick="mappAdd()">生成映射</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <div class="form-group pull-right form-inline">
+                            <div class="col-sm-12">
+                                <button type="cancel" class="btn btn-default" data-dismiss="modal">
+                                    关闭
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button id="formSubmit" type="button" class="btn btn-primary">保存</button>
+
+                            </div>
+
+                        </div>
+                    </fieldset>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+<script src="plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<!--<script src="plugins/jquery/jquery.md5.js"></script>-->
+<script type="text/javascript">
+    $(document).ready(function() {
+        var channelVlidator = $('#addForm').bootstrapValidator({
+            excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
+            message: '校验不合法',
+            fields: {
+                "name": {
+                    message: '用户名不合法',
+                    validators: {
+                        notEmpty: {
+                            message: '渠道名称不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 64,
+                            message: '渠道名称长度在4-32个字符'
+                        }
+                    }
+                },
+                "desc": {
+                    required: "请填写渠道描述",
+                    validators:{
+                        notEmpty: {message: '渠道描述不能为空'}
+                    }
+                },
+                "umengmarket": {
+                    required: "请生成渠道映射",
+                    validators:{
+                        notEmpty: {message: '请生成渠道映射'}
+                    }
+                }
+            }
+        });
+
+        $("#formSubmit").click(function(){
+            var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+            bootstrapValidator.enableFieldValidators("umengmarket",true);
+            bootstrapValidator.validate();
+            var us = $("input[name='addumm']");
+            var ums = "";
+            us.each(function(i){
+                var haveValue = $(this).val();
+                if(ums !=""){
+                    ums = ums +","+haveValue;
+                }else{
+                    ums = haveValue;
+                }
+
+            });
+            $('#umengmarket').val(ums);
+            if(bootstrapValidator.isValid()){
+                var param = $("#addForm").serialize();
+                $.post("channel/channelAdd",param,function(data){
+                    if(data.success){
+                        alert("添加成功")
+                        $("#addModal").modal("hide");
+                        LoadAjaxContent("channel/channelList");
+                    }else{
+                        alert("添加失败,"+data.msg);
+                        return false;
+                    }
+                },"json");
+
+
+            }else{
+                console.log("not valid")
+                return false;
+            }
+        })
+    })
+    var addNum = 0;
+    function mappAdd() {
+        var umengKey = $('#umengkey').val();
+        if(umengKey != ''){
+            var market = $('#marketSelect').val();
+            var haveSame = false;
+            $("input[name='addumm']").each(function(i){
+                var haveValue = $(this).val();
+                var arr = haveValue.split('_');
+                if(arr[0]==umengKey && market==arr[1]){
+                    haveSame = true;
+                }
+
+            });
+            if(haveSame){
+                alert("此映射已经生成")
+                return;
+            }
+            var va = umengKey+"_"+market;
+            addNum++;
+            var appendHtml = '<div id="m'+addNum+'" class="col-sm-16 form-inline" style="width:100%">' +
+                '<input type="text" class="form-control "  name="addumm" value="'+va+'" disabled />&nbsp;&nbsp;<a href="#" onclick="rmMapp(\'m'+addNum+'\')">删除</a>' +
+                '</div>'
+            $('#mapping').append(appendHtml);
+            var hadValue = $('#umengmarket').val();
+
+            if(hadValue==''){
+                hadValue = va;
+            }else{
+                hadValue = hadValue+","+va;
+            }
+            $('#umengmarket').val(hadValue);
+            var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+            bootstrapValidator.enableFieldValidators("umengmarket",false);
+            bootstrapValidator.enableFieldValidators("umengmarket",true);
+            bootstrapValidator.validate();
+        }else{
+            alert("请填写umengkey");
+        }
+    }
+
+    function rmMapp(id){
+        $('#'+id).remove();
+    }
+
+</script>
