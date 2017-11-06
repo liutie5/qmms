@@ -3,7 +3,7 @@ package com.qmms.sevice.impl;
 import com.qmms.dao.SerLoanTypeDao;
 import com.qmms.entity.SerLoanType;
 import com.qmms.entity.SysUserInfo;
-import com.qmms.sevice.SerLoanTypeService;
+import com.qmms.sevice.SerLoanService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class SerLoanTypeServiceImpl implements SerLoanTypeService {
+public class SerLoanServiceImpl implements SerLoanService {
     @Resource
     private SerLoanTypeDao serLoanTypeDao;
    
@@ -35,7 +35,7 @@ public class SerLoanTypeServiceImpl implements SerLoanTypeService {
      * @return
      */
     @Override
-    public Page<SerLoanType> getListWithCondition(int page, int pageSize, final String title) {
+    public Page<SerLoanType> getLoanTypeListWithCondition(int page, int pageSize, final String title) {
         Pageable pageable = new PageRequest(page,pageSize);
         Page<SerLoanType> channelPage = serLoanTypeDao.findAll(new Specification<SerLoanType>(){
             @Override

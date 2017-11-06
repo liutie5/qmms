@@ -4,7 +4,8 @@ package com.qmms.sevice;
 import com.qmms.entity.SerLoanType;
 import org.springframework.data.domain.Page;
 
-public interface SerLoanTypeService {
+public interface SerLoanService {
+    //贷款类型
     /**
      * 分页查询
      * @param page
@@ -12,7 +13,7 @@ public interface SerLoanTypeService {
      * @param title
      * @return
      */
-    Page<SerLoanType> getListWithCondition(int page, int pageSize, String title);
+    Page<SerLoanType> getLoanTypeListWithCondition(int page, int pageSize, String title);
 
     /**
      *
@@ -40,4 +41,10 @@ public interface SerLoanTypeService {
      * @return
      */
     public SerLoanType editLoanType(SerLoanType loanType);
+
+    //贷款产品
+
+    //贷款广告
+
+    //其他设置
 }
