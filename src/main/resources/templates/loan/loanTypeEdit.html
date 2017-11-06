@@ -1,0 +1,148 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<form id="addForm" name="addForm" method="post"  class="form-horizontal">
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>编辑贷款类型</span>
+                </div>
+                <div class="box-icons">
+                    <a class="close-link" data-dismiss="modal" aria-hidden="true">
+                        x
+                    </a>
+                </div>
+                <div class="no-move"></div>
+            </div>
+
+            <div class="box-content">
+                    <fieldset>
+                        <legend>编辑贷款类型</legend>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型ID:</label>
+                            <div class="col-sm-6">
+                                <input type="hidden" name="key" th:value="${loanType.key}"/>
+                                <input type="text" class="form-control" disabled="disabled" th:value="${loanType.key}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型标题:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="title" name="title" th:value="${loanType.title}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="desc" name="desc"  th:value="${loanType.desc}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型图片:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="img" name="img"  th:value="${loanType.img}"/>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group pull-right form-inline">
+                            <div class="col-sm-12">
+                                <button type="cancel" class="btn btn-default" data-dismiss="modal">
+                                    关闭
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button id="formSubmit" type="button" class="btn btn-primary">保存</button>
+
+                            </div>
+
+                        </div>
+                    </fieldset>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+<script src="plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<!--<script src="plugins/jquery/jquery.md5.js"></script>-->
+<script type="text/javascript">
+    $(document).ready(function() {
+        var addVlidator = $('#addForm').bootstrapValidator({
+            excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
+            message: '校验不合法',
+            fields: {
+                "key": {
+                    message: '类型ID不正确',
+                    validators: {
+                        notEmpty: {
+                            message: '类型ID不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '类型ID长度在1-255个字符'
+                        }
+                    }
+                },
+                "title": {
+                    required: "请填写类型标题",
+                    validators:{
+                        notEmpty: {message: '类型标题不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '类型标题长度在1-255字符'
+                        }
+                    }
+                },
+                "desc": {
+                    required: "请填写类型描述",
+                    validators:{
+                        notEmpty: {message: '类型描述不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '类型描述长度在1-1024个字符'
+                        }
+                    }
+                },
+                "img": {
+                    required: "请上传类型图片",
+                    validators:{
+                        notEmpty: {message: '请上传类型图片'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '上传图片名称长度在1-1024个字符'
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#formSubmit").click(function(){
+            var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if(bootstrapValidator.isValid()){
+                var param = $("#addForm").serialize();
+                $.post("loan/loanTypeEdit",param,function(data){
+                    if(data.success){
+                        alert("编辑成功")
+                        $("#addModal").modal("hide");
+                        LoadAjaxContent("loan/loanTypeList");
+                    }else{
+                        alert(data.msg);
+                        return false;
+                    }
+                },"json");
+
+
+            }else{
+                console.log("not valid")
+                return false;
+            }
+        })
+    })
+
+
+</script>

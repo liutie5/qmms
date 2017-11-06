@@ -2,20 +2,28 @@ package com.qmms.web;
 
 import com.qmms.entity.SerLoanType;
 import com.qmms.sevice.SerLoanService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/loan")
 public class LoanController {
+    @Value("${web.upload-path}")
+    private String webUploadPath;
 
     @Resource
     private SerLoanService serLoanService;
@@ -24,7 +32,7 @@ public class LoanController {
      * 贷款类型
      * @return
      */
-    @RequestMapping("/loanTypeTList")
+    @RequestMapping("/loanTypeList")
     public String loanTypeList(){
         return "/loan/loanTypeList";
     }
@@ -41,10 +49,10 @@ public class LoanController {
         return "/loan/loanTypeAdd";
     }
 
-    @RequestMapping("/loanIsExist")
+    @RequestMapping("/loanTypeIsExist")
     @ResponseBody
-    public Map<String,Boolean> isUserExist(String title){
-        SerLoanType loanType = serLoanService.getLoanType(title);
+    public Map<String,Boolean> isUserExist(String key){
+        SerLoanType loanType = serLoanService.getLoanType(key);
         Map<String,Boolean> rs = new HashMap<String,Boolean>();
         if(loanType!=null){
             rs.put("valid",false);
@@ -75,9 +83,9 @@ public class LoanController {
         return data;
     }
 
-    @RequestMapping("/toLoanEdit")
-    public String toUserEdit(String key,Model model){
-        SerLoanType loanType = serLoanService.getLoanType(key);
+    @RequestMapping("/toLoanTypeEdit")
+    public String toUserEdit(String id,Model model){
+        SerLoanType loanType = serLoanService.getLoanType(id);
         model.addAttribute("loanType",loanType);
         return "/loan/loanTypeEdit";
     }
@@ -102,15 +110,49 @@ public class LoanController {
      */
     @RequestMapping("/loanTypeDel")
     @ResponseBody
-    public Map<String,String> laonTypeDel(String key){
+    public Map<String,String> laonTypeDel(String id){
         Map<String,String> data = new HashMap<>();
         try{
-            serLoanService.delLoanType(key);
+            serLoanService.delLoanType(id);
             data.put("success","1");
             data.put("msg","删除成功");
         }catch (Exception e){
             data.put("msg","删除失败："+e.getMessage());
         }
+        return data;
+    }
+
+    @PostMapping(value = "/uploadLoanTypeImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String,String> uploadImg(@RequestParam("file") MultipartFile file){
+        Map<String,String> data = new HashMap<>();
+        if (!file.isEmpty()) {
+            if (file.getContentType().contains("image")) {
+                try {
+                    String temp = "images" + File.separator + "upload" + File.separator;
+                    // 获取图片的文件名
+                    String fileName = file.getOriginalFilename();
+                    // 获取图片的扩展名
+                    String extensionName = StringUtils.substringAfter(fileName, ".");
+                    // 新的图片文件名 = 获取时间戳+"."图片扩展名
+                    String newFileName = String.valueOf(System.currentTimeMillis()) + "." + extensionName;
+                    // 数据库保存的目录
+                    String datdDirectory = temp.concat(File.separator);
+                    // 文件路径
+                    String filePath = webUploadPath.concat(datdDirectory);
+
+                    File dest = new File(filePath, newFileName);
+                    if (!dest.getParentFile().exists()) {
+                        dest.getParentFile().mkdirs();
+                    }
+
+                    // 上传到指定目录
+                    file.transferTo(dest);
+                }catch (Exception e){
+
+                }
+            }
+        }
+
         return data;
     }
 

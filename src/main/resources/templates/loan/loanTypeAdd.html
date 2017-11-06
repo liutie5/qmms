@@ -1,0 +1,201 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<form id="addForm" name="addForm" method="post"  class="form-horizontal">
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>添加贷款类型</span>
+                </div>
+                <div class="box-icons">
+                    <a class="close-link" data-dismiss="modal" aria-hidden="true">
+                        x
+                    </a>
+                </div>
+                <div class="no-move"></div>
+            </div>
+
+            <div class="box-content">
+                    <fieldset>
+                        <legend>添加贷款类型</legend>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型ID:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="key" name="key" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型标题:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="title" name="title" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="desc" name="desc" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型图片:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="img" name="img" />
+                                <p><input type="file" class="form-control" id="file1" name="file" /></p>
+                                <input type="button" id="upload" value="上传" onclick="ajaxFileUpload()" />
+                                <p><img id="img1" alt="上传成功啦" src="" /></p>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group pull-right form-inline">
+                            <div class="col-sm-12">
+                                <button type="cancel" class="btn btn-default" data-dismiss="modal">
+                                    关闭
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button id="formSubmit" type="button" class="btn btn-primary">保存</button>
+
+                            </div>
+
+                        </div>
+                    </fieldset>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+<script src="plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<script src="js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var addVlidator = $('#addForm').bootstrapValidator({
+            excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
+            message: '校验不合法',
+            fields: {
+                "key": {
+                    message: '类型ID不正确',
+                    validators: {
+                        notEmpty: {
+                            message: '类型ID不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '类型ID长度在1-255个字符'
+                        },
+                        remote: {
+                            url: 'loan/loanTypeIsExist',
+                            message: '类型ID已经存在',
+                            delay:1000
+                        }
+                    }
+                },
+                "title": {
+                    required: "请填写类型标题",
+                    validators:{
+                        notEmpty: {message: '类型标题不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '类型标题长度在1-255字符'
+                        }
+                    }
+                },
+                "desc": {
+                    required: "请填写类型描述",
+                    validators:{
+                        notEmpty: {message: '类型描述不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '类型描述长度在1-1024个字符'
+                        }
+                    }
+                },
+                "img": {
+                    required: "请上传类型图片",
+                    validators:{
+                        notEmpty: {message: '请上传类型图片'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '上传图片名称长度在1-1024个字符'
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#formSubmit").click(function(){
+            var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if(bootstrapValidator.isValid()){
+                var param = $("#addForm").serialize();
+                $.post("loan/loanTypeAdd",param,function(data){
+                    if(data.success){
+                        alert("添加成功")
+                        $("#addModal").modal("hide");
+                        LoadAjaxContent("loan/loanTypeList");
+                    }else{
+                        alert(data.msg);
+                        return false;
+                    }
+                },"json");
+
+
+            }else{
+                console.log("not valid")
+                return false;
+            }
+        })
+    })
+
+    function ajaxFileUpload(){
+        var f = $("#file1").val();
+        if(f==null||f==""){
+            alert("请选择图片");
+            return false;
+        }else{
+            var extname = f.substring(f.lastIndexOf(".")+1,f.length);
+            alert(extname);
+            extname = extname.toLowerCase();//处理了大小写
+            if(extname!= "jpeg"&&extname!= "jpg"&&extname!= "gif"&&extname!= "png"){
+                alert("错误提示:格式不正确,支持的图片格式为：JPEG、GIF、PNG！");
+                return false;
+            }
+        }
+        var file = document.getElementById("file1").files;
+        var size = file[0].size;
+        if(size>2097152){
+            alert("错误提示:所选择的图片太大，图片大小最多支持2M!");
+            return false;
+        }
+        $.ajaxFileUpload
+        (
+            {
+                url: 'loan/uploadLoanTypeImg', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'file1', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status)  //服务器成功响应处理函数
+                {
+                    $("#img1").attr("src", data.imgurl);
+                    if (typeof (data.error) != 'undefined') {
+                        if (data.error != '') {
+                            alert(data.error);
+                        } else {
+                            alert(data.msg);
+                        }
+                    }
+                },
+                error: function (data, status, e)//服务器响应失败处理函数
+                {
+                    alert(e);
+                }
+            }
+        )
+        return false;
+    }
+
+</script>

@@ -8,8 +8,11 @@ import java.util.List;
 @Table(name="ser_loan_type")
 public class SerLoanType implements Serializable {
     @Id
+    @Column(name="`key`")
     private String key;
+    @Column(name="`title`")
     private String title;
+    @Column(name="`desc`")
     private String desc;
     private String img;
     private Integer addUserId;
