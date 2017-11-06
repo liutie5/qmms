@@ -173,19 +173,22 @@
 
 
     function toDel(id,name) {
-        if(confirm("确定删除贷款类型："+name)){
+        confirm("确定删除贷款类型："+name,function(e,btn){ //event + button clicked
             var param={}
             param.id = id;
             $.post("loan/loanTypeDel",param,function(data){
                 if(data.success){
-                    alert("删除成功")
+                    successAlert("删除成功")
                 }else{
-                    alert(data.msg);
+                    errorAlert(data.msg);
                 }
                 LoadAjaxContent("loan/loanTypeList");
 
             },"json");
-        }
+        }, function(e,btn){
+
+        });
+
     }
 
 
