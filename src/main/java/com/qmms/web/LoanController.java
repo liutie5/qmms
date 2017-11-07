@@ -172,13 +172,8 @@ public class LoanController {
     @RequestMapping("/getLoanProductList")
     @ResponseBody
     public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, String name){
-        try{
-            Page p1 = serLoanService.getLoanProductList(page, pageSize, name);
-            return p1;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        Page p1 = serLoanService.getLoanProductList(page, pageSize, name);
+        return p1;
 
     }
 
