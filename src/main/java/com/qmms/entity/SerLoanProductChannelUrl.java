@@ -7,7 +7,9 @@ import java.util.List;
 @Entity
 @Table(name="ser_loan_product_channel_url")
 public class SerLoanProductChannelUrl implements Serializable {
+    @Id
     private Integer productId;
+    @Id
     private Integer channelId;
     private Integer channelUrl;
 

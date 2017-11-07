@@ -138,7 +138,7 @@ public class LoanController {
                     // 新的图片文件名 = 获取时间戳+"."图片扩展名
                     String newFileName = String.valueOf(System.currentTimeMillis()) + "." + extensionName;
                     // 数据库保存的目录
-                    String dataPath = loanTypeImgPath.concat(File.separator).concat(newFileName);
+                    String dataPath = loanTypeImgPath.concat(newFileName);
                     // 文件路径
                     String filePath = webUploadPath.concat(loanTypeImgPath);
                     File dest = new File(filePath, newFileName);

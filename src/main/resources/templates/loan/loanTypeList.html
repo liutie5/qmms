@@ -128,7 +128,12 @@
             columns: [
                 { "data": "key" },
                 {"data": "title"},
-                {"data": "img"},
+                {
+                    "data": "img",
+                    render: function(data,type,row,meta){
+                        return '<img src="'+data+'" class="img-rounded"/>'
+                    }
+                },
                 {"data": "desc"},
                 {
                     "data": "key",
