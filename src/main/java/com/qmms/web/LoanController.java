@@ -24,6 +24,8 @@ import java.util.Map;
 public class LoanController {
     @Value("${web.upload-path}")
     private String webUploadPath;
+    @Value("${loanType.img.path}")
+    private String loanTypeImgPath;
 
     @Resource
     private SerLoanService serLoanService;
@@ -123,12 +125,12 @@ public class LoanController {
     }
 
     @PostMapping(value = "/uploadLoanTypeImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public Map<String,String> uploadImg(@RequestParam("file") MultipartFile file){
         Map<String,String> data = new HashMap<>();
         if (!file.isEmpty()) {
             if (file.getContentType().contains("image")) {
                 try {
-                    String temp = "images" + File.separator + "upload" + File.separator;
                     // 获取图片的文件名
                     String fileName = file.getOriginalFilename();
                     // 获取图片的扩展名
@@ -136,23 +138,22 @@ public class LoanController {
                     // 新的图片文件名 = 获取时间戳+"."图片扩展名
                     String newFileName = String.valueOf(System.currentTimeMillis()) + "." + extensionName;
                     // 数据库保存的目录
-                    String datdDirectory = temp.concat(File.separator);
+                    String dataPath = loanTypeImgPath.concat(File.separator).concat(newFileName);
                     // 文件路径
-                    String filePath = webUploadPath.concat(datdDirectory);
-
+                    String filePath = webUploadPath.concat(loanTypeImgPath);
                     File dest = new File(filePath, newFileName);
                     if (!dest.getParentFile().exists()) {
                         dest.getParentFile().mkdirs();
                     }
-
                     // 上传到指定目录
                     file.transferTo(dest);
+                    data.put("success","1");
+                    data.put("imgPath",dataPath);
                 }catch (Exception e){
-
+                    data.put("msg","上传失败:"+e.getMessage());
                 }
             }
         }
-
         return data;
     }
 
