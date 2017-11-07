@@ -8,24 +8,24 @@ import java.util.List;
 @Table(name="ser_loan_product_channel_url")
 public class SerLoanProductChannelUrl implements Serializable {
     @Id
-    private Integer productId;
+    private Long productId;
     @Id
-    private Integer channelId;
+    private Long channelId;
     private Integer channelUrl;
 
-    public Integer getProductId() {
+    public Long getProductId() {
         return productId;
     }
 
-    public void setProductId(Integer productId) {
+    public void setProductId(Long productId) {
         this.productId = productId;
     }
 
-    public Integer getChannelId() {
+    public Long getChannelId() {
         return channelId;
     }
 
-    public void setChannelId(Integer channelId) {
+    public void setChannelId(Long channelId) {
         this.channelId = channelId;
     }
 

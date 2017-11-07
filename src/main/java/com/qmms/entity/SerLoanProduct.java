@@ -39,7 +39,7 @@ public class SerLoanProduct implements Serializable {
     private Integer updateTime;
 
     @ManyToMany(fetch= FetchType.LAZY)
-    @JoinTable(name = "SerLoanProductType", joinColumns = { @JoinColumn(name = "productId") }, inverseJoinColumns ={@JoinColumn(name = "typeId") })
+    @JoinTable(name = "SerLoanProductType", joinColumns = { @JoinColumn(name = "productId") }, inverseJoinColumns ={@JoinColumn(name = "typeKey") })
     private List<SerLoanType> loanTypeList;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "loanProduct")

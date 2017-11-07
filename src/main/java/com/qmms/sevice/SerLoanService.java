@@ -1,6 +1,7 @@
 package com.qmms.sevice;
 
 
+import com.qmms.entity.SerLoanProduct;
 import com.qmms.entity.SerLoanType;
 import org.springframework.data.domain.Page;
 
@@ -43,6 +44,42 @@ public interface SerLoanService {
     public SerLoanType editLoanType(SerLoanType loanType);
 
     //贷款产品
+
+    /**
+     * 分页
+     * @param page
+     * @param pageSize
+     * @param name
+     * @return
+     */
+    public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, String name);
+
+    /**
+     * 获取
+     * @param productId
+     * @return
+     */
+    public SerLoanProduct getLoanProduct(Long productId);
+
+    /**
+     * 添加
+     * @param product
+     * @return
+     */
+    public SerLoanProduct addLoanProduct(SerLoanProduct product);
+
+    /**
+     * 编辑
+     * @param product
+     * @return
+     */
+    public SerLoanProduct editLoanProduct(SerLoanProduct product);
+
+    /**
+     * 删除
+     * @param productId
+     */
+    public void delLoanProduct(Long productId);
 
     //贷款广告
 

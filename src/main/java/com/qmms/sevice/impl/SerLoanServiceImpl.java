@@ -1,6 +1,8 @@
 package com.qmms.sevice.impl;
 
+import com.qmms.dao.SerLoanProductDao;
 import com.qmms.dao.SerLoanTypeDao;
+import com.qmms.entity.SerLoanProduct;
 import com.qmms.entity.SerLoanType;
 import com.qmms.entity.SysUserInfo;
 import com.qmms.sevice.SerLoanService;
@@ -9,6 +11,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,8 @@ import java.util.List;
 public class SerLoanServiceImpl implements SerLoanService {
     @Resource
     private SerLoanTypeDao serLoanTypeDao;
+    @Resource
+    private SerLoanProductDao serLoanProductDao;
    
     /**
      * 分页查找
@@ -112,5 +117,46 @@ public class SerLoanServiceImpl implements SerLoanService {
         cu.setUpdateTime(currentTime);
         cu.setUpdateUserId(currentUser.getUserId());
         return serLoanTypeDao.save(cu);
+    }
+
+    //贷款产品
+
+    @Override
+    public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, final String name) {
+        Pageable pageable = new PageRequest(page,pageSize,new Sort(Sort.Direction.DESC,"orderedBy"));
+        Page<SerLoanProduct> pageList = serLoanProductDao.findAll(new Specification<SerLoanProduct>(){
+            @Override
+            public Predicate toPredicate(Root<SerLoanProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+                if(StringUtils.isNotBlank(name)){
+                    list.add(criteriaBuilder.like(root.get("name").as(String.class),"%"+name+"%"));
+                }
+                Predicate[] predicates = new Predicate[list.size()];
+                predicates = list.toArray(predicates);
+                return criteriaBuilder.and(predicates);
+
+            }
+        },pageable);
+        return pageList;
+    }
+
+    @Override
+    public SerLoanProduct getLoanProduct(Long productId) {
+        return serLoanProductDao.findOne(productId);
+    }
+
+    @Override
+    public SerLoanProduct addLoanProduct(SerLoanProduct product) {
+        return serLoanProductDao.save(product);
+    }
+
+    @Override
+    public SerLoanProduct editLoanProduct(SerLoanProduct product) {
+        return null;
+    }
+
+    @Override
+    public void delLoanProduct(Long productId) {
+        serLoanProductDao.delete(productId);
     }
 }

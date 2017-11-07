@@ -1,5 +1,6 @@
 package com.qmms.web;
 
+import com.qmms.entity.SerLoanProduct;
 import com.qmms.entity.SerLoanType;
 import com.qmms.sevice.SerLoanService;
 import org.apache.commons.lang3.StringUtils;
@@ -157,7 +158,42 @@ public class LoanController {
         return data;
     }
 
+    //贷款产品
 
+    /**
+     * 贷款产品列表
+     * @return
+     */
+    @RequestMapping("/loanProductList")
+    public String loanProductList(){
+        return "/loan/loanProductList";
+    }
+
+    @RequestMapping("/getLoanProductList")
+    @ResponseBody
+    public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, String name){
+        try{
+            Page p1 = serLoanService.getLoanProductList(page, pageSize, name);
+            return p1;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    @RequestMapping("/loanProductDel")
+    public Map<String,String> laonProductDel(Long id){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.delLoanProduct(id);
+            data.put("success","1");
+            data.put("msg","删除成功");
+        }catch (Exception e){
+            data.put("msg","删除失败："+e.getMessage());
+        }
+        return data;
+    }
 
 
 }
