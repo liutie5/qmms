@@ -5,17 +5,24 @@ import java.io.Serializable;
 
 @Entity
 @Table(name="ser_channel_umeng")
-@IdClass(ChannelUmengPk.class)
 public class SerChannelUmeng implements Serializable {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
     private String umengKey;
-    @Id
     private String marketId;
 
-    @ManyToOne(cascade= CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="channelId")
     private SerChannel serChannel;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUmengKey() {
         return umengKey;

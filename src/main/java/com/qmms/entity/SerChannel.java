@@ -15,7 +15,7 @@ public class SerChannel implements Serializable {
     @Column(name="`desc`")
     private String desc;
 
-    @OneToMany(cascade= {CascadeType.ALL},fetch=FetchType.LAZY,mappedBy = "serChannel")
+    @OneToMany(cascade= {CascadeType.ALL},fetch=FetchType.LAZY,mappedBy = "serChannel",orphanRemoval=true)
     private List<SerChannelUmeng> channelUmengList;
 
     public Long getId() {

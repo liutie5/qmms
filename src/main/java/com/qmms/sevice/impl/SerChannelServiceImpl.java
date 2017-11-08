@@ -62,9 +62,6 @@ public class SerChannelServiceImpl implements SerChannelService {
     @Transactional
     @Override
     public SerChannel addChannel(SerChannel channel, String[] umengmarkets) {
-
-
-        Long channelId = channel.getId();
         if(umengmarkets != null){
             List<SerChannelUmeng> dataList = new ArrayList<>();
             for(String umengmarket:umengmarkets) {
@@ -122,9 +119,7 @@ public class SerChannelServiceImpl implements SerChannelService {
             sc.setDesc(channel.getDesc());
         }
         sc.getChannelUmengList().clear();
-        serChannelUmengDao.deleteByChannelId(channel.getId());
         if(umengmarkets != null){
-            List<SerChannelUmeng> dataList = new ArrayList<>();
             for(String umengmarket:umengmarkets) {
                 SerChannelUmeng umeng = new SerChannelUmeng();
                 String[] arr = umengmarket.split("_");
@@ -138,7 +133,6 @@ public class SerChannelServiceImpl implements SerChannelService {
                 umeng.setSerChannel(sc);
                 sc.getChannelUmengList().add(umeng);
             }
-
         }
         serChannelDao.save(sc);
         return sc;

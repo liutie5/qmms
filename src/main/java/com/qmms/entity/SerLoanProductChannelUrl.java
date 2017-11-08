@@ -8,17 +8,20 @@ import java.util.List;
 @Table(name="ser_loan_product_channel_url")
 public class SerLoanProductChannelUrl implements Serializable {
     @Id
-    private Long productId;
-    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
     private Long channelId;
-    private Integer channelUrl;
+    private String channelUrl;
+    @ManyToOne
+    @JoinColumn(name = "productId")
+    public SerLoanProduct loanProduct;
 
-    public Long getProductId() {
-        return productId;
+    public Long getId() {
+        return id;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getChannelId() {
@@ -29,15 +32,22 @@ public class SerLoanProductChannelUrl implements Serializable {
         this.channelId = channelId;
     }
 
-    public Integer getChannelUrl() {
+    public String getChannelUrl() {
         return channelUrl;
     }
 
-    public void setChannelUrl(Integer channelUrl) {
+    public void setChannelUrl(String channelUrl) {
         this.channelUrl = channelUrl;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "productId")
-    public SerLoanProduct loanProduct;
+    public SerLoanProduct getLoanProduct() {
+        return loanProduct;
+    }
+
+    public void setLoanProduct(SerLoanProduct loanProduct) {
+        this.loanProduct = loanProduct;
+    }
+
+
+
 }

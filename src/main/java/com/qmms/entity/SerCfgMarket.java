@@ -8,7 +8,9 @@ import java.util.List;
 @Table(name="ser_cfg_market")
 public class SerCfgMarket implements Serializable {
     @Id
+    @Column(name = "`key`")
     private String key;
+    @Column(name="`value`")
     private String value;
     private Integer orderKey;
 

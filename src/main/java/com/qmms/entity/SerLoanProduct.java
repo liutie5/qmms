@@ -42,7 +42,7 @@ public class SerLoanProduct implements Serializable {
     @JoinTable(name = "SerLoanProductType", joinColumns = { @JoinColumn(name = "productId") }, inverseJoinColumns ={@JoinColumn(name = "typeKey") })
     private List<SerLoanType> loanTypeList;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "loanProduct")
+    @OneToMany(cascade = CascadeType.PERSIST,fetch = FetchType.LAZY,mappedBy = "loanProduct")
     private List<SerLoanProductChannelUrl> channelUrls;
 
 
