@@ -1,0 +1,353 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<form id="addForm" name="addForm" method="post"  class="form-horizontal">
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>添加贷款产品</span>
+                </div>
+                <div class="box-icons">
+                    <a class="close-link" data-dismiss="modal" aria-hidden="true">
+                        x
+                    </a>
+                </div>
+                <div class="no-move"></div>
+            </div>
+
+            <div class="box-content">
+                    <fieldset>
+                        <legend>添加贷款产品</legend>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">贷款名称:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="贷款名称"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">所属机构:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="company" name="company" placeholder="如 51服务金融有限公司" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">额度描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="balanceDesc" placeholder="如 1千到5万"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">最小额度:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="minBalance" placeholder="如 1000（必须数字）"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">最大额度:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="maxBalance" placeholder="如 50000（必须数字）" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">利率描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="rateDesc" placeholder="如 日利率"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">利率信息:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="rate" placeholder="如 0.002%"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">期限描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="termDesc" placeholder="如 贷款期限（天）"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">期限信息:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="term" placeholder="如 7-14"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">速度描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="speedDesc" placeholder="如 放款速度（分钟）"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">速度信息:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="speed" placeholder="如 30"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">特色标签:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="tags" placeholder="如 速度快|审核快|额度高" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">产品宣传:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="slogan" placeholder="如 凭借芝麻信用分可带10万" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">产品描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="productDesc" placeholder="如 描述1_描述2（_符号会进行换行条目处理）" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">申请条件:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="productCondition" placeholder="如 条件1_条件2（_符号会进行换行条目处理）" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">流程介绍:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="productProcess" placeholder="如 流程1_流程2（_符号会进行换行条目处理）" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">基础人数:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="applyNum" placeholder="如 253625（必须数字）" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">产品LOGO:</label>
+                            <div class="col-sm-6">
+                                <input type="hidden" class="form-control" id="img" name="img" />
+                                <p><input type="file" class="form-control" id="file" name="file" /></p>
+                                <input type="button" id="upload" value="上传" onclick="ajaxFileUpload()" />
+                                <p><img id="imgshow" alt="" src="" width="100px" height="100px"/></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">默认链接:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="url" placeholder="如 https://www.baidu.com" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">渠道链接:</label>
+                            <div class="col-sm-6">
+                                <input type="hidden" id="umengmarket" name="umengmarket" value="">
+                                <div id="mapping" style="min-height:50px; height:auto!important; height:50px;overflow:auto;background-color: white">
+
+                                </div>
+                                <div style="clear:both"></div>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="form-inline">
+                                <select class="populate placeholder" id="channelSelect">
+                                    <option value="">渠道</option>
+                                </select>
+                                <input type="text" id="urlin" style="width: 43%"/>
+                                <div class="form-inline" style="float:right;margin-right: 200px;">
+                                    <button id="mappingBtn" type="button" class="btn-primary btn-sm" onclick="mappAdd()">生成</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">贷款类型:</label>
+                            <div class="col-sm-6">
+                                <div class="checkbox-inline">
+                                    <label>
+                                        <input type="checkbox" name="loanType" value="loanType"> 大额
+                                        <i class="fa fa-square-o small"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox-inline">
+                                    <label>
+                                        <input type="checkbox" name="loanType" value=""> 管理
+                                        <i class="fa fa-square-o small"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否上架:</label>
+                            <div class="col-sm-6 form-inline" >
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="status" value="1" checked> 是
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="status" value="0"> 否
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">排序设置:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="orderedBy" placeholder="排序 数字值越大越靠前" />
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <div class="form-group pull-right form-inline">
+                            <div class="col-sm-12">
+                                <button type="cancel" class="btn btn-default" data-dismiss="modal">
+                                    关闭
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button id="formSubmit" type="button" class="btn btn-primary">保存</button>
+
+                            </div>
+
+                        </div>
+                    </fieldset>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+<script src="plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<script src="js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var addVlidator = $('#addForm').bootstrapValidator({
+            excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
+            message: '校验不合法',
+            fields: {
+                "key": {
+                    message: '类型ID不正确',
+                    validators: {
+                        notEmpty: {
+                            message: '类型ID不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '类型ID长度在1-255个字符'
+                        },
+                        remote: {
+                            url: 'loan/loanTypeIsExist',
+                            message: '类型ID已经存在',
+                            delay:1000
+                        }
+                    }
+                },
+                "title": {
+                    required: "请填写类型标题",
+                    validators:{
+                        notEmpty: {message: '类型标题不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '类型标题长度在1-255字符'
+                        }
+                    }
+                },
+                "desc": {
+                    required: "请填写类型描述",
+                    validators:{
+                        notEmpty: {message: '类型描述不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '类型描述长度在1-1024个字符'
+                        }
+                    }
+                },
+                "img": {
+                    required: "请上传类型图片",
+                    validators:{
+                        notEmpty: {message: '请上传类型图片'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '上传图片名称长度在1-1024个字符'
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#formSubmit").click(function(){
+            var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+            bootstrapValidator.enableFieldValidators("img",false);
+            bootstrapValidator.enableFieldValidators("img",true);
+            bootstrapValidator.validate();
+            if(bootstrapValidator.isValid()){
+                var param = $("#addForm").serialize();
+                $.post("loan/loanTypeAdd",param,function(data){
+                    if(data.success){
+                        successAlert("添加成功")
+                        $("#addModal").modal("hide");
+                        LoadAjaxContent("loan/loanTypeList");
+                    }else{
+                        errorAlert(data.msg);
+                        return false;
+                    }
+                },"json");
+
+
+            }else{
+                return false;
+            }
+        })
+    })
+
+    function ajaxFileUpload(){
+        var f = $("#file").val();
+        if(f==null||f==""){
+            warningAlert("请选择图片");
+            return false;
+        }else{
+            var extname = f.substring(f.lastIndexOf(".")+1,f.length);
+            extname = extname.toLowerCase();//处理了大小写
+            if(extname!= "jpeg"&&extname!= "jpg"&&extname!= "gif"&&extname!= "png"){
+                warningAlert("错误提示:格式不正确,支持的图片格式为：JPEG、GIF、PNG！");
+                return false;
+            }
+        }
+        var file = document.getElementById("file").files;
+        var size = file[0].size;
+        if(size>2097152){
+            warningAlert("错误提示:所选择的图片太大，图片大小最多支持2M!");
+            return false;
+        }
+        $.ajaxFileUpload
+        (
+            {
+                url: 'loan/uploadLoanTypeImg', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'file', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status){     //服务器成功响应处理函数
+                    if(data.success){
+                        $("#img").val(data.imgPath);
+                        $("#imgshow").attr("src", data.imgPath);
+                    }else {
+                        warningAlert(data.msg);
+                    }
+
+                },
+                error: function (data, status, e){//服务器响应失败处理函数
+                    warningAlert(e);
+                }
+            }
+        )
+        return false;
+    }
+
+</script>

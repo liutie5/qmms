@@ -42,7 +42,7 @@
 </div>
 
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width: 80%;">
         <div class="modal-content">
         </div>
     </div>
@@ -194,6 +194,25 @@
             var param={}
             param.id = id;
             $.post("loan/loanProductDel",param,function(data){
+                if(data.success){
+                    successAlert("删除成功")
+                }else{
+                    errorAlert(data.msg);
+                }
+                LoadAjaxContent("loan/loanProductList");
+
+            },"json");
+        }, function(e,btn){
+
+        });
+
+    }
+
+    function toDel(id,name) {
+        confirm("确定删除贷款产品："+name,function(e,btn){ //event + button clicked
+            var param={}
+            param.id = id;
+            $.post("loan/loanProducteDel",param,function(data){
                 if(data.success){
                     successAlert("删除成功")
                 }else{

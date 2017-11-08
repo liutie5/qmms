@@ -19,7 +19,7 @@ public class SerLoanProduct implements Serializable {
     private Long maxBalance;
     private String rate;
     private String rateDesc;
-    private Integer term;
+    private String term;
     private String termDesc;
     private Integer speed;
     private String speedDesc;
@@ -110,11 +110,11 @@ public class SerLoanProduct implements Serializable {
         this.rateDesc = rateDesc;
     }
 
-    public Integer getTerm() {
+    public String getTerm() {
         return term;
     }
 
-    public void setTerm(Integer term) {
+    public void setTerm(String term) {
         this.term = term;
     }
 
