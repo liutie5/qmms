@@ -1,11 +1,9 @@
 package com.qmms.sevice.impl;
 
+import com.qmms.dao.SerLoanBannerDao;
 import com.qmms.dao.SerLoanProductDao;
 import com.qmms.dao.SerLoanTypeDao;
-import com.qmms.entity.SerLoanProduct;
-import com.qmms.entity.SerLoanProductChannelUrl;
-import com.qmms.entity.SerLoanType;
-import com.qmms.entity.SysUserInfo;
+import com.qmms.entity.*;
 import com.qmms.sevice.SerLoanService;
 import com.qmms.utils.UpdateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +31,8 @@ public class SerLoanServiceImpl implements SerLoanService {
     private SerLoanTypeDao serLoanTypeDao;
     @Resource
     private SerLoanProductDao serLoanProductDao;
-   
+    @Resource
+    private SerLoanBannerDao serLoanBannerDao;
     /**
      * 分页查找
      * @param page
@@ -206,5 +205,58 @@ public class SerLoanServiceImpl implements SerLoanService {
     @Override
     public void delLoanProduct(Long productId) {
         serLoanProductDao.delete(productId);
+    }
+
+
+    //贷款banner
+    @Override
+    public Page<SerLoanBanner> getLoanBannerList(int page, int pageSize, final String title) {
+        Pageable pageable = new PageRequest(page,pageSize);
+        Page<SerLoanBanner> pageList = serLoanBannerDao.findAll(new Specification<SerLoanBanner>(){
+            @Override
+            public Predicate toPredicate(Root<SerLoanBanner> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+                if(StringUtils.isNotBlank(title)){
+                    list.add(criteriaBuilder.like(root.get("title").as(String.class),"%"+title+"%"));
+                }
+                Predicate[] predicates = new Predicate[list.size()];
+                predicates = list.toArray(predicates);
+                return criteriaBuilder.and(predicates);
+
+            }
+        },pageable);
+        return pageList;
+    }
+
+    @Override
+    public SerLoanBanner getLoanBanner(Long id) {
+        return serLoanBannerDao.getOne(id);
+    }
+
+    @Override
+    public SerLoanBanner addLoanBanner(SerLoanBanner banner) {
+//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+//        int currentTime = (int)(new Date().getTime()/1000);
+//        banner.setAddTime(currentTime);
+//        banner.setAddUserId(currentUser.getUserId());
+//        banner.setUpdateUserId(currentUser.getUserId());
+//        banner.setUpdateTime(currentTime);
+        return serLoanBannerDao.save(banner);
+    }
+
+    @Override
+    public SerLoanBanner editLoanBanner(SerLoanBanner banner) throws Exception {
+        SerLoanBanner rawBanner = serLoanBannerDao.findOne(banner.getId());
+        UpdateUtils.updateNotNullField(rawBanner,banner);
+//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+//        int currentTime = (int)(new Date().getTime()/1000);
+//        rawBanner.setUpdateUserId(currentUser.getUserId());
+//        rawBanner.setUpdateTime(currentTime);
+        return serLoanBannerDao.save(rawBanner);
+    }
+
+    @Override
+    public void delLoanBanner(Long id) {
+        serLoanBannerDao.delete(id);
     }
 }

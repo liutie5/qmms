@@ -1,5 +1,6 @@
 package com.qmms.web;
 
+import com.qmms.entity.SerLoanBanner;
 import com.qmms.entity.SerLoanProduct;
 import com.qmms.entity.SerLoanType;
 import com.qmms.sevice.SerLoanService;
@@ -28,6 +29,8 @@ public class LoanController {
     private String loanTypeImgPath;
     @Value("${loanProduct.img.path}")
     private String loanProdutImgPath;
+    @Value("${loanBanner.img.path}")
+    private String loanBannerImgPath;
 
     @Resource
     private SerLoanService serLoanService;
@@ -147,16 +150,16 @@ public class LoanController {
      * 贷款产品新增页面
      * @return
      */
-    @RequestMapping("/loanProductAdd")
-    public String loanProductAdd(){
+    @RequestMapping("/toLoanProductAdd")
+    public String toLoanProductAdd(){
         return "/loan/loanProductAdd";
     }
     /**
      * 贷款产品编辑页面
      * @return
      */
-    @RequestMapping("/loanProductEdit")
-    public String loanProductEdit(){
+    @RequestMapping("/toLoanProductEdit")
+    public String toLoanProductEdit(){
         return "/loan/loanProductEdit";
     }
 
@@ -212,5 +215,83 @@ public class LoanController {
         return UploadUtil.uploadImg(file,webUploadPath,loanProdutImgPath);
     }
 
+    //贷款广告
+    /**
+     * 列表
+     * @return
+     */
+    @RequestMapping("/loanBannerList")
+    public String loanBannerList(){
+        return "/loan/loanBannerList";
+    }
+
+    /**
+     * 新增页面
+     * @return
+     */
+    @RequestMapping("/toLoanBannerAdd")
+    public String toLoanBannerAdd(){
+        return "/loan/loanBannerAdd";
+    }
+    /**
+     * 编辑页面
+     * @return
+     */
+    @RequestMapping("/toLoanBannerEdit")
+    public String toLoanBannerEdit(){
+        return "/loan/loanBannerEdit";
+    }
+
+    @RequestMapping("/getLoanBannerList")
+    @ResponseBody
+    public Page<SerLoanBanner> getLoanBannerList(int page, int pageSize, String title){
+        Page p1 = serLoanService.getLoanBannerList(page, pageSize, title);
+        return p1;
+    }
+
+    @RequestMapping("/loanBannerDel")
+    public Map<String,String> loanBannerDel(Long id){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.delLoanProduct(id);
+            data.put("success","1");
+            data.put("msg","删除成功");
+        }catch (Exception e){
+            data.put("msg","删除失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/loanBannerAdd")
+    public Map<String,String> laonBannerAdd(SerLoanBanner banner){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.addLoanBanner(banner);
+            data.put("success","1");
+            data.put("msg","添加成功");
+        }catch (Exception e){
+            data.put("msg","添加失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/loanBannerEdit")
+    public Map<String,String> loanBannerEdit(SerLoanBanner banner){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.editLoanBanner(banner);
+            data.put("success","1");
+            data.put("msg","编辑成功");
+        }catch (Exception e){
+            data.put("msg","编辑失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @PostMapping(value = "/uploadLoanBannerImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,String> uploadLoanBannerImg(@RequestParam("file") MultipartFile file){
+        return UploadUtil.uploadImg(file,webUploadPath,loanBannerImgPath);
+    }
 
 }
