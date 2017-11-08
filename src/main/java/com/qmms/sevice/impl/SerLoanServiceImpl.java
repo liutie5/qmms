@@ -3,9 +3,11 @@ package com.qmms.sevice.impl;
 import com.qmms.dao.SerLoanProductDao;
 import com.qmms.dao.SerLoanTypeDao;
 import com.qmms.entity.SerLoanProduct;
+import com.qmms.entity.SerLoanProductChannelUrl;
 import com.qmms.entity.SerLoanType;
 import com.qmms.entity.SysUserInfo;
 import com.qmms.sevice.SerLoanService;
+import com.qmms.utils.UpdateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.data.domain.Page;
@@ -146,13 +148,59 @@ public class SerLoanServiceImpl implements SerLoanService {
     }
 
     @Override
-    public SerLoanProduct addLoanProduct(SerLoanProduct product) {
+    public SerLoanProduct addLoanProduct(SerLoanProduct product,String[] loanTypes,String[] channelUrls) {
+        List<SerLoanType> loanTypeList = new ArrayList<>();
+        for(String loanType:loanTypes){
+            SerLoanType serLoanType = new SerLoanType();
+            serLoanType.setKey(loanType);
+            loanTypeList.add(serLoanType);
+        }
+        product.setLoanTypeList(loanTypeList);
+        List<SerLoanProductChannelUrl> channelUrlList = new ArrayList<>();
+        for(String data:channelUrls){
+            String[] arr = data.split("\\$\\$");
+            SerLoanProductChannelUrl url = new SerLoanProductChannelUrl();
+            url.setChannelId(Long.parseLong(arr[0]));
+            url.setChannelUrl(arr[1]);
+            url.setLoanProduct(product);
+            channelUrlList.add(url);
+        }
+        product.setChannelUrls(channelUrlList);
+//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+//        int currentTime = (int)(new Date().getTime()/1000);
+//        product.setAddTime(currentTime);
+//        product.setAddUserId(currentUser.getUserId());
+//        product.setUpdateUserId(currentUser.getUserId());
+//        product.setUpdateTime(currentTime);
         return serLoanProductDao.save(product);
     }
 
     @Override
-    public SerLoanProduct editLoanProduct(SerLoanProduct product) {
-        return null;
+    @Transactional
+    public SerLoanProduct editLoanProduct(SerLoanProduct product,String[] loanTypes,String[] channelUrls) throws Exception{
+        SerLoanProduct rawObject = serLoanProductDao.findOne(product.getId());
+        UpdateUtils.updateNotNullField(rawObject,product);
+        List<SerLoanType> loanTypeList = rawObject.getLoanTypeList();
+        loanTypeList.clear();
+        for(String loanType:loanTypes){
+            SerLoanType serLoanType = new SerLoanType();
+            serLoanType.setKey(loanType);
+            loanTypeList.add(serLoanType);
+        }
+        List<SerLoanProductChannelUrl> channelUrlList = rawObject.getChannelUrls();
+        channelUrlList.clear();
+        for(String data:channelUrls){
+            String[] arr = data.split("\\$\\$");
+            SerLoanProductChannelUrl url = new SerLoanProductChannelUrl();
+            url.setChannelId(Long.parseLong(arr[0]));
+            url.setChannelUrl(arr[1]);
+            url.setLoanProduct(rawObject);
+            channelUrlList.add(url);
+        }
+//        int currentTime = (int)(new Date().getTime()/1000);
+//        rawObject.setUpdateUserId(currentUser.getUserId());
+//        rawObject.setUpdateTime(currentTime);
+        return serLoanProductDao.save(rawObject);
     }
 
     @Override

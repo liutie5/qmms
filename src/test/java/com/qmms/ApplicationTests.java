@@ -28,31 +28,6 @@ public class ApplicationTests {
 	}
 
     @Test
-    public void testFind(){
-        SerLoanProduct product = new SerLoanProduct();
-        product.setName("test");
-        SerLoanType loanType = new SerLoanType();
-        loanType.setKey("dd");
-        loanType.setTitle("test");
-        List<SerLoanType> loanTypes = new ArrayList<>();
-        loanTypes.add(loanType);
-        product.setLoanTypeList(loanTypes);
-
-        SerLoanProductChannelUrl serLoanProductChannelUrl = new SerLoanProductChannelUrl();
-        serLoanProductChannelUrl.setChannelId(1L);
-        serLoanProductChannelUrl.setChannelUrl("baidu.com");
-        serLoanProductChannelUrl.setLoanProduct(product);
-
-        List<SerLoanProductChannelUrl> channelUrls = new ArrayList<>();
-        channelUrls.add(serLoanProductChannelUrl);
-
-
-        product.setChannelUrls(channelUrls);
-
-        serLoanService.addLoanProduct(product);
-    }
-
-    @Test
     public void testAddChannel(){
         SerChannel channel = new SerChannel();
         channel.setName("test");

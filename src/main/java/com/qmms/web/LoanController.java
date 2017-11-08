@@ -3,7 +3,7 @@ package com.qmms.web;
 import com.qmms.entity.SerLoanProduct;
 import com.qmms.entity.SerLoanType;
 import com.qmms.sevice.SerLoanService;
-import org.apache.commons.lang3.StringUtils;
+import com.qmms.utils.UploadUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +26,8 @@ public class LoanController {
     private String webUploadPath;
     @Value("${loanType.img.path}")
     private String loanTypeImgPath;
+    @Value("${loanProduct.img.path}")
+    private String loanProdutImgPath;
 
     @Resource
     private SerLoanService serLoanService;
@@ -128,34 +129,7 @@ public class LoanController {
     @PostMapping(value = "/uploadLoanTypeImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String,String> uploadImg(@RequestParam("file") MultipartFile file){
-        Map<String,String> data = new HashMap<>();
-        if (!file.isEmpty()) {
-            if (file.getContentType().contains("image")) {
-                try {
-                    // 获取图片的文件名
-                    String fileName = file.getOriginalFilename();
-                    // 获取图片的扩展名
-                    String extensionName = StringUtils.substringAfter(fileName, ".");
-                    // 新的图片文件名 = 获取时间戳+"."图片扩展名
-                    String newFileName = String.valueOf(System.currentTimeMillis()) + "." + extensionName;
-                    // 数据库保存的目录
-                    String dataPath = loanTypeImgPath.concat(newFileName);
-                    // 文件路径
-                    String filePath = webUploadPath.concat(loanTypeImgPath);
-                    File dest = new File(filePath, newFileName);
-                    if (!dest.getParentFile().exists()) {
-                        dest.getParentFile().mkdirs();
-                    }
-                    // 上传到指定目录
-                    file.transferTo(dest);
-                    data.put("success","1");
-                    data.put("imgPath",dataPath);
-                }catch (Exception e){
-                    data.put("msg","上传失败:"+e.getMessage());
-                }
-            }
-        }
-        return data;
+        return UploadUtil.uploadImg(file,webUploadPath,loanTypeImgPath);
     }
 
     //贷款产品
@@ -169,12 +143,28 @@ public class LoanController {
         return "/loan/loanProductList";
     }
 
+    /**
+     * 贷款产品新增页面
+     * @return
+     */
+    @RequestMapping("/loanProductAdd")
+    public String loanProductAdd(){
+        return "/loan/loanProductAdd";
+    }
+    /**
+     * 贷款产品编辑页面
+     * @return
+     */
+    @RequestMapping("/loanProductEdit")
+    public String loanProductEdit(){
+        return "/loan/loanProductEdit";
+    }
+
     @RequestMapping("/getLoanProductList")
     @ResponseBody
     public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, String name){
         Page p1 = serLoanService.getLoanProductList(page, pageSize, name);
         return p1;
-
     }
 
     @RequestMapping("/loanProductDel")
@@ -188,6 +178,38 @@ public class LoanController {
             data.put("msg","删除失败："+e.getMessage());
         }
         return data;
+    }
+
+    @RequestMapping("/loanProductAdd")
+    public Map<String,String> laonProductAdd(SerLoanProduct product,String[] loanType,String[] channelUrl){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.addLoanProduct(product,loanType,channelUrl);
+            data.put("success","1");
+            data.put("msg","添加成功");
+        }catch (Exception e){
+            data.put("msg","添加失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/loanProductEdit")
+    public Map<String,String> loanProductEdit(SerLoanProduct product,String[] loanType,String[] channelUrl){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.editLoanProduct(product, loanType, channelUrl);
+            data.put("success","1");
+            data.put("msg","编辑成功");
+        }catch (Exception e){
+            data.put("msg","编辑失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @PostMapping(value = "/uploadLoanProductImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,String> uploadLoanProductImg(@RequestParam("file") MultipartFile file){
+        return UploadUtil.uploadImg(file,webUploadPath,loanProdutImgPath);
     }
 
 

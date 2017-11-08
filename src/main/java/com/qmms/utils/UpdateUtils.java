@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class UpdateUtils {
 
     public static boolean updateNotNullField(Object rawObject, Object newObject) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        //如果连个对象不一致。不进行更新字段值的操作
+        //如果两个对象不一致。不进行更新字段值的操作
         if (rawObject.getClass().getName() != newObject.getClass().getName()) {
             return false;
         }
@@ -20,7 +20,7 @@ public class UpdateUtils {
         Matcher m;
         for (Method method : methods) {
             m = pattern.matcher(method.getName());
-            //正则匹配以get开头，后面不能匹配Id、CreateTime这两个单词的方法
+            //正则匹配以get开头，后面不能匹配Id、AddTime这两个单词的方法
             if (m.find()) {
                 Object o = method.invoke(newObject, null);
                 //忽略值为空的字段

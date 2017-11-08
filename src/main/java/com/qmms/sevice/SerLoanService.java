@@ -66,14 +66,14 @@ public interface SerLoanService {
      * @param product
      * @return
      */
-    public SerLoanProduct addLoanProduct(SerLoanProduct product);
+    public SerLoanProduct addLoanProduct(SerLoanProduct product,String[] loanTypes,String[] channelUrls);
 
     /**
      * 编辑
      * @param product
      * @return
      */
-    public SerLoanProduct editLoanProduct(SerLoanProduct product);
+    public SerLoanProduct editLoanProduct(SerLoanProduct product,String[] loanTypes,String[] channelUrls) throws Exception;
 
     /**
      * 删除
