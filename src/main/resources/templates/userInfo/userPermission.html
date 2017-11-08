@@ -199,23 +199,22 @@
     $(document).ready(function(){
         $('#userSelect').change(function(){
             var param = $("#userPermissionForm").serialize();
-            console.log(param);
             LoadAjaxContent("/userInfo/userPermission",param);
         });
         $('#userSubmit').click(function () {
             var userId = $('#userSelect').children('option:selected').val();
             if(userId == ''){
-                alert('请选择用户');
+                warningAlert('请选择用户');
                 return;
             }
 
             var param = $("#userPermissionForm").serialize();
             $.post("userInfo/addPermission",param,function(data){
                 if(data.success){
-                    alert("保存成功");
+                    successAlert("保存成功");
                     LoadAjaxContent("userInfo/userPermission",param);
                 }else{
-                    alert(data.msg);
+                    errorAlert(data.msg);
                 }
             },"json");
 

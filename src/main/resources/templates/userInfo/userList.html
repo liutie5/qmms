@@ -167,7 +167,6 @@
                     render:function(data,type,row,meta){
 
                         return '<a href="#" onclick=toEdit("'+data+'")><span class="glyphicon glyphicon-edit">编辑</span></a> &nbsp;&nbsp;<a href="#" onclick=toDel("'+data+'","'+row.userName+'")><span class="glyphicon glyphicon-remove-sign">删除</span></a>'
-//                        return '<button class="btn btn-primary btn-sm" type="button" onclick="alert('+data+')">编&nbsp;&nbsp;辑</button> &nbsp;&nbsp;<button class="btn btn-primary" type="button">删  除</button>'
                     }
                 },
 
@@ -210,19 +209,21 @@
 //    });
 
     function toDel(id,name) {
-        if(confirm("确定删除用户："+name)){
+        confirm("确定删除用户："+name,function(e,btn){
             var param={}
             param.userId = id;
             $.post("userInfo/userDel",param,function(data){
                 if(data.success){
-                    alert("删除成功")
+                    successAlert("删除成功")
                 }else{
-                    alert("删除失败")
+                    errorAlert("删除失败")
                 }
                 LoadAjaxContent("userInfo/userList");
 
             },"json");
-        }
+        });
+
+
     }
 
 

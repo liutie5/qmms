@@ -177,12 +177,14 @@
                 var param = $.param(paramArr);
                 $.post("userInfo/userAdd",param,function(data){
                     if(data.success){
-                        alert("添加成功")
+                        successAlert("添加成功")
                         $("#addModal").modal("hide");
                         LoadAjaxContent("userInfo/userList");
                     }else if(data.errorCode == 1){
-                        alert("用户名已经存在")
+                        errorAlert("用户名已经存在")
                         return false;
+                    }else{
+                        errorAlert(data.msg);
                     }
                 },"json");
 

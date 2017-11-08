@@ -171,19 +171,20 @@
 
 
     function toDel(id,name) {
-        if(confirm("确定删除渠道："+name)){
+        confirm("确定删除渠道："+name,function (e,btn) {
             var param={}
             param.id = id;
             $.post("channel/channelDel",param,function(data){
                 if(data.success){
-                    alert("删除成功")
+                    successAlert("删除成功")
                 }else{
-                    alert("删除失败")
+                    errorAlert("删除失败")
                 }
                 LoadAjaxContent("channel/channelList");
 
             },"json");
-        }
+
+        })
     }
 
 

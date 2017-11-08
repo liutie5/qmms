@@ -191,11 +191,14 @@
                 console.log(param)
                 $.post("userInfo/userEdit",param,function(data){
                     if(data.success){
-                        alert("修改成功")
+                        successAlert("修改成功")
                         $("#addModal").modal("hide");
                         LoadAjaxContent("userInfo/userList");
                     }else if(data.errorCode == 1){
-                        alert("用户名已经存在")
+                        errorAlert("用户名已经存在")
+                        return false;
+                    }else {
+                        errorAlert(data.msg);
                         return false;
                     }
                 },"json");

@@ -149,17 +149,16 @@
                 console.log(param)
                 $.post("channel/channelEdit",param,function(data){
                     if(data.success){
-                        alert("编辑成功")
+                        successAlert("编辑成功")
                         $("#addModal").modal("hide");
                         LoadAjaxContent("channel/channelList");
                     }else{
-                        alert("编辑失败,"+data.msg);
+                        errorAlert("编辑失败,"+data.msg);
                         return false;
                     }
                 },"json");
 
             }else{
-                console.log("not valid")
                 return false;
             }
         })
@@ -168,6 +167,10 @@
     function mappAdd() {
         var umengKey = $('#umengkey').val();
         if(umengKey != ''){
+            if(umengKey.indexOf('_') !=-1){
+                warningAlert("umengKey不能包含_字符")
+                return;
+            }
             var market = $('#marketSelect').val();
             var haveSame = false;
             $("input[name='addumm']").each(function(i){
@@ -179,7 +182,7 @@
 
             });
             if(haveSame){
-                alert("此映射已经生成")
+                warningAlert("此映射已经生成")
                 return;
             }
             var va = umengKey+"_"+market;
@@ -201,7 +204,7 @@
             bootstrapValidator.enableFieldValidators("umengmarket",true);
             bootstrapValidator.validate();
         }else{
-            alert("请填写umengkey");
+            warningAlert("请填写umengkey");
         }
     }
 
