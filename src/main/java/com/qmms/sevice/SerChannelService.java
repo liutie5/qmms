@@ -5,6 +5,8 @@ import com.qmms.entity.SerChannel;
 import com.qmms.entity.SysUserInfo;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface SerChannelService {
     /**
      * 分页查询
@@ -43,4 +45,11 @@ public interface SerChannelService {
      * @return
      */
     public SerChannel editChannel(SerChannel channel,String[] umengmarkets);
+
+    /**
+     * 获取所有渠道
+     * @return
+     */
+    public List<SerChannel> getAllChannel();
+
 }

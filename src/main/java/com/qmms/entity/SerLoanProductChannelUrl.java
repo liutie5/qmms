@@ -1,5 +1,7 @@
 package com.qmms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -14,6 +16,7 @@ public class SerLoanProductChannelUrl implements Serializable {
     private String channelUrl;
     @ManyToOne
     @JoinColumn(name = "productId")
+    @JsonIgnore
     public SerLoanProduct loanProduct;
 
     public Long getId() {

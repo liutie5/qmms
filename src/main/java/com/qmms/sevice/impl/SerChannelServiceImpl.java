@@ -148,4 +148,9 @@ public class SerChannelServiceImpl implements SerChannelService {
         }
         return false;
     }
+
+    @Override
+    public List<SerChannel> getAllChannel() {
+        return serChannelDao.findAll();
+    }
 }

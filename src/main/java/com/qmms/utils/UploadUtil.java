@@ -20,8 +20,8 @@ public class UploadUtil {
                     String fileName = file.getOriginalFilename();
                     // 获取图片的扩展名
                     String extensionName = StringUtils.substringAfter(fileName, ".");
-                    if(!extensionName.equalsIgnoreCase("jpg") && !extensionName.equalsIgnoreCase("jepg") && !extensionName.equalsIgnoreCase("gif") && !extensionName.equalsIgnoreCase("png")){
-                        data.put("msg","图片扩展名称为jpg，jepg,gif,png");
+                    if(!extensionName.equalsIgnoreCase("jpg") && !extensionName.equalsIgnoreCase("jpeg") && !extensionName.equalsIgnoreCase("gif") && !extensionName.equalsIgnoreCase("png")){
+                        data.put("msg","格式不正确,支持的图片格式为：JPEG、GIF、PNG！");
                         return data;
                     }
                     // 新的图片文件名 = 获取时间戳+"."图片扩展名

@@ -139,7 +139,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">渠道链接:</label>
                             <div class="col-sm-6">
-                                <input type="hidden" id="umengmarket" name="umengmarket" value="">
+                                <input type="hidden" id="channelUrl" name="channelUrl" value="">
                                 <div id="mapping" style="min-height:50px; height:auto!important; height:50px;overflow:auto;background-color: white">
 
                                 </div>
@@ -152,29 +152,25 @@
                             <label class="col-sm-3 control-label"></label>
                             <div class="form-inline">
                                 <select class="populate placeholder" id="channelSelect">
-                                    <option value="">渠道</option>
+                                    <option value="">请选择渠道</option>
+                                    <option  th:each="channel:${channels}" th:value="${channel.id}" th:text="${channel.name}"></option>
                                 </select>
-                                <input type="text" id="urlin" style="width: 43%"/>
+                                <input type="text" id="urlin" style="width: 40%" placeholder="渠道链接 如：https://www.baidu.com"/>
                                 <div class="form-inline" style="float:right;margin-right: 200px;">
-                                    <button id="mappingBtn" type="button" class="btn-primary btn-sm" onclick="mappAdd()">生成</button>
+                                    <button id="mappingBtn" type="button" class="btn-primary btn-sm" onclick="urlAdd()">生成</button>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">贷款类型:</label>
                             <div class="col-sm-6">
-                                <div class="checkbox-inline">
+                                <div class="checkbox-inline" th:each="loanType:${loanTypes}">
                                     <label>
-                                        <input type="checkbox" name="loanType" value="loanType"> 大额
+                                        <input type="checkbox" name="loanType" th:value="${loanType.key}" th:text="${loanType.title}" >
                                         <i class="fa fa-square-o small"></i>
                                     </label>
                                 </div>
-                                <div class="checkbox-inline">
-                                    <label>
-                                        <input type="checkbox" name="loanType" value=""> 管理
-                                        <i class="fa fa-square-o small"></i>
-                                    </label>
-                                </div>
+
                             </div>
                         </div>
                         <div class="form-group">
@@ -228,43 +224,197 @@
             excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
             message: '校验不合法',
             fields: {
-                "key": {
-                    message: '类型ID不正确',
+                "name": {
+                    message: '贷款名称不正确',
                     validators: {
                         notEmpty: {
-                            message: '类型ID不能为空'
+                            message: '贷款名称不能为空'
                         },
                         stringLength: {
                             min: 1,
                             max: 255,
-                            message: '类型ID长度在1-255个字符'
-                        },
-                        remote: {
-                            url: 'loan/loanTypeIsExist',
-                            message: '类型ID已经存在',
-                            delay:1000
+                            message: '贷款名称长度在1-255个字符'
                         }
                     }
                 },
-                "title": {
-                    required: "请填写类型标题",
+                "company": {
                     validators:{
-                        notEmpty: {message: '类型标题不能为空'},
+                        notEmpty: {message: '所属机构不能为空'},
                         stringLength: {
                             min: 1,
                             max: 255,
-                            message: '类型标题长度在1-255字符'
+                            message: '所属机构长度在1-255字符'
                         }
                     }
                 },
-                "desc": {
-                    required: "请填写类型描述",
+                "balanceDesc": {
                     validators:{
-                        notEmpty: {message: '类型描述不能为空'},
+                        notEmpty: {message: '额度描述不能为空'},
                         stringLength: {
                             min: 1,
                             max: 1024,
-                            message: '类型描述长度在1-1024个字符'
+                            message: '额度描述长度在1-1024个字符'
+                        }
+                    }
+                },
+                "minBalance":{
+                    validators:{
+                        notEmpty:{message:"最小额度不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '最小额度必须为数字'
+                        },
+                        callback: {
+                            message: '最小额度在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
+                        }
+                    }
+                },
+                "maxBalance":{
+                    validators:{
+                        notEmpty:{message:"最大额度不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '最大额度必须为数字'
+                        },
+                        callback: {
+                            message: '最大额度在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
+                        }
+                    }
+                },
+                "rateDesc": {
+                    validators:{
+                        notEmpty: {message: '利率描述不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '利率描述长度在1-1024之间'
+                        }
+                    }
+                },
+                "rate": {
+                    validators:{
+                        notEmpty: {message: '利率信息不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '利率长度在1-255之间'
+                        }
+                    }
+                },
+                "termDesc": {
+                    validators:{
+                        notEmpty: {message: '期限描述不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '利率长度在1-1024之间'
+                        }
+                    }
+                },
+                "term": {
+                    validators:{
+                        notEmpty: {message: '期限信息不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '利率长度在1-255之间'
+                        }
+                    }
+                },
+                "speedDesc": {
+                    validators:{
+                        notEmpty: {message: '速度描述不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '速度描述长度在1-1024之间'
+                        }
+                    }
+                },
+                "speed":{
+                    validators:{
+                        notEmpty:{message:"速度信息不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '速度信息必须为数字'
+                        },
+                        callback: {
+                            message: '速度信息在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
+                        }
+                    }
+                },
+                "tags": {
+                    validators:{
+                        notEmpty: {message: '特色标签不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '速度描述长度在1-255之间'
+                        }
+                    }
+                },
+                "slogan": {
+                    validators:{
+                        notEmpty: {message: '产品宣传不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '产品宣传长度在1-1024之间'
+                        }
+                    }
+                },
+                "productDesc": {
+                    validators:{
+                        notEmpty: {message: '产品描述不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 4096,
+                            message: '产品描述长度在1-4096之间'
+                        }
+                    }
+                },
+                "productCondition": {
+                    validators:{
+                        notEmpty: {message: '申请条件不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 4096,
+                            message: '申请条件长度在1-4096之间'
+                        }
+                    }
+                },
+
+                "productProcess": {
+                    validators:{
+                        notEmpty: {message: '流程介绍不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 4096,
+                            message: '流程介绍长度在1-4096之间'
+                        }
+                    }
+                },
+                "applyNum":{
+                    validators:{
+                        notEmpty:{message:"基础人数不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '基础人数必须为数字'
+                        },
+                        callback: {
+                            message: '基础人数在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
                         }
                     }
                 },
@@ -278,7 +428,39 @@
                             message: '上传图片名称长度在1-1024个字符'
                         }
                     }
-                }
+                },
+                "url": {
+                    validators:{
+                        notEmpty: {message: '默认链接不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '默认链接长度在1-1024之间'
+                        }
+                    }
+                },
+                "loanType": {
+                    validators:{
+                        notEmpty: {message: '贷款类型不能为空'}
+                    }
+                },
+                "status": {
+                    validators:{
+                        notEmpty: {message: '请选择是否上架'}
+                    }
+                },
+                "orderedBy": {
+                    validators:{
+                        notEmpty: {message: '请填写排序设置'}
+                    },
+                    callback: {
+                        message: '排序设置在0到1000000000之间',
+                        callback:function(value, validator,$field){
+                            return value>=0&&value<=1000000000;
+                        }
+                    }
+                },
+
             }
         });
 
@@ -287,13 +469,25 @@
             bootstrapValidator.enableFieldValidators("img",false);
             bootstrapValidator.enableFieldValidators("img",true);
             bootstrapValidator.validate();
+            var us = $("input[name='addurls']");
+            var ums = "";
+            us.each(function(i){
+                var haveValue = $(this).val();
+                if(ums !=""){
+                    ums = ums +","+haveValue;
+                }else{
+                    ums = haveValue;
+                }
+
+            });
+            $('#channelUrl').val(ums);
             if(bootstrapValidator.isValid()){
                 var param = $("#addForm").serialize();
-                $.post("loan/loanTypeAdd",param,function(data){
+                $.post("loan/loanProductAdd",param,function(data){
                     if(data.success){
                         successAlert("添加成功")
                         $("#addModal").modal("hide");
-                        LoadAjaxContent("loan/loanTypeList");
+                        LoadAjaxContent("loan/loanProductList");
                     }else{
                         errorAlert(data.msg);
                         return false;
@@ -304,8 +498,11 @@
             }else{
                 return false;
             }
-        })
+        });
+
+
     })
+
 
     function ajaxFileUpload(){
         var f = $("#file").val();
@@ -314,22 +511,22 @@
             return false;
         }else{
             var extname = f.substring(f.lastIndexOf(".")+1,f.length);
-            extname = extname.toLowerCase();//处理了大小写
-            if(extname!= "jpeg"&&extname!= "jpg"&&extname!= "gif"&&extname!= "png"){
+            extname = extname.toLowerCase().trim();//处理了大小写
+            if(extname!= "jpeg" && extname!= "jpg" && extname!= "gif" && extname!= "png"){
                 warningAlert("错误提示:格式不正确,支持的图片格式为：JPEG、GIF、PNG！");
                 return false;
             }
         }
         var file = document.getElementById("file").files;
         var size = file[0].size;
-        if(size>2097152){
-            warningAlert("错误提示:所选择的图片太大，图片大小最多支持2M!");
+        if(size>2097152*2){
+            warningAlert("错误提示:所选择的图片太大，图片大小最多支持4M!");
             return false;
         }
         $.ajaxFileUpload
         (
             {
-                url: 'loan/uploadLoanTypeImg', //用于文件上传的服务器端请求地址
+                url: 'loan/uploadLoanProductImg', //用于文件上传的服务器端请求地址
                 secureuri: false, //是否需要安全协议，一般设置为false
                 fileElementId: 'file', //文件上传域的ID
                 dataType: 'json', //返回值类型 一般设置为json
@@ -349,5 +546,65 @@
         )
         return false;
     }
+
+    var addNum = 0;
+    function urlAdd() {
+        var channel = $('#channelSelect').val();
+        var channelName = $("#channelSelect").find("option:selected").text();
+        var url = $('#urlin').val();
+        if(channel == ''){
+            warningAlert("请选择渠道");
+            return;
+        }
+        if(url==''){
+            warningAlert("请填写url");
+            return;
+        }
+
+        if(url.indexOf('\$\$') !=-1){
+            warningAlert("url中不能包含$$字符")
+            return;
+        }
+        var haveSame = false;
+        $("input[name='addurls']").each(function(i){
+            var haveValue = $(this).val();
+            var arr = haveValue.split('\\$\\$');
+            if(arr[0]==channel && url==arr[1]){
+                haveSame = true;
+            }
+
+        });
+        if(haveSame){
+            warningAlert("此渠道链接已经添加")
+            return;
+        }
+        var va = channelName+"_"+url;
+        var vaHiddien = channel+"$$"+url;
+        addNum++;
+        var appendHtml = '<div id="u'+addNum+'" class="col-sm-16 form-inline" style="width:100%">' +
+            '<input type="text" class="form-control " value="'+va+'" style="width: 80%" disabled />' +
+            '<input type="hidden" name="addurls" value="'+vaHiddien+'" />'+
+            '&nbsp;&nbsp;<a href="#" onclick="rmUrl(\'u'+addNum+'\')">删除</a>' +
+            '</div>'
+        $('#mapping').append(appendHtml);
+        var hadValue = $('#channelUrl').val();
+
+        if(hadValue==''){
+            hadValue = vaHiddien;
+        }else{
+            hadValue = hadValue+","+vaHiddien;
+        }
+        $('#channelUrl').val(hadValue);
+        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+//        bootstrapValidator.enableFieldValidators("channelUrl",false);
+//        bootstrapValidator.enableFieldValidators("channelUrl",true);
+        bootstrapValidator.validate();
+
+    }
+
+    function rmUrl(id) {
+        $('#'+id).remove();
+    }
+
 
 </script>

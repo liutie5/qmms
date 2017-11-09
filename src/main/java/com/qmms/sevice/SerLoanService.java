@@ -6,6 +6,8 @@ import com.qmms.entity.SerLoanProduct;
 import com.qmms.entity.SerLoanType;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface SerLoanService {
     //贷款类型
     /**
@@ -43,6 +45,12 @@ public interface SerLoanService {
      * @return
      */
     public SerLoanType editLoanType(SerLoanType loanType);
+
+    /**
+     * 获取所有贷款类型
+     * @return
+     */
+    List<SerLoanType> getAllLoanTypes();
 
     //贷款产品
 

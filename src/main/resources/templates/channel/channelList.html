@@ -39,13 +39,13 @@
     </div>
 </div>
 
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="addChannelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         </div>
     </div>
 </div>
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="editChannelModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         </div>
@@ -146,7 +146,7 @@
     }
 
     function toAdd(){
-        $("#addModal").modal({
+        $("#addChannelModal").modal({
             remote: "channel/toChannelAdd",
             show:true,
             backdrop:"static"
@@ -154,18 +154,18 @@
     }
     
     function toEdit(id) {
-        $("#editModal").modal({
+        $("#editChannelModal").modal({
             remote: "channel/toChannelEdit?id="+id,
             show:true
         });
 
     }
 
-    $("#addModal").on("hidden.bs.modal", function() {
+    $("#addChannelModal").on("hidden.bs.modal", function() {
         $(this).removeData("bs.modal");
     });
 
-    $("#editModal").on("hidden.bs.modal", function() {
+    $("#editChannelModal").on("hidden.bs.modal", function() {
         $(this).removeData("bs.modal");
     });
 

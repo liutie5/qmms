@@ -14,6 +14,7 @@ public class SerLoanProduct implements Serializable {
     @Column(name="`name`")
     private String name;
     private String company;
+    @Column(length = 1024)
     private String balanceDesc;
     private Long minBalance;
     private Long maxBalance;

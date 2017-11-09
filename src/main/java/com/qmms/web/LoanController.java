@@ -1,8 +1,10 @@
 package com.qmms.web;
 
+import com.qmms.entity.SerChannel;
 import com.qmms.entity.SerLoanBanner;
 import com.qmms.entity.SerLoanProduct;
 import com.qmms.entity.SerLoanType;
+import com.qmms.sevice.SerChannelService;
 import com.qmms.sevice.SerLoanService;
 import com.qmms.utils.UploadUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -34,6 +37,8 @@ public class LoanController {
 
     @Resource
     private SerLoanService serLoanService;
+    @Resource
+    private SerChannelService serChannelService;
 
     /**
      * 贷款类型
@@ -151,7 +156,11 @@ public class LoanController {
      * @return
      */
     @RequestMapping("/toLoanProductAdd")
-    public String toLoanProductAdd(){
+    public String toLoanProductAdd(Model model){
+        List<SerChannel> channels = serChannelService.getAllChannel();
+        model.addAttribute("channels",channels);
+        List<SerLoanType> loanTypes = serLoanService.getAllLoanTypes();
+        model.addAttribute("loanTypes",loanTypes);
         return "/loan/loanProductAdd";
     }
     /**
@@ -184,6 +193,7 @@ public class LoanController {
     }
 
     @RequestMapping("/loanProductAdd")
+    @ResponseBody
     public Map<String,String> laonProductAdd(SerLoanProduct product,String[] loanType,String[] channelUrl){
         Map<String,String> data = new HashMap<>();
         try{
