@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -17,10 +18,13 @@ import java.util.Properties;
 @Configuration
 public class ShiroConfig {
 	@Bean
-	public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
+	public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
 		System.out.println("ShiroConfiguration.shirFilter()");
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
+        Map<String, Filter> filters = new LinkedHashMap<>();
+        filters.put("authc",new UserFormAuthenticationFilter());
+        shiroFilterFactoryBean.setFilters(filters);
 		//拦截器.
 		Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
 		// 配置不会被拦截的链接 顺序判断
