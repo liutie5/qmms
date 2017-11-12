@@ -6,7 +6,7 @@
             <div class="box-header">
                 <div class="box-name">
                     <i class="glyphicon glyphicon-plus"></i>
-                    <span>添加贷款产品</span>
+                    <span>编辑贷款产品</span>
                 </div>
                 <div class="box-icons">
                     <a class="close-link" data-dismiss="modal" aria-hidden="true">
@@ -18,129 +18,137 @@
 
             <div class="box-content">
                     <fieldset>
-                        <legend>添加贷款产品</legend>
+                        <legend>编辑贷款产品</legend>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">贷款名称:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="贷款名称"/>
+                                <input type="hidden" name="id" th:value="${product.id}">
+                                <input type="text" class="form-control" id="name" name="name" th:value="${product.name}" placeholder="贷款名称" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">所属机构:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="company" name="company" placeholder="如 51服务金融有限公司" />
+                                <input type="text" class="form-control" id="company" name="company" th:value="${product.company}" placeholder="如 51服务金融有限公司" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">额度描述:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="balanceDesc" placeholder="如 1千到5万"/>
+                                <input type="text" class="form-control" name="balanceDesc" th:value="${product.balanceDesc}" placeholder="如 1千到5万"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">最小额度:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="minBalance" placeholder="如 1000（必须数字）"/>
+                                <input type="text" class="form-control"  name="minBalance" th:value="${product.minBalance}" placeholder="如 1000（必须数字）"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">最大额度:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="maxBalance" placeholder="如 50000（必须数字）" />
+                                <input type="text" class="form-control"  name="maxBalance" th:value="${product.maxBalance}" placeholder="如 50000（必须数字）" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">利率描述:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="rateDesc" placeholder="如 日利率"/>
+                                <input type="text" class="form-control"  name="rateDesc" th:value="${product.rateDesc}" placeholder="如 日利率"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">利率信息:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="rate" placeholder="如 0.002%"/>
+                                <input type="text" class="form-control"  name="rate" th:value="${product.rate}" placeholder="如 0.002%"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">期限描述:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="termDesc" placeholder="如 贷款期限（天）"/>
+                                <input type="text" class="form-control"  name="termDesc" th:value="${product.termDesc}" placeholder="如 贷款期限（天）"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">期限信息:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="term" placeholder="如 7-14"/>
+                                <input type="text" class="form-control"  name="term" th:value="${product.term}" placeholder="如 7-14"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">速度描述:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="speedDesc" placeholder="如 放款速度（分钟）"/>
+                                <input type="text" class="form-control"  name="speedDesc" th:value="${product.speedDesc}"  placeholder="如 放款速度（分钟）"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">速度信息:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="speed" placeholder="如 30"/>
+                                <input type="text" class="form-control"  name="speed" th:value="${product.speed}"  placeholder="如 30"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">特色标签:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="tags" placeholder="如 速度快|审核快|额度高" />
+                                <input type="text" class="form-control"  name="tags" th:value="${product.tags}"  placeholder="如 速度快|审核快|额度高" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">产品宣传:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="slogan" placeholder="如 凭借芝麻信用分可带10万" />
+                                <input type="text" class="form-control"  name="slogan" th:value="${product.slogan}"  placeholder="如 凭借芝麻信用分可带10万" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">产品描述:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="productDesc" placeholder="如 描述1_描述2（_符号会进行换行条目处理）" />
+                                <input type="text" class="form-control"  name="productDesc" th:value="${product.productDesc}"  placeholder="如 描述1_描述2（_符号会进行换行条目处理）" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">申请条件:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="productCondition" placeholder="如 条件1_条件2（_符号会进行换行条目处理）" />
+                                <input type="text" class="form-control"  name="productCondition" th:value="${product.productCondition}"  placeholder="如 条件1_条件2（_符号会进行换行条目处理）" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">流程介绍:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="productProcess" placeholder="如 流程1_流程2（_符号会进行换行条目处理）" />
+                                <input type="text" class="form-control"  name="productProcess" th:value="${product.productProcess}"  placeholder="如 流程1_流程2（_符号会进行换行条目处理）" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">基础人数:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="applyNum" placeholder="如 253625（必须数字）" />
+                                <input type="text" class="form-control"  name="applyNum" th:value="${product.applyNum}"  placeholder="如 253625（必须数字）" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">产品LOGO:</label>
                             <div class="col-sm-6">
-                                <input type="hidden" class="form-control" id="img" name="img" />
+                                <input type="hidden" class="form-control" id="img" name="img" th:value="${product.img}" />
                                 <p><input type="file" class="form-control" id="file" name="file" /></p>
                                 <input type="button" id="upload" value="上传" onclick="ajaxFileUpload()" />
-                                <p><img id="imgshow" alt="" src="" width="100px" height="100px"/></p>
+                                <p><img id="imgshow" alt="" th:src="${product.img}" width="100px" height="100px"/></p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">默认链接:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="url" placeholder="如 https://www.baidu.com" />
+                                <input type="text" class="form-control"  name="url" th:value="${product.url}"  placeholder="如 https://www.baidu.com" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">渠道链接:</label>
                             <div class="col-sm-6">
-                                <input type="hidden" id="channelUrl" name="channelUrl" value="">
+                                <input type="hidden" id="channelUrl" name="channelUrl" th:value="${channelUrl}">
                                 <div id="mapping" style="min-height:50px; height:auto!important; height:50px;overflow:auto;background-color: white">
+                                    <div th:each="channelUrl,urlStat:${product.channelUrls}">
+                                        <div th:id="'u'+${urlStat.index}" class="col-sm-16 form-inline" style="width:100%">
+                                            <input type="text" class="form-control " th:value="${#vars.get('channelMap').get(channelUrl.channelId)}+'_'+${channelUrl.channelUrl}"style="width: 80%" disabled />
+                                            <input type="hidden" name="addurls"  th:value="${channelUrl.channelId}+'$$'+${channelUrl.channelUrl}" />
+                                            &nbsp;&nbsp;<a href="#" th:onclick="'rmUrl(\'u'+${urlStat.index}+'\')'" >删除</a>
+                                            </div>
+                                    </div>
 
                                 </div>
                                 <div style="clear:both"></div>
@@ -166,7 +174,7 @@
                             <div class="col-sm-6">
                                 <div class="checkbox-inline" th:each="loanType:${loanTypes}">
                                     <label>
-                                        <input type="checkbox" name="loanType" th:value="${loanType.key}" th:text="${loanType.title}" >
+                                        <input type="checkbox" name="loanType" th:value="${loanType.key}" th:text="${loanType.title}" th:checked="${#sets.contains(loanTypeSet,loanType.key)}" >
                                         <i class="fa fa-square-o small"></i>
                                     </label>
                                 </div>
@@ -178,13 +186,13 @@
                             <div class="col-sm-6 form-inline" >
                                 <div class="radio-inline">
                                     <label>
-                                        <input type="radio" name="status" value="1" checked> 是
+                                        <input type="radio" name="status" value="1" th:checked="${product.status}==1"> 是
                                         <i class="fa fa-circle-o small"></i>
                                     </label>
                                 </div>
                                 <div class="radio-inline">
                                     <label>
-                                        <input type="radio" name="status" value="0"> 否
+                                        <input type="radio" name="status" value="0" th:checked="${product.status}==0"> 否
                                         <i class="fa fa-circle-o small"></i>
                                     </label>
                                 </div>
@@ -193,7 +201,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">排序设置:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="orderedBy" placeholder="排序 数字值越大越靠前" />
+                                <input type="text" class="form-control"  name="orderedBy" th:value="${product.orderedBy}" placeholder="排序 数字值越大越靠前" />
                             </div>
                         </div>
 
@@ -484,9 +492,9 @@
             if(bootstrapValidator.isValid()){
                 $("#formSubmit").attr("disabled", true);
                 var param = $("#addForm").serialize();
-                $.post("loan/loanProductAdd",param,function(data){
+                $.post("loan/loanProductEdit",param,function(data){
                     if(data.success){
-                        successAlert("添加成功")
+                        successAlert("编辑成功");
                         $("#addModal").modal("hide");
                         LoadAjaxContent("loan/loanProductList");
                     }else{
@@ -549,7 +557,7 @@
         return false;
     }
 
-    var addNum = 0;
+    var addNum = 100000000;
     function urlAdd() {
         var channel = $('#channelSelect').val();
         var channelName = $("#channelSelect").find("option:selected").text();
@@ -571,6 +579,7 @@
         $("input[name='addurls']").each(function(i){
             var haveValue = $(this).val();
             var arr = haveValue.split('\$\$');
+            console.log(channel+","+url +","+ arr[0]+","+arr[1])
             if(arr[0]==channel && url==arr[1]){
                 haveSame = true;
             }

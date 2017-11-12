@@ -175,6 +175,7 @@
                     }
                 }
                 var param = $.param(paramArr);
+                $("#userSubmit").attr("disabled", true);
                 $.post("userInfo/userAdd",param,function(data){
                     if(data.success){
                         successAlert("添加成功")
@@ -182,9 +183,11 @@
                         LoadAjaxContent("userInfo/userList");
                     }else if(data.errorCode == 1){
                         errorAlert("用户名已经存在")
+                        $("#userSubmit").attr("disabled", false);
                         return false;
                     }else{
                         errorAlert(data.msg);
+                        $("#userSubmit").attr("disabled", false);
                     }
                 },"json");
 

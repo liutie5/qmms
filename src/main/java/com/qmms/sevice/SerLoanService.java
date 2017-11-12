@@ -90,6 +90,12 @@ public interface SerLoanService {
      */
     public void delLoanProduct(Long productId);
 
+    /**
+     * 获取所有贷款产品
+     * @return
+     */
+    public List<SerLoanProduct> getAllLoanProducts();
+
     //贷款广告
     /**
      * 分页

@@ -1,9 +1,6 @@
 package com.qmms.web;
 
-import com.qmms.entity.SerChannel;
-import com.qmms.entity.SerLoanBanner;
-import com.qmms.entity.SerLoanProduct;
-import com.qmms.entity.SerLoanType;
+import com.qmms.entity.*;
 import com.qmms.sevice.SerChannelService;
 import com.qmms.sevice.SerLoanService;
 import com.qmms.utils.UploadUtil;
@@ -19,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/loan")
@@ -168,8 +163,35 @@ public class LoanController {
      * @return
      */
     @RequestMapping("/toLoanProductEdit")
-    public String toLoanProductEdit(){
+    public String toLoanProductEdit(Long id,Model model){
+        List<SerChannel> channels = serChannelService.getAllChannel();
+        model.addAttribute("channels",channels);
+        List<SerLoanType> loanTypes = serLoanService.getAllLoanTypes();
+        model.addAttribute("loanTypes",loanTypes);
+        SerLoanProduct product = serLoanService.getLoanProduct(id);
+        model.addAttribute("product",product);
+        List<SerLoanProductChannelUrl> channelUrlList = product.getChannelUrls();
+        StringBuffer buffer =  new StringBuffer();
+        for(SerLoanProductChannelUrl url:channelUrlList){
+            if(buffer.length() == 0){
+                buffer.append(url.getChannelId()).append("$$").append(url.getChannelUrl());
+            }else{
+                buffer.append(",").append(url.getChannelId()).append("$$").append(url.getChannelUrl());
+            }
+        }
+        model.addAttribute("channelUrl",buffer.toString());
+        Map<Long,String> channelMap = new HashMap<>();
+        for(SerChannel channel:channels){
+            channelMap.put(channel.getId(),channel.getName());
+        }
+        model.addAttribute("channelMap",channelMap);
+        Set<String> loanTypeSet = new HashSet<String>();
+        for(SerLoanType loanType:product.getLoanTypeList()){
+            loanTypeSet.add(loanType.getKey());
+        }
+        model.addAttribute("loanTypeSet",loanTypeSet);
         return "/loan/loanProductEdit";
+
     }
 
     @RequestMapping("/getLoanProductList")
@@ -180,6 +202,7 @@ public class LoanController {
     }
 
     @RequestMapping("/loanProductDel")
+    @ResponseBody
     public Map<String,String> laonProductDel(Long id){
         Map<String,String> data = new HashMap<>();
         try{
@@ -207,6 +230,7 @@ public class LoanController {
     }
 
     @RequestMapping("/loanProductEdit")
+    @ResponseBody
     public Map<String,String> loanProductEdit(SerLoanProduct product,String[] loanType,String[] channelUrl){
         Map<String,String> data = new HashMap<>();
         try{
@@ -214,6 +238,7 @@ public class LoanController {
             data.put("success","1");
             data.put("msg","编辑成功");
         }catch (Exception e){
+            e.printStackTrace();
             data.put("msg","编辑失败："+e.getMessage());
         }
         return data;
@@ -240,7 +265,9 @@ public class LoanController {
      * @return
      */
     @RequestMapping("/toLoanBannerAdd")
-    public String toLoanBannerAdd(){
+    public String toLoanBannerAdd(Model model){
+        List<SerLoanProduct> serLoanProductList = serLoanService.getAllLoanProducts();
+        model.addAttribute("products",serLoanProductList);
         return "/loan/loanBannerAdd";
     }
     /**
@@ -248,7 +275,11 @@ public class LoanController {
      * @return
      */
     @RequestMapping("/toLoanBannerEdit")
-    public String toLoanBannerEdit(){
+    public String toLoanBannerEdit(Long id,Model model){
+        SerLoanBanner banner = serLoanService.getLoanBanner(id);
+        model.addAttribute("banner",banner);
+        List<SerLoanProduct> serLoanProductList = serLoanService.getAllLoanProducts();
+        model.addAttribute("products",serLoanProductList);
         return "/loan/loanBannerEdit";
     }
 
@@ -260,10 +291,11 @@ public class LoanController {
     }
 
     @RequestMapping("/loanBannerDel")
+    @ResponseBody
     public Map<String,String> loanBannerDel(Long id){
         Map<String,String> data = new HashMap<>();
         try{
-            serLoanService.delLoanProduct(id);
+            serLoanService.delLoanBanner(id);
             data.put("success","1");
             data.put("msg","删除成功");
         }catch (Exception e){
@@ -273,6 +305,7 @@ public class LoanController {
     }
 
     @RequestMapping("/loanBannerAdd")
+    @ResponseBody
     public Map<String,String> laonBannerAdd(SerLoanBanner banner){
         Map<String,String> data = new HashMap<>();
         try{
@@ -286,6 +319,7 @@ public class LoanController {
     }
 
     @RequestMapping("/loanBannerEdit")
+    @ResponseBody
     public Map<String,String> loanBannerEdit(SerLoanBanner banner){
         Map<String,String> data = new HashMap<>();
         try{
@@ -303,5 +337,7 @@ public class LoanController {
     public Map<String,String> uploadLoanBannerImg(@RequestParam("file") MultipartFile file){
         return UploadUtil.uploadImg(file,webUploadPath,loanBannerImgPath);
     }
+
+
 
 }

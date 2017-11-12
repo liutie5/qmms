@@ -127,6 +127,7 @@
             var bootstrapValidator = $("#addForm").data('bootstrapValidator');
             bootstrapValidator.validate();
             if(bootstrapValidator.isValid()){
+                $("#formSubmit").attr("disabled", true);
                 var param = $("#addForm").serialize();
                 $.post("loan/loanTypeEdit",param,function(data){
                     if(data.success){
@@ -135,6 +136,7 @@
                         LoadAjaxContent("loan/loanTypeList");
                     }else{
                         errorAlert(data.msg);
+                        $("#formSubmit").attr("disabled", false);
                         return false;
                     }
                 },"json");

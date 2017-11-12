@@ -145,8 +145,8 @@
             $('#umengmarket').val(ums);
             bootstrapValidator.validate();
             if(bootstrapValidator.isValid()){
+                $("#formSubmit").attr("disabled", true);
                 var param = $("#editForm").serializeArray();
-                console.log(param)
                 $.post("channel/channelEdit",param,function(data){
                     if(data.success){
                         successAlert("编辑成功")
@@ -154,6 +154,7 @@
                         LoadAjaxContent("channel/channelList");
                     }else{
                         errorAlert("编辑失败,"+data.msg);
+                        $("#formSubmit").attr("disabled", false);
                         return false;
                     }
                 },"json");

@@ -213,6 +213,10 @@ public class SerLoanServiceImpl implements SerLoanService {
         serLoanProductDao.delete(productId);
     }
 
+    @Override
+    public List<SerLoanProduct> getAllLoanProducts() {
+        return serLoanProductDao.findAll();
+    }
 
     //贷款banner
     @Override
@@ -241,12 +245,12 @@ public class SerLoanServiceImpl implements SerLoanService {
 
     @Override
     public SerLoanBanner addLoanBanner(SerLoanBanner banner) {
-//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-//        int currentTime = (int)(new Date().getTime()/1000);
-//        banner.setAddTime(currentTime);
-//        banner.setAddUserId(currentUser.getUserId());
-//        banner.setUpdateUserId(currentUser.getUserId());
-//        banner.setUpdateTime(currentTime);
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        banner.setAddTime(currentTime);
+        banner.setAddUserId(currentUser.getUserId());
+        banner.setUpdateUserId(currentUser.getUserId());
+        banner.setUpdateTime(currentTime);
         return serLoanBannerDao.save(banner);
     }
 
@@ -254,10 +258,10 @@ public class SerLoanServiceImpl implements SerLoanService {
     public SerLoanBanner editLoanBanner(SerLoanBanner banner) throws Exception {
         SerLoanBanner rawBanner = serLoanBannerDao.findOne(banner.getId());
         UpdateUtils.updateNotNullField(rawBanner,banner);
-//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-//        int currentTime = (int)(new Date().getTime()/1000);
-//        rawBanner.setUpdateUserId(currentUser.getUserId());
-//        rawBanner.setUpdateTime(currentTime);
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        rawBanner.setUpdateUserId(currentUser.getUserId());
+        rawBanner.setUpdateTime(currentTime);
         return serLoanBannerDao.save(rawBanner);
     }
 

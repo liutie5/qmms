@@ -140,6 +140,7 @@
             });
             $('#umengmarket').val(ums);
             if(bootstrapValidator.isValid()){
+                $("#formSubmit").attr("disabled", true);
                 var param = $("#addForm").serialize();
                 $.post("channel/channelAdd",param,function(data){
                     if(data.success){
@@ -148,6 +149,7 @@
                         LoadAjaxContent("channel/channelList");
                     }else{
                         errorAlert("添加失败,"+data.msg);
+                        $("#formSubmit").attr("disabled", false);
                         return false;
                     }
                 },"json");

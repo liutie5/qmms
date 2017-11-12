@@ -6,7 +6,7 @@
             <div class="box-header">
                 <div class="box-name">
                     <i class="glyphicon glyphicon-plus"></i>
-                    <span>添加贷款类型</span>
+                    <span>添加贷款广告</span>
                 </div>
                 <div class="box-icons">
                     <a class="close-link" data-dismiss="modal" aria-hidden="true">
@@ -18,32 +18,54 @@
 
             <div class="box-content">
                     <fieldset>
-                        <legend>添加贷款类型</legend>
+                        <legend>添加贷款广告</legend>
+
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">类型ID:</label>
+                            <label class="col-sm-3 control-label">广告标题:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="key" name="key" />
+                                <input type="text" class="form-control" name="title" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">类型标题:</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" id="title" name="title" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">类型描述:</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" id="desc" name="desc" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">类型图片:</label>
+                            <label class="col-sm-3 control-label">广告图片:</label>
                             <div class="col-sm-6">
                                 <input type="hidden" class="form-control" id="img" name="img" />
                                 <p><input type="file" class="form-control" id="file" name="file" /></p>
                                 <input type="button" id="upload" value="上传" onclick="ajaxFileUpload()" />
                                 <p><img id="imgshow" alt="" src="" width="100px" height="100px"/></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">跳转贷款产品:</label>
+                            <div class="col-sm-6">
+                                <select class="populate placeholder" id="pid" name="pid">
+                                    <option value="">不配置</option>
+                                    <option  th:each="product:${products}" th:value="${product.id}" th:text="${product.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">跳转链接:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="url" name="url" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否上架:</label>
+                            <div class="col-sm-6 form-inline" >
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="status" value="1" checked> 是
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="status" value="0"> 否
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -73,44 +95,19 @@
             excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
             message: '校验不合法',
             fields: {
-                "key": {
-                    message: '类型ID不正确',
-                    validators: {
-                        notEmpty: {
-                            message: '类型ID不能为空'
-                        },
-                        stringLength: {
-                            min: 1,
-                            max: 255,
-                            message: '类型ID长度在1-255个字符'
-                        },
-                        remote: {
-                            url: 'loan/loanTypeIsExist',
-                            message: '类型ID已经存在',
-                            delay:1000
-                        }
-                    }
-                },
                 "title": {
-                    required: "请填写类型标题",
                     validators:{
-                        notEmpty: {message: '类型标题不能为空'},
+                        notEmpty: {message: '广告标题不能为空'},
                         stringLength: {
                             min: 1,
                             max: 255,
-                            message: '类型标题长度在1-255字符'
+                            message: '广告标题长度在1-255字符'
                         }
                     }
                 },
-                "desc": {
-                    required: "请填写类型描述",
+                "status": {
                     validators:{
-                        notEmpty: {message: '类型描述不能为空'},
-                        stringLength: {
-                            min: 1,
-                            max: 1024,
-                            message: '类型描述长度在1-1024个字符'
-                        }
+                        notEmpty: {message: '请选择是否上架'}
                     }
                 },
                 "img": {
@@ -121,6 +118,36 @@
                             min: 1,
                             max: 1024,
                             message: '上传图片名称长度在1-1024个字符'
+                        }
+                    }
+                },
+                "pid":{
+                    validators:{
+                        callback: {
+                            message: '请选择贷款跳转产品或者填写跳转链接',
+                            callback: function(value, validator) {
+                                var pid = $('#pid').val();
+                                var url = $('#url').val();
+                                if(pid == '' && url==''){
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                },
+                "url":{
+                    validators:{
+                        callback: {
+                            message: '请选择贷款跳转产品或者填写跳转链接',
+                            callback: function(value, validator) {
+                                var pid = $('#pid').val();
+                                var url = $('#url').val();
+                                if(pid == '' && url==''){
+                                    return false;
+                                }
+                                return true;
+                            }
                         }
                     }
                 }
@@ -135,11 +162,11 @@
             if(bootstrapValidator.isValid()){
                 $("#formSubmit").attr("disabled", true);
                 var param = $("#addForm").serialize();
-                $.post("loan/loanTypeAdd",param,function(data){
+                $.post("loan/loanBannerAdd",param,function(data){
                     if(data.success){
                         successAlert("添加成功")
                         $("#addModal").modal("hide");
-                        LoadAjaxContent("loan/loanTypeList");
+                        LoadAjaxContent("loan/loanBannerList");
                     }else{
                         errorAlert(data.msg);
                         $("#formSubmit").attr("disabled", false);
@@ -176,7 +203,7 @@
         $.ajaxFileUpload
         (
             {
-                url: 'loan/uploadLoanTypeImg', //用于文件上传的服务器端请求地址
+                url: 'loan/uploadLoanBannerImg', //用于文件上传的服务器端请求地址
                 secureuri: false, //是否需要安全协议，一般设置为false
                 fileElementId: 'file', //文件上传域的ID
                 dataType: 'json', //返回值类型 一般设置为json
