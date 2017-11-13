@@ -135,6 +135,12 @@ public class LoanController {
         return UploadUtil.uploadImg(file,webUploadPath,loanTypeImgPath);
     }
 
+    @PostMapping(value = "/uploadLoanTypeSubImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,String> uploadSubImg(@RequestParam("subImgFile") MultipartFile subImgFile){
+        return UploadUtil.uploadImg(subImgFile,webUploadPath,loanTypeImgPath);
+    }
+
     //贷款产品
 
     /**

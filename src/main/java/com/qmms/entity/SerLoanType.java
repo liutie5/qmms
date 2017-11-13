@@ -12,9 +12,14 @@ public class SerLoanType implements Serializable {
     private String key;
     @Column(name="`title`")
     private String title;
-    @Column(name="`desc`")
+    @Column(name="`desc`",length = 1024)
     private String desc;
+    @Column(length = 1024)
     private String img;
+    @Column(length = 1024)
+    private String subDesc;
+    @Column(length = 1024)
+    private String subImg;
     private Integer addUserId;
     private Integer addTime;
     private Integer updateUserId;
@@ -82,5 +87,21 @@ public class SerLoanType implements Serializable {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSubDesc() {
+        return subDesc;
+    }
+
+    public void setSubDesc(String subDesc) {
+        this.subDesc = subDesc;
+    }
+
+    public String getSubImg() {
+        return subImg;
+    }
+
+    public void setSubImg(String subImg) {
+        this.subImg = subImg;
     }
 }

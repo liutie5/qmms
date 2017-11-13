@@ -46,6 +46,21 @@
                                 <p><img id="imgshow" alt="" src="" width="100px" height="100px"/></p>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型子描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="subDesc" name="subDesc" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">类型子图片:</label>
+                            <div class="col-sm-6">
+                                <input type="hidden" class="form-control" id="subImg" name="subImg" />
+                                <p><input type="file" class="form-control" id="subImgFile" name="subImgFile" /></p>
+                                <input type="button" id="uploadSubFile" value="上传" onclick="ajaxFileUploadSub()" />
+                                <p><img id="subImgShow" alt="" src="" width="100px" height="100px"/></p>
+                            </div>
+                        </div>
                         <div class="clearfix"></div>
                         <div class="form-group pull-right form-inline">
                             <div class="col-sm-12">
@@ -123,6 +138,28 @@
                             message: '上传图片名称长度在1-1024个字符'
                         }
                     }
+                },
+                "subDesc": {
+                    required: "请填写类型子描述",
+                    validators:{
+                        notEmpty: {message: '类型子描述不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '类型子描述长度在1-1024个字符'
+                        }
+                    }
+                },
+                "subImg": {
+                    required: "请上传类型子图片",
+                    validators:{
+                        notEmpty: {message: '请上传类型子图片'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '上传图片名称长度在1-1024个字符'
+                        }
+                    }
                 }
             }
         });
@@ -184,6 +221,49 @@
                     if(data.success){
                         $("#img").val(data.imgPath);
                         $("#imgshow").attr("src", data.imgPath);
+                    }else {
+                        warningAlert(data.msg);
+                    }
+
+                },
+                error: function (data, status, e){//服务器响应失败处理函数
+                    warningAlert(e);
+                }
+            }
+        )
+        return false;
+    }
+
+    function ajaxFileUploadSub(){
+        var f = $("#subImgFile").val();
+        if(f==null||f==""){
+            warningAlert("请选择图片");
+            return false;
+        }else{
+            var extname = f.substring(f.lastIndexOf(".")+1,f.length);
+            extname = extname.toLowerCase();//处理了大小写
+            if(extname!= "jpeg"&&extname!= "jpg"&&extname!= "gif"&&extname!= "png"){
+                warningAlert("错误提示:格式不正确,支持的图片格式为：JPEG、GIF、PNG！");
+                return false;
+            }
+        }
+        var file = document.getElementById("subImgFile").files;
+        var size = file[0].size;
+        if(size>2097152){
+            warningAlert("错误提示:所选择的图片太大，图片大小最多支持2M!");
+            return false;
+        }
+        $.ajaxFileUpload
+        (
+            {
+                url: 'loan/uploadLoanTypeSubImg', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'subImgFile', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status){     //服务器成功响应处理函数
+                    if(data.success){
+                        $("#subImg").val(data.imgPath);
+                        $("#subImgShow").attr("src", data.imgPath);
                     }else {
                         warningAlert(data.msg);
                     }

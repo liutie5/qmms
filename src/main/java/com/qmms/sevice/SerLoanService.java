@@ -42,7 +42,7 @@ public interface SerLoanService {
      * @param loanType
      * @return
      */
-    public SerLoanType editLoanType(SerLoanType loanType);
+    public SerLoanType editLoanType(SerLoanType loanType) throws Exception;
 
     /**
      * 获取所有贷款类型

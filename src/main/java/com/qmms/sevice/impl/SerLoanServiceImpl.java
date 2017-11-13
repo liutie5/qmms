@@ -6,6 +6,7 @@ import com.qmms.sevice.SerLoanService;
 import com.qmms.utils.UpdateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.hibernate.sql.Update;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -104,17 +105,9 @@ public class SerLoanServiceImpl implements SerLoanService {
      * @return
      */
     @Override
-    public SerLoanType editLoanType(SerLoanType loanType) {
+    public SerLoanType editLoanType(SerLoanType loanType) throws Exception {
         SerLoanType cu = serLoanTypeDao.findOne(loanType.getKey());
-        if(loanType.getTitle() != null){
-            cu.setTitle(loanType.getTitle());
-        }
-        if(loanType.getDesc() != null){
-            cu.setDesc(loanType.getDesc());
-        }
-        if(loanType.getImg() != null){
-            cu.setImg(loanType.getImg());
-        }
+        UpdateUtils.updateNotNullField(cu,loanType);
         SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
         int currentTime = (int)(new Date().getTime()/1000);
         cu.setUpdateTime(currentTime);
