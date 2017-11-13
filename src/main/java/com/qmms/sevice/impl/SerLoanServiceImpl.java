@@ -351,12 +351,12 @@ public class SerLoanServiceImpl implements SerLoanService {
             loanTypeList.add(type);
         }
         loanGroup.setLoanTypeList(loanTypeList);
-//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-//        int currentTime = (int)(new Date().getTime()/1000);
-//        loanGroup.setAddTime(currentTime);
-//        loanGroup.setAddUserId(currentUser.getUserId());
-//        loanGroup.setUpdateUserId(currentUser.getUserId());
-//        loanGroup.setUpdateTime(currentTime);
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        loanGroup.setAddTime(currentTime);
+        loanGroup.setAddUserId(currentUser.getUserId());
+        loanGroup.setUpdateUserId(currentUser.getUserId());
+        loanGroup.setUpdateTime(currentTime);
         return serLoanGroupDao.save(loanGroup);
     }
 
@@ -380,10 +380,10 @@ public class SerLoanServiceImpl implements SerLoanService {
             type.setKey(loanType);
             rawObj.getLoanTypeList().add(type);
         }
-//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-//        int currentTime = (int)(new Date().getTime()/1000);
-//        rawObj.setUpdateUserId(currentUser.getUserId());
-//        rawObj.setUpdateTime(currentTime);
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        rawObj.setUpdateUserId(currentUser.getUserId());
+        rawObj.setUpdateTime(currentTime);
         return serLoanGroupDao.save(rawObj);
     }
 }
