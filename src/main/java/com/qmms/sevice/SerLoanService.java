@@ -1,9 +1,7 @@
 package com.qmms.sevice;
 
 
-import com.qmms.entity.SerLoanBanner;
-import com.qmms.entity.SerLoanProduct;
-import com.qmms.entity.SerLoanType;
+import com.qmms.entity.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -133,5 +131,79 @@ public interface SerLoanService {
      */
     public void delLoanBanner(Long id);
 
-    //其他设置
+    //运营消息
+    /**
+     * 分页查询
+     * @param page
+     * @param pageSize
+     * @param context
+     * @return
+     */
+    Page<SerLoanTip> getLoanTipListWithCondition(int page, int pageSize, String context);
+
+    /**
+     *
+     * @param loanTip
+     * @return
+     */
+    public SerLoanTip addLoanTip(SerLoanTip loanTip);
+
+    /**
+     * 获取
+     * @param id
+     * @return
+     */
+    public SerLoanTip getLoanTip(Long id);
+
+    /**
+     * 删除
+     * @param id
+     */
+    public void delLoanTip(Long id);
+
+    /**
+     * 编辑
+     * @param loanTip
+     * @return
+     */
+    public SerLoanTip editLoanTip(SerLoanTip loanTip) throws Exception;
+
+    //分类组
+    /**
+     * 分页查询
+     * @param page
+     * @param pageSize
+     * @param id
+     * @return
+     */
+    Page<SerLoanGroup> getLoanGroupListWithCondition(int page, int pageSize, String id);
+
+    /**
+     *
+     * @param loanGroup
+     * @return
+     */
+    public SerLoanGroup addLoanGroup(SerLoanGroup loanGroup,String[] loanTypes);
+
+    /**
+     * 获取
+     * @param id
+     * @return
+     */
+    public SerLoanGroup getLoanGroup(String id);
+
+    /**
+     * 删除
+     * @param id
+     */
+    public void delLoanGroup(String id);
+
+    /**
+     * 编辑
+     * @param loanGroup
+     * @return
+     */
+    public SerLoanGroup editLoanGroup(SerLoanGroup loanGroup,String[] loanTypes) throws Exception;
+
+
 }

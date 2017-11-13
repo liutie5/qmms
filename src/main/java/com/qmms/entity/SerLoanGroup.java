@@ -2,54 +2,47 @@ package com.qmms.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
-@Table(name="ser_loan_tip")
-public class SerLoanTip implements Serializable {
+@Table(name="ser_loan_group")
+public class SerLoanGroup implements Serializable {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
-    @Column(length = 1024)
-    private String context;
-    @Column(length = 1024)
-    private String rmPackage;
-    private int display = 1;
+    private String id;
+    @Column(name="`name`")
+    private String name;
 
     private Integer addUserId;
     private Integer addTime;
     private Integer updateUserId;
     private Integer updateTime;
 
-    public Long getId() {
+    @ManyToMany(fetch= FetchType.EAGER)//立即从数据库中进行加载数据;
+    @JoinTable(name = "SerLoanGroupType", joinColumns = { @JoinColumn(name = "groupId") }, inverseJoinColumns ={@JoinColumn(name = "typeKey") })
+    private List<SerLoanType> loanTypeList;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getContext() {
-        return context;
+    public String getName() {
+        return name;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getRmPackage() {
-        return rmPackage;
+    public List<SerLoanType> getLoanTypeList() {
+        return loanTypeList;
     }
 
-    public void setRmPackage(String rmPackage) {
-        this.rmPackage = rmPackage;
-    }
-
-    public int getDisplay() {
-        return display;
-    }
-
-    public void setDisplay(int display) {
-        this.display = display;
+    public void setLoanTypeList(List<SerLoanType> loanTypeList) {
+        this.loanTypeList = loanTypeList;
     }
 
     public Integer getAddUserId() {

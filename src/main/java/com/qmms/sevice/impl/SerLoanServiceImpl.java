@@ -1,8 +1,6 @@
 package com.qmms.sevice.impl;
 
-import com.qmms.dao.SerLoanBannerDao;
-import com.qmms.dao.SerLoanProductDao;
-import com.qmms.dao.SerLoanTypeDao;
+import com.qmms.dao.*;
 import com.qmms.entity.*;
 import com.qmms.sevice.SerLoanService;
 import com.qmms.utils.UpdateUtils;
@@ -33,6 +31,10 @@ public class SerLoanServiceImpl implements SerLoanService {
     private SerLoanProductDao serLoanProductDao;
     @Resource
     private SerLoanBannerDao serLoanBannerDao;
+    @Resource
+    private SerLoanTipDao serLoanTipDao;
+    @Resource
+    private SerLoanGroupDao serLoanGroupDao;
     /**
      * 分页查找
      * @param page
@@ -268,5 +270,120 @@ public class SerLoanServiceImpl implements SerLoanService {
     @Override
     public void delLoanBanner(Long id) {
         serLoanBannerDao.delete(id);
+    }
+
+    @Override
+    public Page<SerLoanTip> getLoanTipListWithCondition(int page, int pageSize, final String context) {
+        Pageable pageable = new PageRequest(page,pageSize);
+        Page<SerLoanTip> pageList = serLoanTipDao.findAll(new Specification<SerLoanTip>(){
+            @Override
+            public Predicate toPredicate(Root<SerLoanTip> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+                if(StringUtils.isNotBlank(context)){
+                    list.add(criteriaBuilder.like(root.get("context").as(String.class),"%"+context+"%"));
+                }
+                Predicate[] predicates = new Predicate[list.size()];
+                predicates = list.toArray(predicates);
+                return criteriaBuilder.and(predicates);
+
+            }
+        },pageable);
+        return pageList;
+    }
+
+    @Override
+    public SerLoanTip addLoanTip(SerLoanTip loanTip) {
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        loanTip.setAddTime(currentTime);
+        loanTip.setAddUserId(currentUser.getUserId());
+        loanTip.setUpdateUserId(currentUser.getUserId());
+        loanTip.setUpdateTime(currentTime);
+        return serLoanTipDao.save(loanTip);
+    }
+
+    @Override
+    public SerLoanTip getLoanTip(Long id) {
+        return serLoanTipDao.findOne(id);
+    }
+
+    @Override
+    public void delLoanTip(Long id) {
+        serLoanTipDao.delete(id);
+    }
+
+    @Override
+    public SerLoanTip editLoanTip(SerLoanTip loanTip) throws Exception{
+        SerLoanTip rawObj = serLoanTipDao.findOne(loanTip.getId());
+        UpdateUtils.updateNotNullField(rawObj,loanTip);
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        rawObj.setUpdateUserId(currentUser.getUserId());
+        rawObj.setUpdateTime(currentTime);
+        return serLoanTipDao.save(rawObj);
+    }
+
+    @Override
+    public Page<SerLoanGroup> getLoanGroupListWithCondition(int page, int pageSize, final String id) {
+        Pageable pageable = new PageRequest(page,pageSize);
+        Page<SerLoanGroup> pageList = serLoanGroupDao.findAll(new Specification<SerLoanGroup>(){
+            @Override
+            public Predicate toPredicate(Root<SerLoanGroup> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+                if(StringUtils.isNotBlank(id)){
+                    list.add(criteriaBuilder.like(root.get("id").as(String.class),"%"+id+"%"));
+                }
+                Predicate[] predicates = new Predicate[list.size()];
+                predicates = list.toArray(predicates);
+                return criteriaBuilder.and(predicates);
+
+            }
+        },pageable);
+        return pageList;
+    }
+
+    @Override
+    public SerLoanGroup addLoanGroup(SerLoanGroup loanGroup,String[] loanTypes) {
+        List<SerLoanType> loanTypeList = new ArrayList<>();
+        for(String loanType:loanTypes){
+            SerLoanType type = new SerLoanType();
+            type.setKey(loanType);
+            loanTypeList.add(type);
+        }
+        loanGroup.setLoanTypeList(loanTypeList);
+//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+//        int currentTime = (int)(new Date().getTime()/1000);
+//        loanGroup.setAddTime(currentTime);
+//        loanGroup.setAddUserId(currentUser.getUserId());
+//        loanGroup.setUpdateUserId(currentUser.getUserId());
+//        loanGroup.setUpdateTime(currentTime);
+        return serLoanGroupDao.save(loanGroup);
+    }
+
+    @Override
+    public SerLoanGroup getLoanGroup(String id) {
+        return serLoanGroupDao.findOne(id);
+    }
+
+    @Override
+    public void delLoanGroup(String id) {
+        serLoanGroupDao.delete(id);
+    }
+
+    @Override
+    public SerLoanGroup editLoanGroup(SerLoanGroup loanGroup,String[] loanTypes) throws Exception {
+        SerLoanGroup rawObj = serLoanGroupDao.findOne(loanGroup.getId());
+        UpdateUtils.updateNotNullField(rawObj,loanGroup);
+        rawObj.getLoanTypeList().clear();
+        for(String loanType:loanTypes){
+            SerLoanType type = new SerLoanType();
+            type.setKey(loanType);
+            rawObj.getLoanTypeList().add(type);
+        }
+//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+//        int currentTime = (int)(new Date().getTime()/1000);
+//        rawObj.setUpdateUserId(currentUser.getUserId());
+//        rawObj.setUpdateTime(currentTime);
+        return serLoanGroupDao.save(rawObj);
     }
 }

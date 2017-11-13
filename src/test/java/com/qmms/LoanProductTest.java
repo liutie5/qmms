@@ -21,10 +21,6 @@ public class LoanProductTest {
         SerLoanProduct product = new SerLoanProduct();
         product.setName("test");
 
-        SerLoanType loanType = new SerLoanType();
-        loanType.setKey("dd");
-        loanType.setTitle("test");
-
         String loanTypes = "dd";
         String urls ="1$$www.hua.com,2$$hu";
 

@@ -2,6 +2,7 @@ package com.qmms.sevice.impl;
 
 import com.qmms.dao.SerChannelDao;
 import com.qmms.dao.SerChannelUmengDao;
+import com.qmms.dao.SerLoanProductDao;
 import com.qmms.entity.SerChannel;
 import com.qmms.entity.SerChannelUmeng;
 import com.qmms.sevice.SerChannelService;
@@ -27,6 +28,8 @@ public class SerChannelServiceImpl implements SerChannelService {
     private SerChannelDao serChannelDao;
     @Resource
     private SerChannelUmengDao serChannelUmengDao;
+    @Resource
+    private SerLoanProductDao serLoanProductDao;
     /**
      * 分页查找
      * @param page
@@ -89,6 +92,7 @@ public class SerChannelServiceImpl implements SerChannelService {
      */
     @Transactional
     public void delChannel(Long id){
+        serLoanProductDao.deleteByChannelId(id);
         serChannelDao.delete(id);
     }
 
