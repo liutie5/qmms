@@ -19,15 +19,24 @@ public class SerLoanProduct implements Serializable {
     private Long minBalance;
     private Long maxBalance;
     private String rate;
+    @Column(length = 1024)
     private String rateDesc;
     private String term;
+    private Long minTerm;
+    private Long maxTerm;
+    @Column(length = 1024)
     private String termDesc;
     private Integer speed;
+    @Column(length = 1024)
     private String speedDesc;
     private String tags;
+    @Column(length = 1024)
     private String slogan;
+    @Column(length = 4096)
     private String productDesc;
+    @Column(length = 4096)
     private String productCondition;
+    @Column(length = 4096)
     private String productProcess;
     private Integer applyNum;
     private String img;
@@ -117,6 +126,22 @@ public class SerLoanProduct implements Serializable {
 
     public void setTerm(String term) {
         this.term = term;
+    }
+
+    public Long getMinTerm() {
+        return minTerm;
+    }
+
+    public void setMinTerm(Long minTerm) {
+        this.minTerm = minTerm;
+    }
+
+    public Long getMaxTerm() {
+        return maxTerm;
+    }
+
+    public void setMaxTerm(Long maxTerm) {
+        this.maxTerm = maxTerm;
     }
 
     public String getTermDesc() {
