@@ -4,6 +4,7 @@ import com.qmms.entity.*;
 import com.qmms.sevice.SerChannelService;
 import com.qmms.sevice.SerLoanService;
 import com.qmms.utils.UploadUtil;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -344,6 +345,161 @@ public class LoanController {
         return UploadUtil.uploadImg(file,webUploadPath,loanBannerImgPath);
     }
 
+    //运营消息
+    @RequestMapping("loanTipList")
+    public String loanTipList(){
+        return "/loan/loanTipList";
+    }
 
+    @RequestMapping("toLoanTipAdd")
+    public String toLoanTipAdd(){
+        return "/loan/loanTipAdd";
+    }
+
+    @RequestMapping("toLoanTipEdit")
+    public String toLoanTipAdd(Long id,Model model){
+        SerLoanTip tip = serLoanService.getLoanTip(id);
+        model.addAttribute("tip",tip);
+        return "/loan/loanTipEdit";
+    }
+
+    @RequestMapping("/getLoanTipList")
+    @ResponseBody
+    public Page<SerLoanTip> getLoanTipList(int page, int pageSize, String context){
+        Page p1 = serLoanService.getLoanTipListWithCondition(page, pageSize, context);
+        return p1;
+    }
+
+    @RequestMapping("/loanTipAdd")
+    @ResponseBody
+    public Map<String,String> laonTipAdd(SerLoanTip tip){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.addLoanTip(tip);
+            data.put("success","1");
+            data.put("msg","添加成功");
+        }catch (Exception e){
+            data.put("msg","添加失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/loanTipEdit")
+    @ResponseBody
+    public Map<String,String> loanTipEdit(SerLoanTip tip){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.editLoanTip(tip);
+            data.put("success","1");
+            data.put("msg","编辑成功");
+        }catch (Exception e){
+            data.put("msg","编辑失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/loanTipDel")
+    @ResponseBody
+    public Map<String,String> loanTipDel(Long id){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.delLoanTip(id);
+            data.put("success","1");
+            data.put("msg","删除成功");
+        }catch (Exception e){
+            data.put("msg","删除失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    //分类组
+    @RequestMapping("loanGroupList")
+    public String loanGroupList(){
+        return "/loan/loanGroupList";
+    }
+
+    @RequestMapping("toLoanGroupAdd")
+    public String toLoanGroupAdd(Model model){
+        List<SerLoanType> loanTypes = serLoanService.getAllLoanTypes();
+        model.addAttribute("loanTypes",loanTypes);
+        return "/loan/loanGroupAdd";
+    }
+
+
+    @RequestMapping("/loanGroupIsExist")
+    @ResponseBody
+    public Map<String,Boolean> loanGroupIsExist(String id){
+        SerLoanGroup group = serLoanService.getLoanGroup(id);
+        Map<String,Boolean> rs = new HashMap<String,Boolean>();
+        if(group!=null){
+            rs.put("valid",false);
+        }else{
+            rs.put("valid",true);
+        }
+        return rs;
+    }
+
+    @RequestMapping("toLoanGroupEdit")
+    public String toLoanGroupEdit(String id,Model model){
+        SerLoanGroup group = serLoanService.getLoanGroup(id);
+        model.addAttribute("group",group);
+        List<SerLoanType> loanTypes = serLoanService.getAllLoanTypes();
+        model.addAttribute("loanTypes",loanTypes);
+        Set<String> loanTypeSet = new HashSet<String>();
+        for(SerLoanType loanType:group.getLoanTypeList()){
+            loanTypeSet.add(loanType.getKey());
+        }
+        model.addAttribute("loanTypeSet",loanTypeSet);
+        return "/loan/loanGroupEdit";
+    }
+
+    @RequestMapping("/getLoanGroupList")
+    @ResponseBody
+    public Page<SerLoanGroup> getLoanGroupList(int page, int pageSize, String id){
+        Page p1 = serLoanService.getLoanGroupListWithCondition(page, pageSize, id);
+        return p1;
+    }
+
+    @RequestMapping("/loanGroupAdd")
+    @ResponseBody
+    public Map<String,String> laonTipAdd(SerLoanGroup group,String[] loanTypes){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.addLoanGroup(group,loanTypes);
+            data.put("success","1");
+            data.put("msg","添加成功");
+        }catch (Exception e){
+            data.put("msg","添加失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/loanGroupEdit")
+    @ResponseBody
+    public Map<String,String> loanGroupEdit(SerLoanGroup group,String[] loanTypes){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.editLoanGroup(group,loanTypes);
+            data.put("success","1");
+            data.put("msg","编辑成功");
+        }catch (Exception e){
+            data.put("msg","编辑失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/loanGroupDel")
+    @ResponseBody
+    public Map<String,String> loanTipDel(String id){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serLoanService.delLoanGroup(id);
+            data.put("success","1");
+            data.put("msg","删除成功");
+        }catch (Exception e){
+            data.put("msg","删除失败："+e.getMessage());
+        }
+        return data;
+    }
 
 }

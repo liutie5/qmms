@@ -1,0 +1,122 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<form id="addForm" name="addForm" method="post"  class="form-horizontal">
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>添加贷款运行消息</span>
+                </div>
+                <div class="box-icons">
+                    <a class="close-link" data-dismiss="modal" aria-hidden="true">
+                        x
+                    </a>
+                </div>
+                <div class="no-move"></div>
+            </div>
+
+            <div class="box-content">
+                    <fieldset>
+                        <legend>添加贷款运行消息</legend>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">内容:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="context" name="context" placeholder="如 同时申请多个平台可提高通过率"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">排除:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="rmPackage" name="rmPackage" placeholder="包名以;分割，被排除的包名无论下方是否显示都不显示运营消息"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否显示:</label>
+                            <div class="col-sm-6 form-inline" >
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="display" value="1" checked> 是
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="display" value="0"> 否
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group pull-right form-inline">
+                            <div class="col-sm-12">
+                                <button type="cancel" class="btn btn-default" data-dismiss="modal">
+                                    关闭
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button id="formSubmit" type="button" class="btn btn-primary">保存</button>
+
+                            </div>
+
+                        </div>
+                    </fieldset>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+<script src="plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<script src="js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var addVlidator = $('#addForm').bootstrapValidator({
+            excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
+            message: '校验不合法',
+            fields: {
+                "context": {
+                    validators: {
+                        notEmpty: {
+                            message: '内容不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '内容长度在1-1024个字符'
+                        }
+                    }
+                },
+                "display": {
+                    validators:{
+                        notEmpty: {message: '请选择是否显示'}
+                    }
+                }
+            }
+        });
+
+        $("#formSubmit").click(function(){
+            var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+            bootstrapValidator.validate();
+            if(bootstrapValidator.isValid()){
+                $("#formSubmit").attr("disabled", true);
+                var param = $("#addForm").serialize();
+                $.post("loan/loanTipAdd",param,function(data){
+                    if(data.success){
+                        successAlert("添加成功")
+                        $("#addModal").modal("hide");
+                        LoadAjaxContent("loan/loanTipList");
+                    }else{
+                        errorAlert(data.msg);
+                        $("#formSubmit").attr("disabled", false);
+                        return false;
+                    }
+                },"json");
+
+
+            }else{
+                return false;
+            }
+        })
+    })
+</script>
