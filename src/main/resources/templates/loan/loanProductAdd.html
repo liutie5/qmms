@@ -74,6 +74,24 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">最大期限:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="maxTerm" placeholder="必须为数字"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">最小期限:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="minTerm" placeholder="必须为数字"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">期限信息:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="term" placeholder="如 7-14"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">速度描述:</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control"  name="speedDesc" placeholder="如 放款速度（分钟）"/>
@@ -324,6 +342,36 @@
                             min: 1,
                             max: 255,
                             message: '利率长度在1-255之间'
+                        }
+                    }
+                },
+                "maxTerm":{
+                    validators:{
+                        notEmpty:{message:"最大期限不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '最大期限必须为数字'
+                        },
+                        callback: {
+                            message: '最大期限在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
+                        }
+                    }
+                },
+                "minTerm":{
+                    validators:{
+                        notEmpty:{message:"最小期限不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '最小期限必须为数字'
+                        },
+                        callback: {
+                            message: '最小期限在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
                         }
                     }
                 },
@@ -597,10 +645,11 @@
             hadValue = hadValue+","+vaHiddien;
         }
         $('#channelUrl').val(hadValue);
-        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+//        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
 //        bootstrapValidator.enableFieldValidators("channelUrl",false);
 //        bootstrapValidator.enableFieldValidators("channelUrl",true);
-        bootstrapValidator.validate();
+//        bootstrapValidator.validate();
+//        bootstrapValidator.updateStatus('username', 'NOT_VALIDATED').validateField('username')
 
     }
 

@@ -69,6 +69,18 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">最大期限:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="maxTerm" th:value="${product.maxTerm}" placeholder="必须为数字"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">最小期限:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="minTerm" th:value="${product.minTerm}" placeholder="必须为数字"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">期限信息:</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control"  name="term" th:value="${product.term}" placeholder="如 7-14"/>
@@ -322,6 +334,36 @@
                             min: 1,
                             max: 1024,
                             message: '利率长度在1-1024之间'
+                        }
+                    }
+                },
+                "maxTerm":{
+                    validators:{
+                        notEmpty:{message:"最大期限不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '最大期限必须为数字'
+                        },
+                        callback: {
+                            message: '最大期限在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
+                        }
+                    }
+                },
+                "minTerm":{
+                    validators:{
+                        notEmpty:{message:"最小期限不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '最小期限必须为数字'
+                        },
+                        callback: {
+                            message: '最小期限在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
                         }
                     }
                 },
