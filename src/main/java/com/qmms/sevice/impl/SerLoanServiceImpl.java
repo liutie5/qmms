@@ -195,10 +195,10 @@ public class SerLoanServiceImpl implements SerLoanService {
             url.setLoanProduct(rawObject);
             channelUrlList.add(url);
         }
-//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-//        int currentTime = (int)(new Date().getTime()/1000);
-//        rawObject.setUpdateUserId(currentUser.getUserId());
-//        rawObject.setUpdateTime(currentTime);
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        rawObject.setUpdateUserId(currentUser.getUserId());
+        rawObject.setUpdateTime(currentTime);
         return serLoanProductDao.save(rawObject);
     }
 

@@ -31,7 +31,7 @@ public class CreditProductTest {
     @Test
     public void productEdit() throws Exception{
         SerCreditProduct product = new SerCreditProduct();
-        product.setCardId(1L);
+        product.setCardId(2L);
         product.setCardName("ddaa");
 
         String loanTypes = "dd";

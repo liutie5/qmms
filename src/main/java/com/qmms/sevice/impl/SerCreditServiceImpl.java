@@ -284,6 +284,7 @@ public class SerCreditServiceImpl implements SerCreditService{
         return serCreditProductDao.save(product);
     }
 
+    @Transactional
     @Override
     public SerCreditProduct editCreditProduct(SerCreditProduct product, String[] creditTypes, String[] channelUrls) throws Exception {
         SerCreditProduct rawObject = serCreditProductDao.findOne(product.getCardId());
