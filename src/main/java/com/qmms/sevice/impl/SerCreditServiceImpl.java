@@ -275,12 +275,12 @@ public class SerCreditServiceImpl implements SerCreditService{
             channelUrlList.add(url);
         }
         product.setChannelUrls(channelUrlList);
-//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-//        int currentTime = (int)(new Date().getTime()/1000);
-//        product.setAddTime(currentTime);
-//        product.setAddUserId(currentUser.getUserId());
-//        product.setUpdateUserId(currentUser.getUserId());
-//        product.setUpdateTime(currentTime);
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        product.setAddTime(currentTime);
+        product.setAddUserId(currentUser.getUserId());
+        product.setUpdateUserId(currentUser.getUserId());
+        product.setUpdateTime(currentTime);
         return serCreditProductDao.save(product);
     }
 
@@ -306,11 +306,11 @@ public class SerCreditServiceImpl implements SerCreditService{
             url.setCreditProduct(product);
             channelUrlList.add(url);
         }
-//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-//        int currentTime = (int)(new Date().getTime()/1000);
-//        product.setUpdateUserId(currentUser.getUserId());
-//        product.setUpdateTime(currentTime);
-        return serCreditProductDao.save(product);
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        rawObject.setUpdateUserId(currentUser.getUserId());
+        rawObject.setUpdateTime(currentTime);
+        return serCreditProductDao.save(rawObject);
     }
 
     @Override
