@@ -120,8 +120,7 @@ public class SerLoanServiceImpl implements SerLoanService {
         return serLoanTypeDao.findAll();
     }
 
-//贷款产品
-
+    //贷款产品
     @Override
     public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, final String name) {
         Pageable pageable = new PageRequest(page,pageSize,new Sort(Sort.Direction.DESC,"orderedBy"));
@@ -196,10 +195,10 @@ public class SerLoanServiceImpl implements SerLoanService {
             url.setLoanProduct(rawObject);
             channelUrlList.add(url);
         }
-        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
-        int currentTime = (int)(new Date().getTime()/1000);
-        rawObject.setUpdateUserId(currentUser.getUserId());
-        rawObject.setUpdateTime(currentTime);
+//        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+//        int currentTime = (int)(new Date().getTime()/1000);
+//        rawObject.setUpdateUserId(currentUser.getUserId());
+//        rawObject.setUpdateTime(currentTime);
         return serLoanProductDao.save(rawObject);
     }
 
@@ -210,7 +209,7 @@ public class SerLoanServiceImpl implements SerLoanService {
 
     @Override
     public List<SerLoanProduct> getAllLoanProducts() {
-        return serLoanProductDao.findAll();
+        return serLoanProductDao.findAll(new Sort(Sort.Direction.DESC,"orderedBy"));
     }
 
     //贷款banner

@@ -30,7 +30,7 @@ public class LoanProductTest {
     @Test
     public void productEdit() throws Exception{
         SerLoanProduct product = new SerLoanProduct();
-        product.setId(13L);
+        product.setId(1L);
         product.setName("test");
 
         SerLoanType loanType = new SerLoanType();

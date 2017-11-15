@@ -1,6 +1,8 @@
 package com.qmms.sevice;
 
 import com.qmms.entity.SerCreditBank;
+import com.qmms.entity.SerCreditBanner;
+import com.qmms.entity.SerCreditProduct;
 import com.qmms.entity.SerCreditType;
 import org.springframework.data.domain.Page;
 
@@ -86,5 +88,85 @@ public interface SerCreditService {
      * @return
      */
     List<SerCreditType> getAllCreditTypes();
+    
+    //信用卡广告
+    /**
+     * 分页
+     * @param page
+     * @param pageSize
+     * @param title
+     * @return
+     */
+    public Page<SerCreditBanner> getCreditBannerList(int page, int pageSize, String title);
+
+    /**
+     * 获取
+     * @param id
+     * @return
+     */
+    public SerCreditBanner getCreditBanner(Long id);
+
+    /**
+     * 添加
+     * @param banner
+     * @return
+     */
+    public SerCreditBanner addCreditBanner(SerCreditBanner banner);
+
+    /**
+     * 编辑
+     * @param banner
+     * @return
+     */
+    public SerCreditBanner editCreditBanner(SerCreditBanner banner) throws Exception;
+
+    /**
+     * 删除
+     * @param id
+     */
+    public void delCreditBanner(Long id);
+
+    //信用卡产品
+    /**
+     * 分页
+     * @param page
+     * @param pageSize
+     * @param cardName
+     * @return
+     */
+    public Page<SerCreditProduct> getCreditProductList(int page, int pageSize, String cardName);
+
+    /**
+     * 获取
+     * @param cartId
+     * @return
+     */
+    public SerCreditProduct getCreditProduct(Long cartId);
+
+    /**
+     * 添加
+     * @param product
+     * @return
+     */
+    public SerCreditProduct addCreditProduct(SerCreditProduct product,String[] creditTypes,String[] channelUrls);
+
+    /**
+     * 编辑
+     * @param product
+     * @return
+     */
+    public SerCreditProduct editCreditProduct(SerCreditProduct product,String[] creditTypes,String[] channelUrls) throws Exception;
+
+    /**
+     * 删除
+     * @param cardId
+     */
+    public void delCreditProduct(Long cardId);
+
+    /**
+     * 获取所有贷款产品
+     * @return
+     */
+    public List<SerCreditProduct> getAllCreditProducts();
 
 }
