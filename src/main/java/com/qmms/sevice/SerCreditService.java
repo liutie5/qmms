@@ -46,6 +46,8 @@ public interface SerCreditService {
      */
     public SerCreditBank editCreditBank(SerCreditBank creditBank) throws Exception;
 
+    public List<SerCreditBank> getAllCreditBank();
+
     //信用卡类型
     /**
      * 分页查询

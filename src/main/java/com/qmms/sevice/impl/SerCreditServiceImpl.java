@@ -89,6 +89,11 @@ public class SerCreditServiceImpl implements SerCreditService{
         return serCreditBankDao.save(rawObject);
     }
 
+    @Override
+    public List<SerCreditBank> getAllCreditBank() {
+        return serCreditBankDao.findAll();
+    }
+
     //信用卡类型
     /**
      * 分页查找
@@ -233,14 +238,14 @@ public class SerCreditServiceImpl implements SerCreditService{
 
     //信用卡产品
     @Override
-    public Page<SerCreditProduct> getCreditProductList(int page, int pageSize, final String cardName) {
+    public Page<SerCreditProduct> getCreditProductList(int page, int pageSize, final String cardBandId) {
         Pageable pageable = new PageRequest(page,pageSize,new Sort(Sort.Direction.DESC,"orderedBy"));
         Page<SerCreditProduct> pageList = serCreditProductDao.findAll(new Specification<SerCreditProduct>(){
             @Override
             public Predicate toPredicate(Root<SerCreditProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> list = new ArrayList<Predicate>();
-                if(StringUtils.isNotBlank(cardName)){
-                    list.add(criteriaBuilder.like(root.get("cardName").as(String.class),"%"+cardName+"%"));
+                if(StringUtils.isNotBlank(cardBandId) && StringUtils.isNumeric(cardBandId)){
+                    list.add(criteriaBuilder.equal(root.get("cardBankId").as(Long.class), Long.parseLong(cardBandId)));
                 }
                 Predicate[] predicates = new Predicate[list.size()];
                 predicates = list.toArray(predicates);

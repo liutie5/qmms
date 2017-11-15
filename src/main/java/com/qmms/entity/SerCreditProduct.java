@@ -12,7 +12,7 @@ public class SerCreditProduct implements Serializable {
     private Long cardId;
     private String cardName;
     private Long cardBankId;
-    private String cardbankName;
+    private String cardBankName;
     @Column(length = 1024)
     private String cardTags;
     @Column(length = 1024)
@@ -59,12 +59,12 @@ public class SerCreditProduct implements Serializable {
         this.cardBankId = cardBankId;
     }
 
-    public String getCardbankName() {
-        return cardbankName;
+    public String getCardBankName() {
+        return cardBankName;
     }
 
-    public void setCardbankName(String cardbankName) {
-        this.cardbankName = cardbankName;
+    public void setCardBankName(String cardBankName) {
+        this.cardBankName = cardBankName;
     }
 
     public String getCardTags() {

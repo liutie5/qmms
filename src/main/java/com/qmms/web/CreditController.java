@@ -6,6 +6,7 @@ import com.qmms.entity.SerCreditBanner;
 import com.qmms.entity.SerCreditProduct;
 import com.qmms.sevice.SerCreditService;
 import com.qmms.utils.UploadUtil;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -302,6 +303,22 @@ public class CreditController {
     @ResponseBody
     public Map<String,String> uploadCreditBannerImg(@RequestParam("file") MultipartFile file){
         return UploadUtil.uploadImg(file,webUploadPath,creditBannerImgPath);
+    }
+
+    //信用卡产品
+    @RequestMapping("/creditProductList")
+    public String creditProductList(Model model){
+        List<SerCreditBank> banks = serCreditService.getAllCreditBank();
+        model.addAttribute("banks",banks);
+        model.addAttribute("lt","liutieshuode");
+        return "/credit/creditProductList";
+    }
+
+    @RequestMapping("/getCreditProductList")
+    @ResponseBody
+    public Page<SerCreditProduct> getCreditProductList(int page, int pageSize, String bankId){
+        Page p1 = serCreditService.getCreditProductList(page, pageSize, bankId);
+        return p1;
     }
 
 }
