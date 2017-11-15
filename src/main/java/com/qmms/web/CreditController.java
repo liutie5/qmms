@@ -36,7 +36,7 @@ public class CreditController {
 
     //信用卡银行
     @RequestMapping("/creditBankList")
-    public String loanTypeList(){
+    public String creditBankList(){
         return "/credit/creditBankList";
     }
 
@@ -111,6 +111,106 @@ public class CreditController {
 
 
     //信用卡类型
+    @RequestMapping("/creditTypeList")
+    public String creditTypeList(){
+        return "/credit/creditTypeList";
+    }
 
+    @RequestMapping("/getCreditTypeList")
+    @ResponseBody
+    public Page<SerCreditType> getCreditTypeList(int page, int pageSize,String title){
+        Page p1 = serCreditService.getCreditTypeListWithCondition(page, pageSize, title);
+        return p1;
+    }
+
+    @RequestMapping("/toCreditTypeAdd")
+    public String toUserAdd(){
+        return "/credit/creditTypeAdd";
+    }
+
+    @RequestMapping("/creditTypeIsExist")
+    @ResponseBody
+    public Map<String,Boolean> isUserExist(String key){
+        SerCreditType creditType = serCreditService.getCreditType(key);
+        Map<String,Boolean> rs = new HashMap<String,Boolean>();
+        if(creditType!=null){
+            rs.put("valid",false);
+        }else{
+            rs.put("valid",true);
+        }
+        return rs;
+    }
+    @PostMapping("/creditTypeAdd")
+    @ResponseBody
+    public Map<String,String> creditTypeAdd(SerCreditType creditType){
+        String key = creditType.getKey();
+        SerCreditType have = serCreditService.getCreditType(key);
+        Map<String,String> data = new HashMap<>();
+        if(have != null && have.getTitle() != null){
+            data.put("errorCode","1");
+            data.put("msg","类型ID已经存在");
+            return data;
+        }
+        try{
+            serCreditService.addCreditType(creditType);
+            data.put("success","1");
+            data.put("msg","添加成功");
+        }catch (Exception e){
+            data.put("msg","添加失败："+e.getMessage());
+        }
+
+        return data;
+    }
+
+    @RequestMapping("/toCreditTypeEdit")
+    public String toUserEdit(String id,Model model){
+        SerCreditType creditType = serCreditService.getCreditType(id);
+        model.addAttribute("creditType",creditType);
+        return "/credit/creditTypeEdit";
+    }
+
+    @PostMapping("/creditTypeEdit")
+    @ResponseBody
+    public Map<String,String> creditTypeEdit(SerCreditType creditType){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.editCreditType(creditType);
+            data.put("success","1");
+            data.put("msg","编辑成功");
+        }catch (Exception e){
+            data.put("msg","编辑失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    /**
+     * 贷款类型删除
+     * @return
+     */
+    @RequestMapping("/creditTypeDel")
+    @ResponseBody
+    public Map<String,String> laonTypeDel(String id){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.delCreditType(id);
+            data.put("success","1");
+            data.put("msg","删除成功");
+        }catch (Exception e){
+            data.put("msg","删除失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @PostMapping(value = "/uploadCreditTypeImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,String> uploadImg(@RequestParam("file") MultipartFile file){
+        return UploadUtil.uploadImg(file,webUploadPath,creditTypeImgPath);
+    }
+
+    @PostMapping(value = "/uploadCreditTypeSubImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,String> uploadSubImg(@RequestParam("subImgFile") MultipartFile subImgFile){
+        return UploadUtil.uploadImg(subImgFile,webUploadPath,creditTypeImgPath);
+    }
 
 }

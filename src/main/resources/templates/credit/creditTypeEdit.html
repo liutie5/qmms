@@ -6,7 +6,7 @@
             <div class="box-header">
                 <div class="box-name">
                     <i class="glyphicon glyphicon-plus"></i>
-                    <span>编辑贷款类型</span>
+                    <span>编辑信用卡类型</span>
                 </div>
                 <div class="box-icons">
                     <a class="close-link" data-dismiss="modal" aria-hidden="true">
@@ -18,48 +18,48 @@
 
             <div class="box-content">
                     <fieldset>
-                        <legend>编辑贷款类型</legend>
+                        <legend>编辑信用卡类型</legend>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">类型ID:</label>
                             <div class="col-sm-6">
-                                <input type="hidden" name="key" th:value="${loanType.key}"/>
-                                <input type="text" class="form-control" disabled="disabled" th:value="${loanType.key}"/>
+                                <input type="hidden" name="key" th:value="${creditType.key}"/>
+                                <input type="text" class="form-control" disabled="disabled" th:value="${creditType.key}"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">类型标题:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="title" name="title" th:value="${loanType.title}"/>
+                                <input type="text" class="form-control" id="title" name="title" th:value="${creditType.title}"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">类型描述:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="desc" name="desc"  th:value="${loanType.desc}"/>
+                                <input type="text" class="form-control" id="desc" name="desc"  th:value="${creditType.desc}"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">类型图片:</label>
                             <div class="col-sm-6">
-                                <input type="hidden" class="form-control" id="img" name="img" th:value="${loanType.img}" />
+                                <input type="hidden" class="form-control" id="img" name="img" th:value="${creditType.img}" />
                                 <p><input type="file" class="form-control" id="file" name="file" /></p>
                                 <input type="button" id="upload" value="上传" onclick="ajaxFileUpload()" />
-                                <p><img id="imgshow" alt="" th:src="${loanType.img}" width="100px" height="100px"/></p>
+                                <p><img id="imgshow" alt="" th:src="${creditType.img}" width="100px" height="100px"/></p>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">类型子描述:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="subDesc" name="subDesc" th:value="${loanType.subDesc}" />
+                                <input type="text" class="form-control" id="subDesc" name="subDesc" th:value="${creditType.subDesc}" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">类型子图片:</label>
                             <div class="col-sm-6">
-                                <input type="hidden" class="form-control" id="subImg" name="subImg" th:value="${loanType.subImg}"/>
+                                <input type="hidden" class="form-control" id="subImg" name="subImg" th:value="${creditType.subImg}"/>
                                 <p><input type="file" class="form-control" id="subImgFile" name="subImgFile"/></p>
                                 <input type="button" id="uploadSubFile" value="上传" onclick="ajaxFileUploadSub()" />
-                                <p><img id="subImgShow" alt="" th:src="${loanType.subImg}" width="100px" height="100px"/></p>
+                                <p><img id="subImgShow" alt="" th:src="${creditType.subImg}" width="100px" height="100px"/></p>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -166,11 +166,11 @@
             if(bootstrapValidator.isValid()){
                 $("#formSubmit").attr("disabled", true);
                 var param = $("#addForm").serialize();
-                $.post("loan/loanTypeEdit",param,function(data){
+                $.post("credit/creditTypeEdit",param,function(data){
                     if(data.success){
                         successAlert("编辑成功")
                         $("#addModal").modal("hide");
-                        LoadAjaxContent("loan/loanTypeList");
+                        LoadAjaxContent("credit/creditTypeList");
                     }else{
                         errorAlert(data.msg);
                         $("#formSubmit").attr("disabled", false);
@@ -186,6 +186,7 @@
     })
     function ajaxFileUpload(){
         var f = $("#file").val();
+        console.log(f);
         if(f==null||f==""){
             warningAlert("请选择图片");
             return false;
@@ -206,7 +207,7 @@
         $.ajaxFileUpload
         (
             {
-                url: 'loan/uploadLoanTypeImg', //用于文件上传的服务器端请求地址
+                url: 'credit/uploadCreditTypeImg', //用于文件上传的服务器端请求地址
                 secureuri: false, //是否需要安全协议，一般设置为false
                 fileElementId: 'file', //文件上传域的ID
                 dataType: 'json', //返回值类型 一般设置为json
@@ -250,14 +251,13 @@
         $.ajaxFileUpload
         (
             {
-                url: 'loan/uploadLoanTypeSubImg', //用于文件上传的服务器端请求地址
+                url: 'credit/uploadCreditTypeSubImg', //用于文件上传的服务器端请求地址
                 secureuri: false, //是否需要安全协议，一般设置为false
                 fileElementId: 'subImgFile', //文件上传域的ID
                 dataType: 'json', //返回值类型 一般设置为json
                 success: function (data, status){     //服务器成功响应处理函数
                     if(data.success){
                         $("#subImg").val(data.imgPath);
-                        console.log(data.imgPath);
                         $("#subImgShow").attr("src", data.imgPath);
                         var bootstrapValidator = $("#addForm").data('bootstrapValidator');
                         bootstrapValidator.updateStatus('subImg', 'NOT_VALIDATED').validateField('subImg');

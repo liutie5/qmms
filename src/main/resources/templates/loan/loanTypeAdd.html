@@ -221,6 +221,8 @@
                     if(data.success){
                         $("#img").val(data.imgPath);
                         $("#imgshow").attr("src", data.imgPath);
+                        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+                        bootstrapValidator.updateStatus('img', 'NOT_VALIDATED').validateField('img');
                     }else {
                         warningAlert(data.msg);
                     }
@@ -264,6 +266,8 @@
                     if(data.success){
                         $("#subImg").val(data.imgPath);
                         $("#subImgShow").attr("src", data.imgPath);
+                        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+                        bootstrapValidator.updateStatus('subImg', 'NOT_VALIDATED').validateField('subImg');
                     }else {
                         warningAlert(data.msg);
                     }
