@@ -1,0 +1,227 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<form id="addForm" name="addForm" method="post"  class="form-horizontal">
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>添加信用卡广告</span>
+                </div>
+                <div class="box-icons">
+                    <a class="close-link" data-dismiss="modal" aria-hidden="true">
+                        x
+                    </a>
+                </div>
+                <div class="no-move"></div>
+            </div>
+
+            <div class="box-content">
+                    <fieldset>
+                        <legend>添加信用卡广告</legend>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">广告标题:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="title" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">广告图片:</label>
+                            <div class="col-sm-6">
+                                <input type="hidden" class="form-control" id="img" name="img" />
+                                <p><input type="file" class="form-control" id="file" name="file" /></p>
+                                <input type="button" id="upload" value="上传" onclick="ajaxFileUpload()" />
+                                <p><img id="imgshow" alt="" src="" width="100px" height="100px"/></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">跳转信用卡产品:</label>
+                            <div class="col-sm-6">
+                                <select class="populate placeholder" id="pid" name="pid">
+                                    <option value="">不配置</option>
+                                    <option  th:each="product:${products}" th:value="${product.id}" th:text="${product.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">跳转链接:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="url" name="url" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否上架:</label>
+                            <div class="col-sm-6 form-inline" >
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="status" value="1" checked> 是
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="status" value="0"> 否
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group pull-right form-inline">
+                            <div class="col-sm-12">
+                                <button type="cancel" class="btn btn-default" data-dismiss="modal">
+                                    关闭
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button id="formSubmit" type="button" class="btn btn-primary">保存</button>
+
+                            </div>
+
+                        </div>
+                    </fieldset>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+<script src="plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<script src="js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var addVlidator = $('#addForm').bootstrapValidator({
+            excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
+            message: '校验不合法',
+            fields: {
+                "title": {
+                    validators:{
+                        notEmpty: {message: '广告标题不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '广告标题长度在1-255字符'
+                        }
+                    }
+                },
+                "status": {
+                    validators:{
+                        notEmpty: {message: '请选择是否上架'}
+                    }
+                },
+                "img": {
+                    required: "请上传类型图片",
+                    validators:{
+                        notEmpty: {message: '请上传类型图片'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '上传图片名称长度在1-1024个字符'
+                        }
+                    }
+                },
+                "pid":{
+                    validators:{
+                        callback: {
+                            message: '请选择信用卡跳转产品或者填写跳转链接',
+                            callback: function(value, validator) {
+                                var pid = $('#pid').val();
+                                var url = $('#url').val();
+                                if(pid == '' && url==''){
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                },
+                "url":{
+                    validators:{
+                        callback: {
+                            message: '请选择信用卡跳转产品或者填写跳转链接',
+                            callback: function(value, validator) {
+                                var pid = $('#pid').val();
+                                var url = $('#url').val();
+                                if(pid == '' && url==''){
+                                    return false;
+                                }
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        $("#formSubmit").click(function(){
+            var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+            bootstrapValidator.enableFieldValidators("img",false);
+            bootstrapValidator.enableFieldValidators("img",true);
+            bootstrapValidator.validate();
+            if(bootstrapValidator.isValid()){
+                $("#formSubmit").attr("disabled", true);
+                var param = $("#addForm").serialize();
+                $.post("credit/creditBannerAdd",param,function(data){
+                    if(data.success){
+                        successAlert("添加成功")
+                        $("#addModal").modal("hide");
+                        LoadAjaxContent("credit/creditBannerList");
+                    }else{
+                        errorAlert(data.msg);
+                        $("#formSubmit").attr("disabled", false);
+                        return false;
+                    }
+                },"json");
+
+
+            }else{
+                return false;
+            }
+        })
+    })
+
+    function ajaxFileUpload(){
+        var f = $("#file").val();
+        if(f==null||f==""){
+            warningAlert("请选择图片");
+            return false;
+        }else{
+            var extname = f.substring(f.lastIndexOf(".")+1,f.length);
+            extname = extname.toLowerCase();//处理了大小写
+            if(extname!= "jpeg"&&extname!= "jpg"&&extname!= "gif"&&extname!= "png"){
+                warningAlert("错误提示:格式不正确,支持的图片格式为：JPEG、GIF、PNG！");
+                return false;
+            }
+        }
+        var file = document.getElementById("file").files;
+        var size = file[0].size;
+        if(size>2097152){
+            warningAlert("错误提示:所选择的图片太大，图片大小最多支持2M!");
+            return false;
+        }
+        $.ajaxFileUpload
+        (
+            {
+                url: 'credit/uploadCreditBannerImg', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'file', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status){     //服务器成功响应处理函数
+                    if(data.success){
+                        $("#img").val(data.imgPath);
+                        $("#imgshow").attr("src", data.imgPath);
+                    }else {
+                        warningAlert(data.msg);
+                    }
+
+                },
+                error: function (data, status, e){//服务器响应失败处理函数
+                    warningAlert(e);
+                }
+            }
+        )
+        return false;
+    }
+
+</script>

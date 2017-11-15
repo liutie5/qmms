@@ -1,6 +1,9 @@
 package com.qmms.web;
 
-import com.qmms.entity.*;
+import com.qmms.entity.SerCreditBank;
+import com.qmms.entity.SerCreditType;
+import com.qmms.entity.SerCreditBanner;
+import com.qmms.entity.SerCreditProduct;
 import com.qmms.sevice.SerCreditService;
 import com.qmms.utils.UploadUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -211,6 +214,94 @@ public class CreditController {
     @ResponseBody
     public Map<String,String> uploadSubImg(@RequestParam("subImgFile") MultipartFile subImgFile){
         return UploadUtil.uploadImg(subImgFile,webUploadPath,creditTypeImgPath);
+    }
+
+    //信用卡广告
+    /**
+     * 列表
+     * @return
+     */
+    @RequestMapping("/creditBannerList")
+    public String creditBannerList(){
+        return "/credit/creditBannerList";
+    }
+
+    /**
+     * 新增页面
+     * @return
+     */
+    @RequestMapping("/toCreditBannerAdd")
+    public String toCreditBannerAdd(Model model){
+        List<SerCreditProduct> serCreditProductList = serCreditService.getAllCreditProducts();
+        model.addAttribute("products",serCreditProductList);
+        return "/credit/creditBannerAdd";
+    }
+    /**
+     * 编辑页面
+     * @return
+     */
+    @RequestMapping("/toCreditBannerEdit")
+    public String toCreditBannerEdit(Long id,Model model){
+        SerCreditBanner banner = serCreditService.getCreditBanner(id);
+        model.addAttribute("banner",banner);
+        List<SerCreditProduct> serCreditProductList = serCreditService.getAllCreditProducts();
+        model.addAttribute("products",serCreditProductList);
+        return "/credit/creditBannerEdit";
+    }
+
+    @RequestMapping("/getCreditBannerList")
+    @ResponseBody
+    public Page<SerCreditBanner> getCreditBannerList(int page, int pageSize, String title){
+        Page p1 = serCreditService.getCreditBannerList(page, pageSize, title);
+        return p1;
+    }
+
+    @RequestMapping("/creditBannerDel")
+    @ResponseBody
+    public Map<String,String> creditBannerDel(Long id){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.delCreditBanner(id);
+            data.put("success","1");
+            data.put("msg","删除成功");
+        }catch (Exception e){
+            data.put("msg","删除失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/creditBannerAdd")
+    @ResponseBody
+    public Map<String,String> laonBannerAdd(SerCreditBanner banner){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.addCreditBanner(banner);
+            data.put("success","1");
+            data.put("msg","添加成功");
+        }catch (Exception e){
+            data.put("msg","添加失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/creditBannerEdit")
+    @ResponseBody
+    public Map<String,String> creditBannerEdit(SerCreditBanner banner){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.editCreditBanner(banner);
+            data.put("success","1");
+            data.put("msg","编辑成功");
+        }catch (Exception e){
+            data.put("msg","编辑失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @PostMapping(value = "/uploadCreditBannerImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,String> uploadCreditBannerImg(@RequestParam("file") MultipartFile file){
+        return UploadUtil.uploadImg(file,webUploadPath,creditBannerImgPath);
     }
 
 }
