@@ -1,0 +1,419 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<form id="addForm" name="addForm" method="post"  class="form-horizontal">
+<div class="row">
+    <div class="col-xs-12 col-sm-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>添加信用卡产品</span>
+                </div>
+                <div class="box-icons">
+                    <a class="close-link" data-dismiss="modal" aria-hidden="true">
+                        x
+                    </a>
+                </div>
+                <div class="no-move"></div>
+            </div>
+
+            <div class="box-content">
+                    <fieldset>
+                        <legend>添加信用卡产品</legend>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">卡片名称:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="cardName" placeholder="产品名称"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">所属银行:</label>
+                            <div class="col-sm-6">
+                                <div class="form-inline">
+                                    <select class="populate placeholder" name="cardBankId">
+                                        <option value="">请选择银行</option>
+                                        <option  th:each="bank:${banks}" th:value="${bank.bankId}" th:text="${bank.bankName}"></option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">特色标签:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="cardTags" placeholder="如 金卡|商旅|智能"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">专属特权:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="cardPrivilege" placeholder="如 特权1_特权2"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">其他描述:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="cardDesc" placeholder="如 描述1_描述2" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">基础人数:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="applyNum" placeholder="如 253625(必须为数字)"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">信用卡图片:</label>
+                            <div class="col-sm-6">
+                                <input type="hidden" class="form-control" id="img" name="cardImg" />
+                                <p><input type="file" class="form-control" id="file" name="file" /></p>
+                                <input type="button" id="upload" value="上传" onclick="ajaxFileUpload()" />
+                                <p><img id="imgshow" alt="" src="" width="100px" height="100px"/></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">默认链接:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="url" placeholder="如 https://www.baidu.com" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">渠道链接:</label>
+                            <div class="col-sm-6">
+                                <input type="hidden" id="channelUrl" name="channelUrl" value="">
+                                <div id="mapping" style="min-height:50px; height:auto!important; height:50px;overflow:auto;background-color: white">
+
+                                </div>
+                                <div style="clear:both"></div>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="form-inline">
+                                <select class="populate placeholder" id="channelSelect">
+                                    <option value="">请选择渠道</option>
+                                    <option  th:each="channel:${channels}" th:value="${channel.id}" th:text="${channel.name}"></option>
+                                </select>
+                                <input type="text" id="urlin" style="width: 40%" placeholder="渠道链接 如：https://www.baidu.com"/>
+                                <div class="form-inline" style="float:right;margin-right: 200px;">
+                                    <button id="mappingBtn" type="button" class="btn-primary btn-sm" onclick="urlAdd()">生成</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">信用卡类型:</label>
+                            <div class="col-sm-6">
+                                <div class="checkbox-inline" th:each="type:${types}">
+                                    <label>
+                                        <input type="checkbox" name="creditType" th:value="${type.key}" th:text="${type.title}" >
+                                        <i class="fa fa-square-o small"></i>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否上架:</label>
+                            <div class="col-sm-6 form-inline" >
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="status" value="1" checked> 是
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
+                                <div class="radio-inline">
+                                    <label>
+                                        <input type="radio" name="status" value="0"> 否
+                                        <i class="fa fa-circle-o small"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">排序设置:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="orderedBy" placeholder="排序 数字值越大越靠前" />
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <div class="form-group pull-right form-inline">
+                            <div class="col-sm-12">
+                                <button type="cancel" class="btn btn-default" data-dismiss="modal">
+                                    关闭
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <button id="formSubmit" type="button" class="btn btn-primary">保存</button>
+
+                            </div>
+
+                        </div>
+                    </fieldset>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+<script src="plugins/bootstrapvalidator/bootstrapValidator.min.js"></script>
+<script src="js/ajaxfileupload.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var addVlidator = $('#addForm').bootstrapValidator({
+            excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
+            message: '校验不合法',
+            fields: {
+                "cardName": {
+                    validators: {
+                        notEmpty: {
+                            message: '卡片名称不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '卡片名称长度在1-255个字符'
+                        }
+                    }
+                },
+                "cardBankId": {
+                    validators:{
+                        notEmpty: {message: '请选择所属银行'}
+                    }
+                },
+                "cardTags": {
+                    validators:{
+                        notEmpty: {message: '特色标签不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '特色标签长度在1-1024个字符'
+                        }
+                    }
+                },
+                "cardPrivilege": {
+                    validators:{
+                        notEmpty: {message: '专属特权不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '专属特权长度在1-1024之间'
+                        }
+                    }
+                },
+                "cardDesc": {
+                    validators:{
+                        notEmpty: {message: '其他描述不能为空'},
+                        stringLength: {
+                            min: 1,
+                                max: 1024,
+                                message: '其他描述长度在1-1024之间'
+                        }
+                    }
+                },
+                "applyNum":{
+                    validators:{
+                        notEmpty:{message:"基础人数不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '基础人数必须为数字'
+                        },
+                        callback: {
+                            message: '基础人数在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
+                        }
+                    }
+                },
+                "cardImg": {
+                    required: "请上传类型图片",
+                    validators:{
+                        notEmpty: {message: '请上传类型图片'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '上传图片名称长度在1-1024个字符'
+                        }
+                    }
+                },
+                "url": {
+                    validators:{
+                        notEmpty: {message: '默认链接不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '默认链接长度在1-1024之间'
+                        }
+                    }
+                },
+                "status": {
+                    validators:{
+                        notEmpty: {message: '请选择是否上架'}
+                    }
+                },
+                "orderedBy": {
+                    validators:{
+                        notEmpty: {message: '请填写排序设置'}
+                    },
+                    callback: {
+                        message: '排序设置在0到1000000000之间',
+                        callback:function(value, validator,$field){
+                            return value>=0&&value<=1000000000;
+                        }
+                    }
+                },
+
+            }
+        });
+
+        $("#formSubmit").click(function(){
+            var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+            bootstrapValidator.enableFieldValidators("cardImg",false);
+            bootstrapValidator.enableFieldValidators("cardImg",true);
+            bootstrapValidator.validate();
+            var us = $("input[name='addurls']");
+            var ums = "";
+            us.each(function(i){
+                var haveValue = $(this).val();
+                if(ums !=""){
+                    ums = ums +","+haveValue;
+                }else{
+                    ums = haveValue;
+                }
+
+            });
+            $('#channelUrl').val(ums);
+            if(bootstrapValidator.isValid()){
+                $("#formSubmit").attr("disabled", true);
+                var param = $("#addForm").serialize();
+                $.post("credit/creditProductAdd",param,function(data){
+                    if(data.success){
+                        successAlert("添加成功")
+                        $("#addModal").modal("hide");
+                        LoadAjaxContent("credit/creditProductList");
+                    }else{
+                        errorAlert(data.msg);
+                        $("#formSubmit").attr("disabled", false);
+                        return false;
+                    }
+                },"json");
+
+
+            }else{
+                return false;
+            }
+        });
+
+
+    })
+
+
+    function ajaxFileUpload(){
+        var f = $("#file").val();
+        if(f==null||f==""){
+            warningAlert("请选择图片");
+            return false;
+        }else{
+            var extname = f.substring(f.lastIndexOf(".")+1,f.length);
+            extname = extname.toLowerCase().trim();//处理了大小写
+            if(extname!= "jpeg" && extname!= "jpg" && extname!= "gif" && extname!= "png"){
+                warningAlert("错误提示:格式不正确,支持的图片格式为：JPEG、GIF、PNG！");
+                return false;
+            }
+        }
+        var file = document.getElementById("file").files;
+        var size = file[0].size;
+        if(size>2097152*2){
+            warningAlert("错误提示:所选择的图片太大，图片大小最多支持4M!");
+            return false;
+        }
+        $.ajaxFileUpload
+        (
+            {
+                url: 'credit/uploadCreditProductImg', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'file', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status){     //服务器成功响应处理函数
+                    if(data.success){
+                        $("#img").val(data.imgPath);
+                        $("#imgshow").attr("src", data.imgPath);
+                        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+                        bootstrapValidator.updateStatus('cardImg', 'NOT_VALIDATED').validateField('cardImg');
+                    }else {
+                        warningAlert(data.msg);
+                    }
+
+                },
+                error: function (data, status, e){//服务器响应失败处理函数
+                    warningAlert(e);
+                }
+            }
+        )
+        return false;
+    }
+
+    var addNum = 0;
+    function urlAdd() {
+        var channel = $('#channelSelect').val();
+        var channelName = $("#channelSelect").find("option:selected").text();
+        var url = $('#urlin').val();
+        if(channel == ''){
+            warningAlert("请选择渠道");
+            return;
+        }
+        if(url==''){
+            warningAlert("请填写url");
+            return;
+        }
+
+        if(url.indexOf('\$\$') !=-1){
+            warningAlert("url中不能包含$$字符")
+            return;
+        }
+        var haveSame = false;
+        $("input[name='addurls']").each(function(i){
+            var haveValue = $(this).val();
+            var arr = haveValue.split('\$\$');
+            if(arr[0]==channel && url==arr[1]){
+                haveSame = true;
+            }
+
+        });
+        if(haveSame){
+            warningAlert("此渠道链接已经添加")
+            return;
+        }
+        var va = channelName+"_"+url;
+        var vaHiddien = channel+"$$"+url;
+        addNum++;
+        var appendHtml = '<div id="u'+addNum+'" class="col-sm-16 form-inline" style="width:100%">' +
+            '<input type="text" class="form-control " value="'+va+'" style="width: 80%" disabled />' +
+            '<input type="hidden" name="addurls" value="'+vaHiddien+'" />'+
+            '&nbsp;&nbsp;<a href="#" onclick="rmUrl(\'u'+addNum+'\')">删除</a>' +
+            '</div>'
+        $('#mapping').append(appendHtml);
+        var hadValue = $('#channelUrl').val();
+
+        if(hadValue==''){
+            hadValue = vaHiddien;
+        }else{
+            hadValue = hadValue+","+vaHiddien;
+        }
+        $('#channelUrl').val(hadValue);
+//        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+//        bootstrapValidator.enableFieldValidators("channelUrl",false);
+//        bootstrapValidator.enableFieldValidators("channelUrl",true);
+//        bootstrapValidator.validate();
+//        bootstrapValidator.updateStatus('username', 'NOT_VALIDATED').validateField('username')
+
+    }
+
+    function rmUrl(id) {
+        $('#'+id).remove();
+    }
+
+
+</script>

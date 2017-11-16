@@ -1,4 +1,3 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <div class="row">
     <div id="breadcrumb" class="col-xs-12">
         <a href="#" class="show-sidebar">
@@ -6,7 +5,8 @@
         </a>
         <ol class="breadcrumb pull-left">
             <li><a href="#">信用卡管理</a></li>
-            <li><a href="#">信用卡产品</a></li>
+            <li><a href="#">其他设置</a></li>
+            <li><a href="#">分类组</a></li>
         </ol>
 
     </div>
@@ -17,7 +17,7 @@
             <div class="box-header">
                 <div class="box-name">
                     <i class="fa"></i>
-                    <span>信用卡产品</span>
+                    <span>分类组</span>
                 </div>
 
                 <div class="no-move"></div>
@@ -26,12 +26,9 @@
                 <table class="table table-bordered table-striped table-hover table-heading table-datatable" id="listTable">
                     <thead>
                     <tr>
-                        <th>信用卡名称</th>
-                        <th>所属银行</th>
-                        <th>信用卡图片</th>
-                        <th>是否上架</th>
-                        <th>排序设置</th>
-                        <th>操作</th>
+                        <th>组ID</th>
+                        <th>组名</th>
+                        <th style="width: 20%">操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -43,21 +40,21 @@
 </div>
 
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 80%;">
+    <div class="modal-dialog">
         <div class="modal-content">
         </div>
     </div>
 </div>
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 80%;">
+    <div class="modal-dialog">
         <div class="modal-content">
         </div>
     </div>
 </div>
-<script type="text/javascript" th:inline="javascript">
+<script type="text/javascript">
     // Run Datables plugin and create 3 variants of settings
     function AllTables(){
-        loanProductListTable();
+        creditBannerListTable();
         LoadSelect2Script(MakeSelect2);
     }
 
@@ -69,12 +66,11 @@
         "sInfoEmpty": "当前显示第 0 至 0 项，共 0 项",
         "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
         "sInfoPostFix": "",
-        "sSearch": "产品名称:",
+        "sSearch": "ID:",
         "sUrl": "",
         "sEmptyTable": "表中数据为空",
         "sLoadingRecords": "载入中...",
         "sInfoThousands": ",",
-        "searching": false,
         "oPaginate": {
             "sFirst": "首页",
             "sPrevious": "上页",
@@ -87,10 +83,10 @@
             "sSortDescending": ": 以降序排列此列"
         }
     };
-    function loanProductListTable(){
+    function creditBannerListTable(){
         $('#listTable').dataTable({
             "aaSorting": [[ 0, "asc" ]],
-            "sDom": "<'box-content'<'#searchBank.col-sm-6'><'#addBtn.col-sm-2'><'col-sm-3 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
+            "sDom": "<'box-content'<'col-sm-6'f><'#addBtn.col-sm-2'><'col-sm-3 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
             "sPaginationType": "bootstrap",
             "oLanguage": lang,
             ordering:false,
@@ -101,11 +97,12 @@
                 param.pageSize= data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
 //                param.page = data.start;//开始的记录序号
                 param.page = (data.start / data.length);//当前页码
-                param.bankId = $("#selectBank").val();
+                param.context = data.search.value;
+                //ajax请求数据方法
                 //ajax请求数据方法
                 $.ajax({
                     type: "GET",
-                    url: "credit/getCreditProductList",//url请求的地址
+                    url: "credit/getCreditGroupList",//url请求的地址
                     cache: false,  //禁用缓存
                     data: param,  //传入组装的参数
                     dataType: "json",
@@ -128,52 +125,20 @@
                 });
             },
             columns: [
-                { "data": "cardName" },
-                { "data": "cardBankName" },
+                { "data": "id" },
+                {"data": "name"},
                 {
-                    "data": "cardImg",
-                    render: function (data, type, row, meta) {
-                        return '<img src="' + data + '" class="img-rounded"/>'
-                    }
-                },
-                {
-                    "data": "status",
-                    render: function(data,type,row,meta){
-                        if(data==0){
-                            return "否";
-                        }else if(data==1){
-                            return "是";
-                        }else{
-                            return "未知";
-                        }
-                    }
-                },
-                {"data": "orderedBy"},
-                {
-                    "data": "cardId",
+                    "data": "id",
                     render:function(data,type,row,meta){
-                        return '<a href="#" onclick=toEdit("'+data+'")><span class="glyphicon glyphicon-edit">编辑</span></a> &nbsp;&nbsp;<a href="#" onclick=toDel("'+data+'","'+row.name+'")><span class="glyphicon glyphicon-remove-sign">删除</span></a>'
+                        return '<a href="#" onclick=toEdit("'+data+'")><span class="glyphicon glyphicon-edit">编辑</span></a> &nbsp;&nbsp;<a href="#" onclick=toDel("'+data+'","'+data+'")><span class="glyphicon glyphicon-remove-sign">删除</span></a>'
                     }
                 },
 
             ],
             initComplete: function () {
-                var banks = [[${banks}]];
-                var selectHtml = "<select id='selectBank'>"+
-                    "   <option value=''>全部银行</option>";
-                for(var i in banks){
-                    var bank = banks[i];
-                    selectHtml += "<option value='"+bank.bankId+"'>"+bank.bankName+"</option>";
-                }
-                selectHtml += "</select>";
-                $("#searchBank").html(selectHtml);
-                $("#addBtn").append('<button id="addModelButton" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>添加</button>');
-                $("#addModelButton").on("click", toAdd);
-                $("#selectBank").change(function () {
-                    var selectBank = $("#selectBank").val();
-                    $("#listTable").dataTable().fnDraw(0);;
 
-                });
+                $("#addBtn").append('<button id="addCreditGroupBtn" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>添加</button>');
+                $("#addCreditGroupBtn").on("click", toAdd);
             }
         }).api();
 
@@ -181,7 +146,7 @@
 
     function toAdd(){
         $("#addModal").modal({
-            remote: "credit/toCreditProductAdd",
+            remote: "credit/toCreditGroupAdd",
             show:true,
             backdrop:"static"
         });
@@ -189,7 +154,7 @@
     
     function toEdit(id) {
         $("#editModal").modal({
-            remote: "credit/toCreditProductEdit?id="+id,
+            remote: "credit/toCreditGroupEdit?id="+id,
             show:true
         });
 
@@ -203,17 +168,18 @@
         $(this).removeData("bs.modal");
     });
 
+
     function toDel(id,name) {
-        confirm("确定删除信用卡产品："+name,function(e,btn){ //event + button clicked
+        confirm("确定删除运营消息："+name,function(e,btn){ //event + button clicked
             var param={}
             param.id = id;
-            $.post("credit/editProductDel",param,function(data){
+            $.post("credit/creditGroupDel",param,function(data){
                 if(data.success){
                     successAlert("删除成功")
                 }else{
                     errorAlert(data.msg);
                 }
-                LoadAjaxContent("credit/editProductList");
+                LoadAjaxContent("credit/creditGroupList");
 
             },"json");
         }, function(e,btn){

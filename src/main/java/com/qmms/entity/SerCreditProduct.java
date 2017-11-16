@@ -19,6 +19,7 @@ public class SerCreditProduct implements Serializable {
     private String cardPrivilege;
     @Column(length = 1024)
     private String cardDesc;
+    @Column(length = 1024)
     private String cardImg;
     private Integer applyNum;
     private String url;

@@ -1,9 +1,6 @@
 package com.qmms.sevice;
 
-import com.qmms.entity.SerCreditBank;
-import com.qmms.entity.SerCreditBanner;
-import com.qmms.entity.SerCreditProduct;
-import com.qmms.entity.SerCreditType;
+import com.qmms.entity.*;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -170,5 +167,43 @@ public interface SerCreditService {
      * @return
      */
     public List<SerCreditProduct> getAllCreditProducts();
+
+    //分类组
+
+    /**
+     * 分页查询
+     * @param page
+     * @param pageSize
+     * @param id
+     * @return
+     */
+    Page<SerCreditGroup> getCreditGroupListWithCondition(int page, int pageSize, String id);
+
+    /**
+     *
+     * @param creditGroup
+     * @return
+     */
+    public SerCreditGroup addCreditGroup(SerCreditGroup creditGroup,String[] creditTypes);
+
+    /**
+     * 获取
+     * @param id
+     * @return
+     */
+    public SerCreditGroup getCreditGroup(String id);
+
+    /**
+     * 删除
+     * @param id
+     */
+    public void delCreditGroup(String id);
+
+    /**
+     * 编辑
+     * @param creditGroup
+     * @return
+     */
+    public SerCreditGroup editCreditGroup(SerCreditGroup creditGroup,String[] creditTypes) throws Exception;
 
 }

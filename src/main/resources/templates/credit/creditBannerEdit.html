@@ -41,7 +41,7 @@
                             <div class="col-sm-6">
                                 <select class="populate placeholder" id="pid" name="pid">
                                     <option value="">不配置</option>
-                                    <option  th:each="product:${products}" th:value="${product.id}" th:selected="${product.id}==${banner.pid}" th:text="${product.name}"></option>
+                                    <option  th:each="product:${products}" th:value="${product.cardId}" th:selected="${product.cardId}==${banner.pid}" th:text="${product.cardName}"></option>
                                 </select>
                             </div>
                         </div>

@@ -1,12 +1,9 @@
 package com.qmms.web;
 
-import com.qmms.entity.SerCreditBank;
-import com.qmms.entity.SerCreditType;
-import com.qmms.entity.SerCreditBanner;
-import com.qmms.entity.SerCreditProduct;
+import com.qmms.entity.*;
+import com.qmms.sevice.SerChannelService;
 import com.qmms.sevice.SerCreditService;
 import com.qmms.utils.UploadUtil;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -37,6 +34,8 @@ public class CreditController {
 
     @Resource
     private SerCreditService serCreditService;
+    @Resource
+    private SerChannelService serChannelService;
 
     //信用卡银行
     @RequestMapping("/creditBankList")
@@ -319,6 +318,188 @@ public class CreditController {
     public Page<SerCreditProduct> getCreditProductList(int page, int pageSize, String bankId){
         Page p1 = serCreditService.getCreditProductList(page, pageSize, bankId);
         return p1;
+    }
+
+    @RequestMapping("/toCreditProductAdd")
+    public String toCreditProductAdd(Model model){
+        List<SerCreditBank> banks = serCreditService.getAllCreditBank();
+        model.addAttribute("banks",banks);
+        List<SerCreditType> types = serCreditService.getAllCreditTypes();
+        model.addAttribute("types",types);
+        List<SerChannel> channels = serChannelService.getAllChannel();
+        model.addAttribute("channels",channels);
+        return "/credit/creditProductAdd";
+    }
+
+    @RequestMapping("/creditProductAdd")
+    @ResponseBody
+    public Map<String,String> creditProductAdd(SerCreditProduct product,String[] creditType,String[] channelUrl){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.addCreditProduct(product,creditType,channelUrl);
+            data.put("success","1");
+            data.put("msg","添加成功");
+        }catch (Exception e){
+            data.put("msg","添加失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @PostMapping(value = "/uploadCreditProductImg", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String,String> uploadCreditProductImg(@RequestParam("file") MultipartFile file){
+        return UploadUtil.uploadImg(file,webUploadPath,creditProdutImgPath);
+    }
+
+    @RequestMapping("/toCreditProductEdit")
+    public String toCreditProductEdit(Long id,Model model){
+        SerCreditProduct product = serCreditService.getCreditProduct(id);
+        model.addAttribute("product",product);
+        List<SerCreditBank> banks = serCreditService.getAllCreditBank();
+        model.addAttribute("banks",banks);
+        List<SerCreditType> types = serCreditService.getAllCreditTypes();
+        model.addAttribute("types",types);
+        List<SerChannel> channels = serChannelService.getAllChannel();
+        model.addAttribute("channels",channels);
+        Set<SerCreditProductChannelUrl> channelUrlList = product.getChannelUrls();
+        StringBuffer buffer =  new StringBuffer();
+        for(SerCreditProductChannelUrl url:channelUrlList){
+            if(buffer.length() == 0){
+                buffer.append(url.getChannelId()).append("$$").append(url.getChannelUrl());
+            }else{
+                buffer.append(",").append(url.getChannelId()).append("$$").append(url.getChannelUrl());
+            }
+        }
+        model.addAttribute("channelUrl",buffer.toString());
+        Map<Long,String> channelMap = new HashMap<>();
+        for(SerChannel channel:channels){
+            channelMap.put(channel.getId(),channel.getName());
+        }
+        model.addAttribute("channelMap",channelMap);
+        Set<String> typeSet = new HashSet<String>();
+        for(SerCreditType type:product.getCreditTypeList()){
+            typeSet.add(type.getKey());
+        }
+        model.addAttribute("typeSet",typeSet);
+        return "/credit/creditProductEdit";
+    }
+
+    @RequestMapping("/creditProductEdit")
+    @ResponseBody
+    public Map<String,String> creditProductEdit(SerCreditProduct product,String[] creditType,String[] channelUrl){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.editCreditProduct(product,creditType,channelUrl);
+            data.put("success","1");
+            data.put("msg","添加成功");
+        }catch (Exception e){
+            data.put("msg","添加失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/creditProductDel")
+    @ResponseBody
+    public Map<String,String> creditProductDel(Long id){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.delCreditProduct(id);
+            data.put("success","1");
+            data.put("msg","删除成功");
+        }catch (Exception e){
+            data.put("msg","删除失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    //分类组
+    @RequestMapping("creditGroupList")
+    public String creditGroupList(){
+        return "/credit/creditGroupList";
+    }
+
+    @RequestMapping("toCreditGroupAdd")
+    public String toCreditGroupAdd(Model model){
+        List<SerCreditType> creditTypes = serCreditService.getAllCreditTypes();
+        model.addAttribute("creditTypes",creditTypes);
+        return "/credit/creditGroupAdd";
+    }
+
+
+    @RequestMapping("/creditGroupIsExist")
+    @ResponseBody
+    public Map<String,Boolean> creditGroupIsExist(String id){
+        SerCreditGroup group = serCreditService.getCreditGroup(id);
+        Map<String,Boolean> rs = new HashMap<String,Boolean>();
+        if(group!=null){
+            rs.put("valid",false);
+        }else{
+            rs.put("valid",true);
+        }
+        return rs;
+    }
+
+    @RequestMapping("toCreditGroupEdit")
+    public String toCreditGroupEdit(String id,Model model){
+        SerCreditGroup group = serCreditService.getCreditGroup(id);
+        model.addAttribute("group",group);
+        List<SerCreditType> creditTypes = serCreditService.getAllCreditTypes();
+        model.addAttribute("creditTypes",creditTypes);
+        Set<String> creditTypeSet = new HashSet<String>();
+        for(SerCreditType creditType:group.getCreditTypeList()){
+            creditTypeSet.add(creditType.getKey());
+        }
+        model.addAttribute("creditTypeSet",creditTypeSet);
+        return "/credit/creditGroupEdit";
+    }
+
+    @RequestMapping("/getCreditGroupList")
+    @ResponseBody
+    public Page<SerCreditGroup> getCreditGroupList(int page, int pageSize, String id){
+        Page p1 = serCreditService.getCreditGroupListWithCondition(page, pageSize, id);
+        return p1;
+    }
+
+    @RequestMapping("/creditGroupAdd")
+    @ResponseBody
+    public Map<String,String> laonTipAdd(SerCreditGroup group,String[] creditTypes){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.addCreditGroup(group,creditTypes);
+            data.put("success","1");
+            data.put("msg","添加成功");
+        }catch (Exception e){
+            data.put("msg","添加失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/creditGroupEdit")
+    @ResponseBody
+    public Map<String,String> creditGroupEdit(SerCreditGroup group,String[] creditTypes){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.editCreditGroup(group,creditTypes);
+            data.put("success","1");
+            data.put("msg","编辑成功");
+        }catch (Exception e){
+            data.put("msg","编辑失败："+e.getMessage());
+        }
+        return data;
+    }
+
+    @RequestMapping("/creditGroupDel")
+    @ResponseBody
+    public Map<String,String> creditTipDel(String id){
+        Map<String,String> data = new HashMap<>();
+        try{
+            serCreditService.delCreditGroup(id);
+            data.put("success","1");
+            data.put("msg","删除成功");
+        }catch (Exception e){
+            data.put("msg","删除失败："+e.getMessage());
+        }
+        return data;
     }
 
 }

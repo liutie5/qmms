@@ -1,9 +1,6 @@
 package com.qmms.sevice.impl;
 
-import com.qmms.dao.SerCreditBankDao;
-import com.qmms.dao.SerCreditBannerDao;
-import com.qmms.dao.SerCreditProductDao;
-import com.qmms.dao.SerCreditTypeDao;
+import com.qmms.dao.*;
 import com.qmms.entity.*;
 import com.qmms.sevice.SerCreditService;
 import com.qmms.utils.UpdateUtils;
@@ -34,7 +31,8 @@ public class SerCreditServiceImpl implements SerCreditService{
     private SerCreditBannerDao serCreditBannerDao;
     @Resource
     private SerCreditProductDao serCreditProductDao;
-
+    @Resource
+    private SerCreditGroupDao serCreditGroupDao;
 
     //信用卡银行
     
@@ -295,22 +293,32 @@ public class SerCreditServiceImpl implements SerCreditService{
         SerCreditProduct rawObject = serCreditProductDao.findOne(product.getCardId());
         UpdateUtils.updateNotNullField(rawObject,product);
         Set<SerCreditType> typeList = rawObject.getCreditTypeList();
-        typeList.clear();
-        for(String creditType:creditTypes){
-            SerCreditType serCreditType = new SerCreditType();
-            serCreditType.setKey(creditType);
-            typeList.add(serCreditType);
+        if(typeList != null){
+            typeList.clear();
         }
+        if(creditTypes != null){
+            for(String creditType:creditTypes){
+                SerCreditType serCreditType = new SerCreditType();
+                serCreditType.setKey(creditType);
+                typeList.add(serCreditType);
+            }
+        }
+
         Set<SerCreditProductChannelUrl> channelUrlList = rawObject.getChannelUrls();
-        channelUrlList.clear();
-        for(String data:channelUrls){
-            String[] arr = data.split("\\$\\$");
-            SerCreditProductChannelUrl url = new SerCreditProductChannelUrl();
-            url.setChannelId(Long.parseLong(arr[0]));
-            url.setChannelUrl(arr[1]);
-            url.setCreditProduct(product);
-            channelUrlList.add(url);
+        if(channelUrlList != null){
+            channelUrlList.clear();
         }
+        if(channelUrls != null){
+            for(String data:channelUrls){
+                String[] arr = data.split("\\$\\$");
+                SerCreditProductChannelUrl url = new SerCreditProductChannelUrl();
+                url.setChannelId(Long.parseLong(arr[0]));
+                url.setChannelUrl(arr[1]);
+                url.setCreditProduct(product);
+                channelUrlList.add(url);
+            }
+        }
+
         SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
         int currentTime = (int)(new Date().getTime()/1000);
         rawObject.setUpdateUserId(currentUser.getUserId());
@@ -326,5 +334,70 @@ public class SerCreditServiceImpl implements SerCreditService{
     @Override
     public List<SerCreditProduct> getAllCreditProducts() {
         return serCreditProductDao.findAll(new Sort(Sort.Direction.DESC,"orderedBy"));
+    }
+
+    //分类组
+    @Override
+    public Page<SerCreditGroup> getCreditGroupListWithCondition(int page, int pageSize, final String id) {
+        Pageable pageable = new PageRequest(page,pageSize);
+        Page<SerCreditGroup> pageList = serCreditGroupDao.findAll(new Specification<SerCreditGroup>(){
+            @Override
+            public Predicate toPredicate(Root<SerCreditGroup> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+                if(StringUtils.isNotBlank(id)){
+                    list.add(criteriaBuilder.like(root.get("id").as(String.class),"%"+id+"%"));
+                }
+                Predicate[] predicates = new Predicate[list.size()];
+                predicates = list.toArray(predicates);
+                return criteriaBuilder.and(predicates);
+
+            }
+        },pageable);
+        return pageList;
+    }
+
+    @Override
+    public SerCreditGroup addCreditGroup(SerCreditGroup creditGroup,String[] creditTypes) {
+        List<SerCreditType> creditTypeList = new ArrayList<>();
+        for(String creditType:creditTypes){
+            SerCreditType type = new SerCreditType();
+            type.setKey(creditType);
+            creditTypeList.add(type);
+        }
+        creditGroup.setCreditTypeList(creditTypeList);
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        creditGroup.setAddTime(currentTime);
+        creditGroup.setAddUserId(currentUser.getUserId());
+        creditGroup.setUpdateUserId(currentUser.getUserId());
+        creditGroup.setUpdateTime(currentTime);
+        return serCreditGroupDao.save(creditGroup);
+    }
+
+    @Override
+    public SerCreditGroup getCreditGroup(String id) {
+        return serCreditGroupDao.findOne(id);
+    }
+
+    @Override
+    public void delCreditGroup(String id) {
+        serCreditGroupDao.delete(id);
+    }
+
+    @Override
+    public SerCreditGroup editCreditGroup(SerCreditGroup creditGroup,String[] creditTypes) throws Exception {
+        SerCreditGroup rawObj = serCreditGroupDao.findOne(creditGroup.getId());
+        UpdateUtils.updateNotNullField(rawObj,creditGroup);
+        rawObj.getCreditTypeList().clear();
+        for(String creditType:creditTypes){
+            SerCreditType type = new SerCreditType();
+            type.setKey(creditType);
+            rawObj.getCreditTypeList().add(type);
+        }
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        rawObj.setUpdateUserId(currentUser.getUserId());
+        rawObj.setUpdateTime(currentTime);
+        return serCreditGroupDao.save(rawObj);
     }
 }

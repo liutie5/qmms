@@ -40,7 +40,7 @@
                             <div class="col-sm-6">
                                 <select class="populate placeholder" id="pid" name="pid">
                                     <option value="">不配置</option>
-                                    <option  th:each="product:${products}" th:value="${product.id}" th:text="${product.name}"></option>
+                                    <option  th:each="product:${products}" th:value="${product.cardId}" th:text="${product.cardName}"></option>
                                 </select>
                             </div>
                         </div>
@@ -158,6 +158,8 @@
             var bootstrapValidator = $("#addForm").data('bootstrapValidator');
             bootstrapValidator.enableFieldValidators("img",false);
             bootstrapValidator.enableFieldValidators("img",true);
+            bootstrapValidator.updateStatus('pid', 'NOT_VALIDATED').validateField('pid');
+            bootstrapValidator.updateStatus('url', 'NOT_VALIDATED').validateField('url');
             bootstrapValidator.validate();
             if(bootstrapValidator.isValid()){
                 $("#formSubmit").attr("disabled", true);
@@ -211,6 +213,8 @@
                     if(data.success){
                         $("#img").val(data.imgPath);
                         $("#imgshow").attr("src", data.imgPath);
+                        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+                        bootstrapValidator.updateStatus('img', 'NOT_VALIDATED').validateField('img');
                     }else {
                         warningAlert(data.msg);
                     }
