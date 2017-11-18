@@ -58,13 +58,13 @@
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="userManage" th:checked="${#sets.contains(permissionSet,'userManage')}">用户管理
+                                        <input type="checkbox" name="permission" value="sys:userManage" th:checked="${#sets.contains(permissionSet,'sys:userManage')}">用户管理
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="permissionConf" th:checked="${#sets.contains(permissionSet,'permissionConf')}">权限配置
+                                        <input type="checkbox" name="permission" value="sys:permissionConf" th:checked="${#sets.contains(permissionSet,'sys:permissionConf')}">权限配置
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="channelConf"  th:checked="${#sets.contains(permissionSet,'channelConf')}">渠道配置
+                                        <input type="checkbox" name="permission" value="channel:channelConf"  th:checked="${#sets.contains(permissionSet,'channel:channelConf')}">渠道配置
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
@@ -96,25 +96,25 @@
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox"  name="permission" value="loanType"  th:checked="${#sets.contains(permissionSet,'loanType')}">贷款类型
+                                        <input type="checkbox"  name="permission" value="loan:loanType"  th:checked="${#sets.contains(permissionSet,'loan:loanType')}">贷款类型
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox"  name="permission" value="loanProduct"  th:checked="${#sets.contains(permissionSet,'loanProduct')}">贷款产品
+                                        <input type="checkbox"  name="permission" value="loan:loanProduct"  th:checked="${#sets.contains(permissionSet,'loan:loanProduct')}">贷款产品
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="loanAd"  th:checked="${#sets.contains(permissionSet,'loanAd')}" >贷款广告
+                                        <input type="checkbox" name="permission" value="loan:loanAd"  th:checked="${#sets.contains(permissionSet,'loan:loanAd')}" >贷款广告
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox"  name="permission" value="loanOther"   th:checked="${#sets.contains(permissionSet,'loanOther')}">其他配置
+                                        <input type="checkbox"  name="permission" value="loan:loanOther"   th:checked="${#sets.contains(permissionSet,'loan:loanOther')}">其他配置
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
@@ -130,31 +130,31 @@
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="creditBank"  th:checked="${#sets.contains(permissionSet,'creditBank')}">信用卡银行
+                                        <input type="checkbox" name="permission" value="credit:creditBank"  th:checked="${#sets.contains(permissionSet,'credit:creditBank')}">信用卡银行
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="creditType"  th:checked="${#sets.contains(permissionSet,'creditType')}">信用卡类型
+                                        <input type="checkbox" name="permission" value="credit:creditType"  th:checked="${#sets.contains(permissionSet,'credit:creditType')}">信用卡类型
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="creditProduct"  th:checked="${#sets.contains(permissionSet,'creditProduct')}">信用卡产品
+                                        <input type="checkbox" name="permission" value="credit:creditProduct"  th:checked="${#sets.contains(permissionSet,'credit:creditProduct')}">信用卡产品
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="creditAd"  th:checked="${#sets.contains(permissionSet,'creditAd')}">信用卡广告
+                                        <input type="checkbox" name="permission" value="credit:creditAd"  th:checked="${#sets.contains(permissionSet,'credit:creditAd')}">信用卡广告
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox"  name="permission" value="creditOther"  th:checked="${#sets.contains(permissionSet,'creditOther')}">其他配置
+                                        <input type="checkbox"  name="permission" value="credit:creditOther"  th:checked="${#sets.contains(permissionSet,'credit:creditOther')}">其他配置
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
@@ -169,13 +169,34 @@
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="loanUv"  th:checked="${#sets.contains(permissionSet,'loanUv')}" >贷款UV统计
+                                        <input type="checkbox" name="permission" value="stat:loanUv"  th:checked="${#sets.contains(permissionSet,'stat:loanUv')}" >贷款UV统计
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label style="margin-left: 40px">
-                                        <input type="checkbox" name="permission" value="creditUv"  th:checked="${#sets.contains(permissionSet,'creditUv')}" >信用卡UV统计
+                                        <input type="checkbox" name="permission" value="stat:creditUv"  th:checked="${#sets.contains(permissionSet,'stat:creditUv')}" >信用卡UV统计
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <div class="checkbox">
+                                    <label>
+                                        其他配置
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="conf:changeShow"  th:checked="${#sets.contains(permissionSet,'conf:changeShow')}" >下发管理
+                                        <i class="fa fa-square-o small" style="margin-left: 40px"></i>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label style="margin-left: 40px">
+                                        <input type="checkbox" name="permission" value="conf:rnUpdate"  th:checked="${#sets.contains(permissionSet,'conf:rnUpdate')}" >升级配置
                                         <i class="fa fa-square-o small" style="margin-left: 40px"></i>
                                     </label>
                                 </div>

@@ -5,8 +5,10 @@ import com.qmms.dao.SerChannelUmengDao;
 import com.qmms.dao.SerLoanProductDao;
 import com.qmms.entity.SerChannel;
 import com.qmms.entity.SerChannelUmeng;
+import com.qmms.entity.SysUserInfo;
 import com.qmms.sevice.SerChannelService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -82,6 +85,12 @@ public class SerChannelServiceImpl implements SerChannelService {
             }
             channel.setChannelUmengList(dataList);
         }
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        channel.setAddTime(currentTime);
+        channel.setAddUserId(currentUser.getUserId());
+        channel.setUpdateUserId(currentUser.getUserId());
+        channel.setUpdateTime(currentTime);
         channel = serChannelDao.save(channel);
         return channel;
     }
@@ -138,6 +147,10 @@ public class SerChannelServiceImpl implements SerChannelService {
                 sc.getChannelUmengList().add(umeng);
             }
         }
+        SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
+        int currentTime = (int)(new Date().getTime()/1000);
+        sc.setUpdateUserId(currentUser.getUserId());
+        sc.setUpdateTime(currentTime);
         serChannelDao.save(sc);
         return sc;
 

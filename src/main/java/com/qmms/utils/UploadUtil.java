@@ -1,6 +1,8 @@
 package com.qmms.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -12,6 +14,7 @@ import java.util.Set;
  * Created by liutie on 17-11-8.
  */
 public class UploadUtil {
+    private static Logger logger = LoggerFactory.getLogger(UploadUtil.class);
     public static Map<String,String> uploadImg(MultipartFile file,String basePath,String privatePath){
         Map<String,String> data = new HashMap<>();
         if (!file.isEmpty()) {
@@ -79,5 +82,17 @@ public class UploadUtil {
         }
 
         return data;
+    }
+
+    public static void rmUploadFile(String filePath){
+        try{
+            File dest = new File(filePath);
+            if(!dest.isDirectory()){
+                dest.delete();
+            }
+        }catch (Exception e){
+            logger.error("rmUploadFileError:",e);
+        }
+
     }
 }

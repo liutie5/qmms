@@ -4,9 +4,11 @@ import com.qmms.dao.*;
 import com.qmms.entity.*;
 import com.qmms.sevice.SerLoanService;
 import com.qmms.utils.UpdateUtils;
+import com.qmms.utils.UploadUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.hibernate.sql.Update;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,16 @@ import java.util.List;
 
 @Service
 public class SerLoanServiceImpl implements SerLoanService {
+
+    @Value("${web.upload-path}")
+    private String webUploadPath;
+    @Value("${loanType.img.path}")
+    private String loanTypeImgPath;
+    @Value("${loanProduct.img.path}")
+    private String loanProdutImgPath;
+    @Value("${loanBanner.img.path}")
+    private String loanBannerImgPath;
+
     @Resource
     private SerLoanTypeDao serLoanTypeDao;
     @Resource
@@ -36,6 +48,8 @@ public class SerLoanServiceImpl implements SerLoanService {
     private SerLoanTipDao serLoanTipDao;
     @Resource
     private SerLoanGroupDao serLoanGroupDao;
+
+
     /**
      * 分页查找
      * @param page
@@ -86,6 +100,11 @@ public class SerLoanServiceImpl implements SerLoanService {
      */
     @Transactional
     public void delLoanType(String key){
+        SerLoanType loanType = serLoanTypeDao.findOne(key);
+        String img = loanType.getImg();
+        String subImg = loanType.getSubImg();
+        UploadUtil.rmUploadFile(webUploadPath+loanTypeImgPath+img);
+        UploadUtil.rmUploadFile(webUploadPath+loanTypeImgPath+subImg);
         serLoanTypeDao.delete(key);
     }
 
