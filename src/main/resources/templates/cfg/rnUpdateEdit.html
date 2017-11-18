@@ -20,16 +20,22 @@
                     <fieldset>
                         <legend>编辑</legend>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">描述信息:</label>
+                            <label class="col-sm-3 control-label">更新简述:</label>
                             <div class="col-sm-6">
-                                <input type="hidden" name="id" th:value="${show.id}" />
-                                <input type="text" class="form-control" id="desc" name="desc" th:value="${show.desc}" placeholder="描述信息 方便识别"/>
+                                <input type="hidden" name="id" th:value="${update.id}"/>
+                                <input type="text" class="form-control" id="desc" name="desc" th:value="${update.desc}" placeholder="描述信息 方便识别"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">版本:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="version" th:value="${update.version}" placeholder="当前更新版本"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">umeng:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="umeng" name="umeng" th:value="${show.umeng}" placeholder="umeng key"/>
+                                <input type="text" class="form-control" id="umeng" name="umeng" th:value="${update.umeng}"  placeholder="umeng key"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -37,20 +43,23 @@
                             <div class="col-sm-6" >
                                 <select class="populate placeholder" id="marketSelect" name="marketId">
                                     <option value="">请选择</option>
-                                    <option  th:each="market:${markets}" th:value="${market.key}" th:selected="${show.marketId}==${market.key}" th:text="${market.value}"></option>
+                                    <option  th:each="market:${markets}" th:value="${market.key}" th:selected="${market.key}==${update.marketId}" th:text="${market.value}"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">显示类型:</label>
+                            <label class="col-sm-3 control-label">更新描述:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="type" th:value="${show.type}" placeholder="显示类型"/>
+                                <input type="text" class="form-control" name="updateDesc" th:value="${update.updateDesc}"  placeholder="更新描述"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">链接地址:</label>
+                            <label class="col-sm-3 control-label">更新下载文件:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" name="url" th:value="${show.url}" placeholder="部分显示类型需要链接"/>
+                                <input type="hidden" class="form-control" id="updateFile" th:value="${update.updateFile}" name="updateFile" />
+                                <p><input type="file" class="form-control" id="file" name="file" /></p>
+                                <input type="button" id="upload" value="上传" onclick="ajaxFileUpload()" />
+                                <p><a href="#" id="fileShow"></a></p>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -92,6 +101,18 @@
                         }
                     }
                 },
+                "version": {
+                    validators: {
+                        notEmpty: {
+                            message: '版本不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '版本长度在1-255个字符'
+                        }
+                    }
+                },
                 "umeng": {
                     validators: {
                         notEmpty: {
@@ -101,18 +122,6 @@
                             min: 1,
                             max: 255,
                             message: 'umeng长度在1-255个字符'
-                        }
-                    }
-                },
-                "type": {
-                    validators: {
-                        notEmpty: {
-                            message: '显示类型不能为空'
-                        },
-                        stringLength: {
-                            min: 1,
-                            max: 255,
-                            message: '显示类型长度在1-255个字符'
                         }
                     }
                 }
@@ -125,11 +134,11 @@
             if(bootstrapValidator.isValid()){
                 $("#formSubmit").attr("disabled", true);
                 var param = $("#addForm").serialize();
-                $.post("cfg/changeShowEdit",param,function(data){
+                $.post("cfg/rnUpdateEdit",param,function(data){
                     if(data.success){
                         successAlert("编辑成功")
                         $("#addModal").modal("hide");
-                        LoadAjaxContent("cfg/changeShowList");
+                        LoadAjaxContent("cfg/rnUpdateList");
                     }else{
                         errorAlert(data.msg);
                         $("#formSubmit").attr("disabled", false);
@@ -143,4 +152,45 @@
             }
         })
     })
+
+    function ajaxFileUpload(){
+        var f = $("#file").val();
+        if(f==null||f==""){
+            warningAlert("请选择文件");
+            return false;
+        }else{
+            var extname = f.substring(f.lastIndexOf(".")+1,f.length);
+            extname = extname.toLowerCase();//处理了大小写
+        }
+        var file = document.getElementById("file").files;
+        var size = file[0].size;
+//        if(size>2097152){
+//            warningAlert("错误提示:所选择的图片太大，图片大小最多支持2M!");
+//            return false;
+//        }
+        $.ajaxFileUpload
+        (
+            {
+                url: 'cfg/uploadRnUpdateFile', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'file', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data, status){     //服务器成功响应处理函数
+                    if(data.success){
+                        $("#updateFile").val(data.filePath);
+                        $("#fileShow").attr("href", data.filePath);
+                        $("#fileShow").text(data.filePath);
+                    }else {
+                        warningAlert(data.msg);
+                    }
+
+                },
+                error: function (data, status, e){//服务器响应失败处理函数
+                    warningAlert(e);
+                }
+            }
+        )
+        return false;
+    }
+
 </script>

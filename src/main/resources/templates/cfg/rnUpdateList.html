@@ -5,7 +5,7 @@
         </a>
         <ol class="breadcrumb pull-left">
             <li><a href="#">其他配置</a></li>
-            <li><a href="#">下发管理</a></li>
+            <li><a href="#">升级配置</a></li>
         </ol>
 
     </div>
@@ -25,11 +25,12 @@
                 <table class="table table-bordered table-striped table-hover table-heading table-datatable" id="listTable">
                     <thead>
                     <tr>
-                        <th>描述信息</th>
+                        <th>更新简述</th>
+                        <th>版本</th>
                         <th>umeng</th>
-                        <th>市场渠道</th>
-                        <th>type</th>
-                        <th>url</th>
+                        <th>source</th>
+                        <th>描述</th>
+                        <th>更新下载地址</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -104,7 +105,7 @@
                 //ajax请求数据方法
                 $.ajax({
                     type: "GET",
-                    url: "cfg/getChangeShowList",//url请求的地址
+                    url: "cfg/getRnUpdateList",//url请求的地址
                     cache: false,  //禁用缓存
                     data: param,  //传入组装的参数
                     dataType: "json",
@@ -128,10 +129,11 @@
             },
             columns: [
                 { "data": "desc" },
+                { "data": "version" },
                 {"data": "umeng"},
                 {"data": "marketId"},
-                {"data": "type"},
-                {"data": "url"},
+                {"data": "updateDesc"},
+                {"data": "updateFile"},
                 {
                     "data": "id",
                     render:function(data,type,row,meta){
@@ -151,7 +153,7 @@
 
     function toAdd(){
         $("#addModal").modal({
-            remote: "cfg/toChangeShowAdd",
+            remote: "cfg/toRnUpdateAdd",
             show:true,
             backdrop:"static"
         });
@@ -159,7 +161,7 @@
     
     function toEdit(id) {
         $("#editModal").modal({
-            remote: "cfg/toChangeShowEdit?id="+id,
+            remote: "cfg/toRnUpdateEdit?id="+id,
             show:true
         });
 
@@ -178,13 +180,13 @@
         confirm("确定删除："+name,function(e,btn){ //event + button clicked
             var param={}
             param.id = id;
-            $.post("cfg/changeShowDel",param,function(data){
+            $.post("cfg/rnUpdateDel",param,function(data){
                 if(data.success){
                     successAlert("删除成功")
                 }else{
                     errorAlert(data.msg);
                 }
-                LoadAjaxContent("cfg/changeShowList");
+                LoadAjaxContent("cfg/rnUpdateList");
 
             },"json");
         }, function(e,btn){
