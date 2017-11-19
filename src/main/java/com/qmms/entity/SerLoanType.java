@@ -1,8 +1,8 @@
 package com.qmms.entity;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name="ser_loan_type")
