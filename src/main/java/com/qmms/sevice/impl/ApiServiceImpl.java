@@ -148,7 +148,7 @@ public class ApiServiceImpl implements ApiService{
 
     public String getLoanForwardUrl(String domainName,String pkgName,String source,String type,String pid,String url){
         StringBuffer buffer = new StringBuffer(domainName);
-        buffer.append("/forward/loan?umeng=").append(pkgName).append("&mrid=").append(source)
+        buffer.append("/forward/loan?pkgKey=").append(pkgName).append("&source=").append(source)
                 .append("&type=").append(type).append("&pid=").append(pid).append("&fallback="+url);
         return buffer.toString();
     }
