@@ -58,7 +58,6 @@
                                 <div class="form-inline">
                                     <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市场ID:</label>
                                     <select class="populate placeholder" id="marketSelect">
-                                        <option value="">全部市场</option>
                                         <option  th:each="market:${markets}" th:value="${market.key}" th:text="${market.value}"></option>
                                     </select>
                                 </div>
@@ -164,8 +163,8 @@
     function mappAdd() {
         var umengKey = $('#umengkey').val();
         if(umengKey != ''){
-            if(umengKey.index('_')){
-                warningAlert("umengKey不能包含_字符")
+            if(umengKey.indexOf('_')!=-1){
+                warningAlert("umengKey不能包含_字符");
                 return;
             }
             var market = $('#marketSelect').val();

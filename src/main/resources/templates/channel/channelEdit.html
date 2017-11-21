@@ -63,7 +63,6 @@
                                 <div class="form-inline">
                                     <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;市场ID:</label>
                                     <select class="populate placeholder" id="marketSelect">
-                                        <option value="">全部市场</option>
                                         <option  th:each="market:${markets}" th:value="${market.key}" th:text="${market.value}"></option>
                                     </select>
                                 </div>
