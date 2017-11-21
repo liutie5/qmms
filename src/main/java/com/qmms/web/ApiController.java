@@ -1,6 +1,7 @@
 package com.qmms.web;
 
 import com.qmms.entity.api.LoanMain;
+import com.qmms.entity.api.LoanPlist;
 import com.qmms.sevice.ApiService;
 import com.qmms.utils.WebUtil;
 import org.slf4j.Logger;
@@ -38,6 +39,27 @@ public class ApiController {
             loanMain.setDesc(e.getMessage());
         }
         return  loanMain;
+    }
+
+    @RequestMapping("loan/loanPlist.go")
+    @ResponseBody
+    public LoanPlist loanPlist(HttpServletRequest request, String type, String balance,String term) {
+        String domainName = WebUtil.getDomainName(request);
+        String pkgName = request.getHeader("pkgName");
+        String pkgKey = request.getHeader("pkgKey");
+        String source = request.getHeader("source");
+        LoanPlist loanPlist = null;
+        try{
+            loanPlist =  apiService.loanProduct(domainName,pkgName,pkgKey,source,type,balance,term);
+            loanPlist.setDesc("success");
+            return loanPlist;
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            loanPlist = new LoanPlist();
+            loanPlist.setCode(1);
+            loanPlist.setDesc(e.getMessage());
+        }
+        return  loanPlist;
     }
 
 

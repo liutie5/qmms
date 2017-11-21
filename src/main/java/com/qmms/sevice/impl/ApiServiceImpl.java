@@ -4,10 +4,13 @@ import com.qmms.dao.*;
 import com.qmms.entity.*;
 import com.qmms.entity.api.*;
 import com.qmms.sevice.ApiService;
+import com.qmms.sevice.SerLoanService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +28,8 @@ public class ApiServiceImpl implements ApiService{
     private SerLoanTipDao serLoanTipDao;
     @Resource
     private SerLoanGroupDao serLoanGroupDao;
+    @Resource
+    private SerChannelDao serChannelDao;
 
 
     @Override
@@ -137,7 +142,35 @@ public class ApiServiceImpl implements ApiService{
                 target.setApplyNum(String.valueOf(data.getApplyNum()));
                 target.setProductProcess(data.getProductProcess());
                 target.setImg(domainName+"/"+data.getImg());
-                target.setUrl(getLoanForwardUrl(domainName,pkgKey,source,"product",data.getId().toString(),data.getUrl()));
+                String urlRs = "";
+                String allUrlRs = "";
+                List<SerLoanProductChannelUrl> channelUrlList = data.getChannelUrls();
+                for(SerLoanProductChannelUrl url:channelUrlList){
+                    long channelId = url.getChannelId();
+                    SerChannel channel = serChannelDao.findOne(channelId);
+                    List<SerChannelUmeng> channelUmengList = channel.getChannelUmengList();
+                    for(SerChannelUmeng umeng:channelUmengList){
+                        String umengKey = umeng.getUmengKey();
+                        String marketId = umeng.getMarketId();
+                        if(umengKey.equals(pkgKey) && marketId.equals(source)){
+                            urlRs = url.getChannelUrl();
+                            break;
+                        }
+                        //所有市场
+                        if(umengKey.equals(pkgKey) && marketId.equals("")){
+                            allUrlRs = url.getChannelUrl();
+                        }
+                    }
+                }
+                String finalUrl = "";
+                if(StringUtils.isNotBlank(urlRs)){
+                    finalUrl = urlRs;
+                }else if(StringUtils.isNotBlank(allUrlRs)){
+                    finalUrl = allUrlRs;
+                }else{
+                    finalUrl = data.getUrl();
+                }
+                target.setUrl(getLoanForwardUrl(domainName,pkgKey,source,"product",data.getId().toString(),finalUrl));
                 rs.add(target);
             }
 
@@ -153,4 +186,35 @@ public class ApiServiceImpl implements ApiService{
         return buffer.toString();
     }
 
+    @Override
+    public LoanPlist loanProduct(String domainName, String pkgName, String pkgKey, String source, final String type, final String balance, final String term) {
+        LoanPlist loanPlist = new LoanPlist();
+        List<SerLoanProduct> productList = serLoanProductDao.findAll(new Specification<SerLoanProduct>(){
+            @Override
+            public Predicate toPredicate(Root<SerLoanProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+                if(StringUtils.isNotBlank(balance) && StringUtils.isNumeric(balance)){
+                    list.add(criteriaBuilder.lessThanOrEqualTo(root.get("minBalance").as(Long.class),Long.parseLong(balance)));
+                    list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("maxBalance").as(Long.class),Long.parseLong(balance)));
+
+                }
+                if(StringUtils.isNotBlank(term) && StringUtils.isNumeric(term)){
+                    list.add(criteriaBuilder.lessThanOrEqualTo(root.get("minTerm").as(Long.class),Long.parseLong(term)));
+                    list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("maxTerm").as(Long.class),Long.parseLong(term)));
+
+                }
+                if(StringUtils.isNotBlank(type)){
+                    CriteriaBuilder.In<String> in = criteriaBuilder.in(root.join("loanTypeList").get("key").as(String.class));
+                    in.value(type);
+                    list.add(in);
+                }
+                Predicate[] predicates = new Predicate[list.size()];
+                predicates = list.toArray(predicates);
+                return criteriaBuilder.and(predicates);
+
+            }
+        });
+        loanPlist.setData(convertLoanProduct(domainName,pkgKey,source,productList));
+        return loanPlist;
+    }
 }
