@@ -33,7 +33,7 @@ public class ApiServiceImpl implements ApiService{
     @Resource
     private SerChannelDao serChannelDao;
 
-    private static final int CodeSuccess = 1;
+    private static final int CodeSuccess = 0;
     private static final int CodeFailed = 1;
 
     @Override
