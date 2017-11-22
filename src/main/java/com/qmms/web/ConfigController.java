@@ -138,7 +138,7 @@ public class ConfigController {
     public String toRnUpdateAdd(Model model){
         List<SerCfgMarket> markets = serCfgMarketService.getMarketList();
         model.addAttribute("markets",markets);
-        return "cfg/rnUpdateAdd";
+        return "/cfg/rnUpdateAdd";
     }
 
     @PostMapping("/rnUpdateAdd")

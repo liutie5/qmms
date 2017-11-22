@@ -65,7 +65,7 @@ public class ChannelController {
     public String toChannelAdd(Model model){
         List<SerCfgMarket> markets = serCfgMarketService.getMarketList();
         model.addAttribute("markets",markets);
-        return "channel/channelAdd";
+        return "/channel/channelAdd";
     }
 
     @PostMapping("/channelAdd")
