@@ -1,7 +1,6 @@
 package com.qmms.web;
 
-import com.qmms.entity.api.LoanMain;
-import com.qmms.entity.api.LoanPlist;
+import com.qmms.entity.api.*;
 import com.qmms.sevice.ApiService;
 import com.qmms.utils.WebUtil;
 import org.slf4j.Logger;
@@ -24,12 +23,10 @@ public class ApiController {
     @ResponseBody
     public LoanMain loanMain(HttpServletRequest request,String group,String hotType) {
         String domainName = WebUtil.getDomainName(request);
-        String pkgName = request.getHeader("pkgName");
-        String pkgKey = request.getHeader("pkgKey");
-        String source = request.getHeader("source");
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
         LoanMain loanMain = null;
         try{
-            loanMain =  apiService.loanMain(domainName,pkgName,pkgKey,source,group,hotType);
+            loanMain =  apiService.loanMain(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource(),group,hotType);
             loanMain.setDesc("success");
             return loanMain;
         }catch (Exception e){
@@ -45,14 +42,10 @@ public class ApiController {
     @ResponseBody
     public LoanPlist loanPlist(HttpServletRequest request, String type, String balance,String term) {
         String domainName = WebUtil.getDomainName(request);
-        String pkgName = request.getHeader("pkgName");
-        String pkgKey = request.getHeader("pkgKey");
-        String source = request.getHeader("source");
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
         LoanPlist loanPlist = null;
         try{
-            loanPlist =  apiService.loanProduct(domainName,pkgName,pkgKey,source,type,balance,term);
-            loanPlist.setDesc("success");
-            return loanPlist;
+            loanPlist =  apiService.loanPlist(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource(),type,balance,term);
         }catch (Exception e){
             logger.error("loanMain Error:",e);
             loanPlist = new LoanPlist();
@@ -61,6 +54,41 @@ public class ApiController {
         }
         return  loanPlist;
     }
+
+    @RequestMapping("loan/loanPdetail.go")
+    @ResponseBody
+    public LoanPdetail loanPdetail(HttpServletRequest request, String pid) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        LoanPdetail loanPdetail = null;
+        try{
+            loanPdetail =  apiService.loanPdetail(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource(), pid);
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            loanPdetail = new LoanPdetail();
+            loanPdetail.setCode(1);
+            loanPdetail.setDesc(e.getMessage());
+        }
+        return  loanPdetail;
+    }
+
+    @RequestMapping("loan/loanTypes.go")
+    @ResponseBody
+    public LoanTypes loanTypes(HttpServletRequest request, String group) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        LoanTypes loanTypes = null;
+        try{
+            loanTypes =  apiService.loanTypes(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource(), group);
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            loanTypes = new LoanTypes();
+            loanTypes.setCode(1);
+            loanTypes.setDesc(e.getMessage());
+        }
+        return  loanTypes;
+    }
+
 
 
 }
