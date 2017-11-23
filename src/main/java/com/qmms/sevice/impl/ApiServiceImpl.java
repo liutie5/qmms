@@ -90,6 +90,8 @@ public class ApiServiceImpl implements ApiService{
                 target.setDesc(data.getDesc());
                 target.setImg(domainName+"/"+data.getImg());
                 target.setTitle(data.getTitle());
+                target.setSubImg(domainName+"/"+data.getSubImg());
+                target.setSubDesc(data.getSubDesc());
                 rs.add(target);
             }
         }

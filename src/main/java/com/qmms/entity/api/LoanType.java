@@ -5,6 +5,8 @@ public class LoanType {
     private String title;
     private String desc;
     private String img;
+    private String subDesc;
+    private String subImg;
 
     public String getKey() {
         return key;
@@ -36,5 +38,21 @@ public class LoanType {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public String getSubDesc() {
+        return subDesc;
+    }
+
+    public void setSubDesc(String subDesc) {
+        this.subDesc = subDesc;
+    }
+
+    public String getSubImg() {
+        return subImg;
+    }
+
+    public void setSubImg(String subImg) {
+        this.subImg = subImg;
     }
 }

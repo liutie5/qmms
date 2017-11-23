@@ -30,7 +30,7 @@
                         <div class="text-center"><h4 th:text="${msg}"></h4></div>
                         <div class="form-group">
                             <label class="control-label">用户名</label>
-                            <input type="text" class="form-control" name="username" />
+                            <input type="text" class="form-control" id="username" name="username" />
                         </div>
                         <div class="form-group">
                             <label class="control-label">密码</label>
@@ -51,8 +51,14 @@
     $(document).ready(function() {
         $("#loginSubmit").click(function(){
             var password = $("#password").val();
-            $("#password").val($.md5(password));
-            $("#loginSubmit").submit();
+            var username = $("#username").val();
+            if(password==''|| username ==''){
+                return false;
+            }else{
+                $("#password").val($.md5(password));
+                $("#loginSubmit").submit();
+            }
+
         })
     })
 </script>
