@@ -32,7 +32,7 @@ public class ForwardController {
             }
             fallback = fallback.trim();
             String ft = fallback.toLowerCase();
-            if(!ft.startsWith("http://") || !ft.startsWith("https://")){
+            if(!ft.startsWith("http://") && !ft.startsWith("https://")){
                 fallback = "http://"+fallback;
             }
             response.sendRedirect(fallback);
