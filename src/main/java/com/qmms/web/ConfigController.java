@@ -59,7 +59,7 @@ public class ConfigController {
     public String toChangeShowAdd(Model model){
         List<SerCfgMarket> markets = serCfgMarketService.getMarketList();
         model.addAttribute("markets",markets);
-        return "cfg/changeShowAdd";
+        return "/cfg/changeShowAdd";
     }
 
     @PostMapping("/changeShowAdd")
