@@ -89,6 +89,12 @@ public class ApiController {
         return  loanTypes;
     }
 
+    @RequestMapping("domainRefresh")
+    @ResponseBody
+    public String domainRefresh(HttpServletRequest request) {
+        return WebUtil.refreshDomainName(request);
+    }
+
 
 
 }

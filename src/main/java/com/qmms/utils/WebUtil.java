@@ -22,6 +22,11 @@ public class WebUtil {
         return domainName;
     }
 
+    public static String refreshDomainName(HttpServletRequest request){
+       domainName = null;
+       return domainName;
+    }
+
     public static HeaderMsg getHeadMsg(HttpServletRequest request){
         String pkgName = request.getHeader("pkgName");
         String pkgKey = request.getHeader("pkgKey");

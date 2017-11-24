@@ -31,10 +31,10 @@ public class ForwardController {
                 uv = setUv(response);
             }
             fallback = fallback.trim();
-            String ft = fallback.toLowerCase();
-            if(!ft.startsWith("http://") && !ft.startsWith("https://")){
-                fallback = "http://"+fallback;
-            }
+//            String ft = fallback.toLowerCase();
+//            if(!ft.startsWith("http://") && !ft.startsWith("https://")){
+//                fallback = "http://"+fallback;
+//            }
             response.sendRedirect(fallback);
             //add info
             //String pkgKey,String source,String type,String pid,String fallback,String deviceId
