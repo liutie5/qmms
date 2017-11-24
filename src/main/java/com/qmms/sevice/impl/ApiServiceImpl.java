@@ -33,6 +33,15 @@ public class ApiServiceImpl implements ApiService{
     @Resource
     private SerChannelDao serChannelDao;
 
+    @Resource
+    private SerCreditBannerDao serCreditBannerDao;
+    @Resource
+    private SerCreditTypeDao serCreditTypeDao;
+    @Resource
+    private SerCreditProductDao serCreditProductDao;
+    @Resource
+    private SerCreditGroupDao serCreditGroupDao;
+
     private static final int CodeSuccess = 0;
     private static final int CodeFailed = 1;
 
@@ -273,5 +282,161 @@ public class ApiServiceImpl implements ApiService{
         loanTypes.setCode(CodeSuccess);
         loanTypes.setDesc("success");
         return loanTypes;
+    }
+
+
+    @Override
+    public CreditMain creditMain(String domainName, String pkgName, String pkgKey, String source, String group, String hotType) {
+        CreditMain rs = new CreditMain();
+        CreditMainData data = new CreditMainData();
+        rs.setData(data);
+        if(StringUtils.isBlank(group)){
+            group = "default";
+        }
+        SerCreditGroup creditGroup = serCreditGroupDao.findOne(group);
+        List<CreditType> type = new ArrayList<>();
+        if(creditGroup != null){
+            type = convertCreditType(domainName,creditGroup.getCreditTypeList());
+        }
+        data.setTypes(type);
+        List<SerCreditBanner> bannerList = serCreditBannerDao.findAllByStatus(1);
+        List<CreditBanner> banner = convertCreditBanner(domainName,pkgKey,source ,bannerList);
+        data.setBanner(banner);
+
+        List<SerCreditProduct> serCreditProductList = null;
+        if(StringUtils.isBlank(hotType)){
+            serCreditProductList = serCreditProductDao.findAllByStatus(1);
+        }else{
+            SerCreditType creditType = new SerCreditType();
+            creditType.setKey(hotType);
+            Set<SerCreditType> creditTypeSet = new HashSet<>();
+            creditTypeSet.add(creditType);
+            serCreditProductList = serCreditProductDao.findAllByLoanTypeListInAndStatus(creditTypeSet,1);
+        }
+        data.setHotps(convertCreditProductList(domainName, pkgKey, source, serCreditProductList));
+
+        return rs;
+    }
+
+    @Override
+    public CreditList creditList(String domainName, String pkgName, String pkgKey, String source, String bankId, String type) {
+        return null;
+    }
+
+    @Override
+    public CreditDetail creditDetail(String domainName, String pkgName, String pkgKey, String source, String cardId) {
+        return null;
+    }
+
+    @Override
+    public CreditTypes creditTypes(String domainName, String pkgName, String pkgKey, String source, String group) {
+        return null;
+    }
+
+
+    public  List<CreditType> convertCreditType(String domainName,List<SerCreditType> list){
+        List<CreditType> rs = new ArrayList<>();
+        if(list != null){
+            for(SerCreditType data:list){
+                CreditType target = new CreditType();
+                target.setKey(data.getKey());
+                target.setDesc(data.getDesc());
+                target.setImg(domainName+"/"+data.getImg());
+                target.setTitle(data.getTitle());
+                target.setSubImg(domainName+"/"+data.getSubImg());
+                target.setSubDesc(data.getSubDesc());
+                rs.add(target);
+            }
+        }
+        return  rs;
+    }
+
+    public  List<CreditBanner> convertCreditBanner(String domainName,String pkgKey,String source,List<SerCreditBanner> list){
+        List<CreditBanner> rs = new ArrayList<>();
+        if(list != null){
+            for(SerCreditBanner data:list){
+                Long pid = data.getPid();
+                String url = data.getUrl();
+                if((pid == null || pid <=0) && StringUtils.isBlank(url)){
+                    continue;
+                }
+                CreditBanner target = new CreditBanner();
+                if(pid != null && pid >0){
+                    SerCreditProduct product = serCreditProductDao.findOne(pid);
+                    if(product != null){
+                        target.setPid(getLoanForwardUrl(domainName,pkgKey,source,"product",pid.toString(),product.getUrl()));
+                    }
+                }
+                target.setTitle(data.getTitle());
+                target.setImg(domainName+"/"+data.getImg());
+                target.setUrl(getLoanForwardUrl(domainName,pkgKey,source,"product","-1",data.getUrl()));
+                rs.add(target);
+            }
+        }
+        return rs;
+    }
+
+    public String getCreditForwardUrl(String domainName,String pkgName,String source,String type,String cardId,String bankId,String url){
+        StringBuffer buffer = new StringBuffer(domainName);
+        buffer.append("/forward/credit?pkgKey=").append(pkgName).append("&source=").append(source)
+                .append("&type=").append(type).append("&cardId=").append(cardId).append("&bankId=").append(bankId).append("&fallback="+url);
+        return buffer.toString();
+    }
+
+    public  List<CreditProduct> convertCreditProductList(String domainName,String pkgKey,String source,List<SerCreditProduct> list){
+        List<CreditProduct> rs = new ArrayList<>();
+        if(list != null){
+            for(SerCreditProduct data:list){
+                rs.add(convertCreditProduct(domainName,pkgKey,source,data));
+            }
+        }
+        return rs;
+
+    }
+
+
+    public CreditProduct convertCreditProduct(String domainName,String pkgKey,String source,SerCreditProduct data){
+        CreditProduct target  = new CreditProduct();
+        target.setCardId(String.valueOf(data.getCardId()));
+        target.setCardName(data.getCardName());
+        target.setCardBankId(String.valueOf(data.getCardBankId()));
+        target.setCardBankName(data.getCardBankName());
+        target.setCardTags(data.getCardTags());
+        target.setCardPrivilege(data.getCardPrivilege());
+        target.setCardDesc(data.getCardDesc());
+        target.setApplyNum(String.valueOf(data.getApplyNum()));
+        target.setCardImg(domainName+"/"+data.getCardImg());
+        String urlRs = "";
+        String allUrlRs = "";
+        Set<SerCreditProductChannelUrl> channelUrlList = data.getChannelUrls();
+        for(SerCreditProductChannelUrl url:channelUrlList){
+            long channelId = url.getChannelId();
+            SerChannel channel = serChannelDao.findOne(channelId);
+            if(channel != null){
+                List<SerChannelUmeng> channelUmengList = channel.getChannelUmengList();
+                for(SerChannelUmeng umeng:channelUmengList){
+                    String umengKey = umeng.getUmengKey();
+                    String marketId = umeng.getMarketId();
+                    if(umengKey.equals(pkgKey) && marketId.equals(source)){
+                        urlRs = url.getChannelUrl();
+                        break;
+                    }
+                    //所有市场
+                    if(umengKey.equals(pkgKey) && marketId.equals("")){
+                        allUrlRs = url.getChannelUrl();
+                    }
+                }
+            }
+        }
+        String finalUrl = "";
+        if(StringUtils.isNotBlank(urlRs)){
+            finalUrl = urlRs;
+        }else if(StringUtils.isNotBlank(allUrlRs)){
+            finalUrl = allUrlRs;
+        }else{
+            finalUrl = data.getUrl();
+        }
+        target.setUrl(getCreditForwardUrl(domainName,pkgKey,source,"product",data.getCardId().toString(),data.getCardBankId().toString(),finalUrl));
+        return target;
     }
 }
