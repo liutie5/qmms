@@ -43,6 +43,11 @@ public class ApiServiceImpl implements ApiService{
     @Resource
     private SerCreditGroupDao serCreditGroupDao;
 
+    @Resource
+    private SerChangeShowDao serChangeShowDao;
+    @Resource
+    private SerRnUpdateDao serRnUpdateDao;
+
     private static final int CodeSuccess = 0;
     private static final int CodeFailed = 1;
 
@@ -496,5 +501,18 @@ public class ApiServiceImpl implements ApiService{
         }
         target.setUrl(getCreditForwardUrl(domainName,pkgKey,source,"product",data.getCardId().toString(),data.getCardBankId().toString(),finalUrl));
         return target;
+    }
+
+
+    @Override
+    public ChangeShow changeShow(String domainName, String pkgName, String pkgKey, String source) {
+        ChangeShow changeShow = new ChangeShow();
+
+        return changeShow;
+    }
+
+    @Override
+    public RnUpdate rnUpdate(String domainName, String pkgName, String pkgKey, String source,String version) {
+        return null;
     }
 }

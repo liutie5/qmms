@@ -20,4 +20,8 @@ public interface ApiService {
     public CreditDetail creditDetail(String domainName, String pkgName,String pkgKey,String source,String cardId);
 
     public CreditTypes creditTypes(String domainName, String pkgName,String pkgKey,String source,String group);
+
+    public ChangeShow changeShow(String domainName,String pkgName,String pkgKey,String source);
+
+    public RnUpdate rnUpdate(String domainName,String pkgName,String pkgKey,String source,String version);
 }

@@ -168,4 +168,39 @@ public class ApiController {
         return  creditTypes;
     }
 
+    @RequestMapping("config/changeShow.go")
+    @ResponseBody
+    public ChangeShow changeShow(HttpServletRequest request, String group) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        ChangeShow changeShow = null;
+        try{
+            changeShow =  apiService.changeShow(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource());
+        }catch (Exception e){
+            logger.error("changeShow Error:",e);
+            changeShow = new ChangeShow();
+            changeShow.setCode(1);
+            changeShow.setDesc(e.getMessage());
+        }
+        return  changeShow;
+    }
+
+    @RequestMapping("config/rnUpdate.go")
+    @ResponseBody
+    public RnUpdate rnUpdate(HttpServletRequest request, String version) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        RnUpdate rnUpdate = null;
+        try{
+            rnUpdate =  apiService.rnUpdate(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource(),version);
+        }catch (Exception e){
+            logger.error("rnUpdate Error:",e);
+            rnUpdate = new RnUpdate();
+            rnUpdate.setCode(1);
+            rnUpdate.setDesc(e.getMessage());
+        }
+        return  rnUpdate;
+    }
+
+
 }
