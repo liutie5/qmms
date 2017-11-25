@@ -16,7 +16,7 @@ public interface SerLoanProductDao extends CrudRepository<SerLoanProduct,Long>,J
     @Modifying
     public void deleteByChannelId(Long channelId);
 
-    public List<SerLoanProduct> findAllByStatus(int status);
+    public List<SerLoanProduct> findAllByStatusOrderByOrderedByDesc(int status);
 
-    public List<SerLoanProduct> findAllByLoanTypeListInAndStatus(Set<SerLoanType> loanTypeSet,int status);
+    public List<SerLoanProduct> findAllByLoanTypeListInAndStatusOrderByOrderedByDesc(Set<SerLoanType> loanTypeSet,int status);
 }

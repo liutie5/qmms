@@ -5,6 +5,7 @@ import com.qmms.entity.*;
 import com.qmms.entity.api.*;
 import com.qmms.sevice.ApiService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -65,13 +66,13 @@ public class ApiServiceImpl implements ApiService{
 
         List<SerLoanProduct> serLoanProductList = null;
         if(StringUtils.isBlank(hotType)){
-            serLoanProductList = serLoanProductDao.findAllByStatus(1);
+            serLoanProductList = serLoanProductDao.findAllByStatusOrderByOrderedByDesc(1);
         }else{
             SerLoanType loanType = new SerLoanType();
             loanType.setKey(hotType);
             Set<SerLoanType> loanTypeSet = new HashSet<>();
             loanTypeSet.add(loanType);
-            serLoanProductList = serLoanProductDao.findAllByLoanTypeListInAndStatus(loanTypeSet,1);
+            serLoanProductList = serLoanProductDao.findAllByLoanTypeListInAndStatusOrderByOrderedByDesc(loanTypeSet,1);
         }
         data.setHotps(convertLoanProductList(domainName, pkgKey, source, serLoanProductList));
         SerLoanTip loanTip = null;
@@ -119,10 +120,9 @@ public class ApiServiceImpl implements ApiService{
                 LoanBanner target = new LoanBanner();
 
                 if(pid != null && pid >0){
-                    SerLoanProduct product = serLoanProductDao.findOne(pid);
-                    if(product != null){
-                        target.setPid(getLoanForwardUrl(domainName,pkgKey,source,"product",pid.toString(),product.getUrl()));
-                    }
+                    target.setPid(pid.toString());
+                }else{
+                    target.setPid("");
                 }
                 target.setTitle(data.getTitle());
                 target.setImg(domainName+"/"+data.getImg());
@@ -165,6 +165,8 @@ public class ApiServiceImpl implements ApiService{
         target.setApplyNum(String.valueOf(data.getApplyNum()));
         target.setProductProcess(data.getProductProcess());
         target.setImg(domainName+"/"+data.getImg());
+        target.setSuccessRate(data.getSuccessRate());
+        target.setHotLevel(data.getHotLevel().toString());
         String urlRs = "";
         String allUrlRs = "";
         List<SerLoanProductChannelUrl> channelUrlList = data.getChannelUrls();
@@ -213,7 +215,7 @@ public class ApiServiceImpl implements ApiService{
             @Override
             public Predicate toPredicate(Root<SerLoanProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> list = new ArrayList<Predicate>();
-                list.add(criteriaBuilder.lessThanOrEqualTo(root.get("status").as(Integer.class),1));
+                list.add(criteriaBuilder.equal(root.get("status").as(Integer.class),1));
                 if(StringUtils.isNotBlank(balance) && StringUtils.isNumeric(balance)){
                     list.add(criteriaBuilder.lessThanOrEqualTo(root.get("minBalance").as(Long.class),Long.parseLong(balance)));
                     list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("maxBalance").as(Long.class),Long.parseLong(balance)));
@@ -234,7 +236,7 @@ public class ApiServiceImpl implements ApiService{
                 return criteriaBuilder.and(predicates);
 
             }
-        });
+        },new Sort(Sort.Direction.DESC,"orderedBy"));
         loanPlist.setData(convertLoanProductList(domainName, pkgKey, source, productList));
         loanPlist.setCode(CodeSuccess);
         loanPlist.setDesc("success");
@@ -311,7 +313,7 @@ public class ApiServiceImpl implements ApiService{
             creditType.setKey(hotType);
             Set<SerCreditType> creditTypeSet = new HashSet<>();
             creditTypeSet.add(creditType);
-            serCreditProductList = serCreditProductDao.findAllByLoanTypeListInAndStatus(creditTypeSet,1);
+            serCreditProductList = serCreditProductDao.findAllByCreditTypeListInAndStatus(creditTypeSet,1);
         }
         data.setHotps(convertCreditProductList(domainName, pkgKey, source, serCreditProductList));
 
@@ -319,8 +321,33 @@ public class ApiServiceImpl implements ApiService{
     }
 
     @Override
-    public CreditList creditList(String domainName, String pkgName, String pkgKey, String source, String bankId, String type) {
-        return null;
+    public CreditList creditList(String domainName, String pkgName, String pkgKey, String source, final String bankId, final String type) {
+        List<SerCreditProduct> list = serCreditProductDao.findAll(new Specification<SerCreditProduct>(){
+            @Override
+            public Predicate toPredicate(Root<SerCreditProduct> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+                list.add(criteriaBuilder.equal(root.get("status").as(Integer.class), 1));
+                if(StringUtils.isNotBlank(bankId) && StringUtils.isNumeric(bankId)){
+                    list.add(criteriaBuilder.equal(root.get("cardBankId").as(Long.class), Long.parseLong(bankId)));
+                }
+                if(StringUtils.isNotBlank(type)){
+                    CriteriaBuilder.In<String> in = criteriaBuilder.in(root.join("creditTypeList").get("key").as(String.class));
+                    in.value(type);
+                    list.add(in);
+                }
+                Predicate[] predicates = new Predicate[list.size()];
+                predicates = list.toArray(predicates);
+                return criteriaBuilder.and(predicates);
+            }
+        });
+
+        CreditList creditList = new CreditList();
+        if(list != null){
+            creditList.setData(convertCreditProductList(domainName,pkgKey,source,list));
+        }else{
+            creditList.setData(new ArrayList<CreditProduct>());
+        }
+        return creditList;
     }
 
     @Override
@@ -362,10 +389,9 @@ public class ApiServiceImpl implements ApiService{
                 }
                 CreditBanner target = new CreditBanner();
                 if(pid != null && pid >0){
-                    SerCreditProduct product = serCreditProductDao.findOne(pid);
-                    if(product != null){
-                        target.setPid(getLoanForwardUrl(domainName,pkgKey,source,"product",pid.toString(),product.getUrl()));
-                    }
+                    target.setPid(pid.toString());
+                }else{
+                    target.setPid("");
                 }
                 target.setTitle(data.getTitle());
                 target.setImg(domainName+"/"+data.getImg());

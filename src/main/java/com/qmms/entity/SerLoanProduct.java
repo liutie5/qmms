@@ -25,7 +25,7 @@ public class SerLoanProduct implements Serializable {
     private Long maxTerm;
     @Column(length = 1024)
     private String termDesc;
-    private Integer speed;
+    private String speed;
     @Column(length = 1024)
     private String speedDesc;
     private String tags;
@@ -46,6 +46,8 @@ public class SerLoanProduct implements Serializable {
     private Integer addTime;
     private Integer updateUserId;
     private Integer updateTime;
+    private String successRate;
+    private Integer hotLevel;
 
     @ManyToMany(fetch= FetchType.LAZY)
     @JoinTable(name = "SerLoanProductType", joinColumns = { @JoinColumn(name = "productId") }, inverseJoinColumns ={@JoinColumn(name = "typeKey") })
@@ -151,11 +153,11 @@ public class SerLoanProduct implements Serializable {
         this.termDesc = termDesc;
     }
 
-    public Integer getSpeed() {
+    public String getSpeed() {
         return speed;
     }
 
-    public void setSpeed(Integer speed) {
+    public void setSpeed(String speed) {
         this.speed = speed;
     }
 
@@ -293,5 +295,21 @@ public class SerLoanProduct implements Serializable {
 
     public void setChannelUrls(List<SerLoanProductChannelUrl> channelUrls) {
         this.channelUrls = channelUrls;
+    }
+
+    public String getSuccessRate() {
+        return successRate;
+    }
+
+    public void setSuccessRate(String successRate) {
+        this.successRate = successRate;
+    }
+
+    public Integer getHotLevel() {
+        return hotLevel;
+    }
+
+    public void setHotLevel(Integer hotLevel) {
+        this.hotLevel = hotLevel;
     }
 }

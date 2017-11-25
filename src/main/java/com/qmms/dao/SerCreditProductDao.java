@@ -18,6 +18,7 @@ public interface SerCreditProductDao extends CrudRepository<SerCreditProduct,Lon
 
     public List<SerCreditProduct> findAllByStatus(int status);
 
-    public List<SerCreditProduct> findAllByLoanTypeListInAndStatus(Set<SerCreditType> creditTypeSet, int status);
+    public List<SerCreditProduct> findAllByCreditTypeListInAndStatus(Set<SerCreditType> creditTypeSet, int status);
+
 
 }

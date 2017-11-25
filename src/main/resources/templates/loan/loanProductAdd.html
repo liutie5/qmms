@@ -74,21 +74,21 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">最大期限:</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="maxTerm" placeholder="单位(天) 必须为数字"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-sm-3 control-label">最小期限:</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control"  name="minTerm" placeholder="单位(天) 必须为数字"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">期限信息:</label>
+                            <label class="col-sm-3 control-label">最大期限:</label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control"  name="term" placeholder="如 7-14"/>
+                                <input type="text" class="form-control"  name="maxTerm" placeholder="单位(天) 必须为数字"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">通过率:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="successRate" placeholder="通过率"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -206,6 +206,12 @@
                                         <i class="fa fa-circle-o small"></i>
                                     </label>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">热门程度:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control"  name="hotLevel" placeholder="1到100 必须为数字"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -375,6 +381,16 @@
                         }
                     }
                 },
+                "successRate":{
+                    validators:{
+                        notEmpty: {message: '通过率不能为空'},
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '通过率长度在1-255之间'
+                        }
+                    }
+                },
                 "speedDesc": {
                     validators:{
                         notEmpty: {message: '速度描述不能为空'},
@@ -388,15 +404,10 @@
                 "speed":{
                     validators:{
                         notEmpty:{message:"速度信息不能为空"},
-                        regexp: {
-                            regexp: /^[1-9]\d*$/,
-                            message: '速度信息必须为数字'
-                        },
-                        callback: {
-                            message: '速度信息在0到1000000000之间',
-                            callback:function(value, validator,$field){
-                                return value>=0&&value<=1000000000;
-                            }
+                        stringLength: {
+                            min: 1,
+                            max: 255,
+                            message: '速度信息长度在1-255之间'
                         }
                     }
                 },
@@ -508,6 +519,21 @@
                         }
                     }
                 },
+                "hotLevel":{
+                    validators:{
+                        notEmpty:{message:"热门程度不能为空"},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '热门程度必须为数字'
+                        },
+                        callback: {
+                            message: '热门程度在1到100之间',
+                            callback:function(value, validator,$field){
+                                return value>=1&&value<=100;
+                            }
+                        }
+                    }
+                }
 
             }
         });

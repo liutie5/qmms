@@ -96,5 +96,43 @@ public class ApiController {
     }
 
 
+    @RequestMapping("credit/creditMain.go")
+    @ResponseBody
+    public CreditMain creditMain(HttpServletRequest request,String group,String hotType) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        CreditMain creditMain = null;
+        try{
+            creditMain =  apiService.creditMain(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource(),group,hotType);
+            creditMain.setDesc("success");
+            return creditMain;
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            creditMain = new CreditMain();
+            creditMain.setCode(1);
+            creditMain.setDesc(e.getMessage());
+        }
+        return  creditMain;
+    }
+
+    @RequestMapping("credit/creditList.go")
+    @ResponseBody
+    public CreditList creditList(HttpServletRequest request,String bankId,String type) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        CreditList creditList = null;
+        try{
+            creditList =  apiService.creditList(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource(),bankId,type);
+            creditList.setDesc("success");
+            return creditList;
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            creditList = new CreditList();
+            creditList.setCode(1);
+            creditList.setDesc(e.getMessage());
+        }
+        return  creditList;
+    }
+
 
 }

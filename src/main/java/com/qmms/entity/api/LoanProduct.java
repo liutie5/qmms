@@ -21,6 +21,8 @@ public class LoanProduct {
     private String applyNum;
     private String img;
     private String url;
+    private String successRate;
+    private String hotLevel;
 
     public String getId() {
         return id;
@@ -180,5 +182,21 @@ public class LoanProduct {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getSuccessRate() {
+        return successRate;
+    }
+
+    public void setSuccessRate(String successRate) {
+        this.successRate = successRate;
+    }
+
+    public String getHotLevel() {
+        return hotLevel;
+    }
+
+    public void setHotLevel(String hotLevel) {
+        this.hotLevel = hotLevel;
     }
 }

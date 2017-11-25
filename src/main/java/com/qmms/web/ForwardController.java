@@ -1,6 +1,8 @@
 package com.qmms.web;
 
+import com.qmms.dao.StatCreditUvDao;
 import com.qmms.dao.StatLoanUvDao;
+import com.qmms.entity.StatCreditUv;
 import com.qmms.entity.StatLoanUv;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,9 +23,11 @@ public class ForwardController {
 
     @Resource
     private StatLoanUvDao statLoanUvDao;
+    @Resource
+    private StatCreditUvDao statCreditUvDao;
 
     @RequestMapping("/loan")
-    public void forward(String pkgKey,String source,String type,String pid,@RequestParam("fallback")String fallback,HttpServletRequest request,HttpServletResponse response){
+    public void forwardLoan(String pkgKey,String source,String type,String pid,@RequestParam("fallback")String fallback,HttpServletRequest request,HttpServletResponse response){
         //http://www.qmms.com/forward/loan?umeng=umeng123&mrid=xiaomi&type=product&pid=3&fallback=www.mi.com"}
         String uv = getUv(request.getCookies());
         try{
@@ -48,6 +52,35 @@ public class ForwardController {
 
 
     }
+
+
+    @RequestMapping("/credit")
+    public void forwardCredit(String pkgKey,String source,String type,String cardId,String bankId,@RequestParam("fallback")String fallback,HttpServletRequest request,HttpServletResponse response){
+        //http://www.qmms.com/forward/loan?umeng=umeng123&mrid=xiaomi&type=product&pid=3&fallback=www.mi.com"}
+        String uv = getUv(request.getCookies());
+        try{
+            if(StringUtils.isBlank(uv)){
+                uv = setUv(response);
+            }
+            fallback = fallback.trim();
+//            String ft = fallback.toLowerCase();
+//            if(!ft.startsWith("http://") && !ft.startsWith("https://")){
+//                fallback = "http://"+fallback;
+//            }
+            response.sendRedirect(fallback);
+            //add info
+            //String pkgKey,String source,String type,String pid,String fallback,String deviceId
+            StatCreditUv creditUv = new StatCreditUv(pkgKey,source,type,cardId,bankId,fallback,uv);
+            statCreditUvDao.save(creditUv);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error(StringUtils.join("credit_fd_error",pkgKey,source,type,cardId,bankId,fallback));
+        }
+
+
+    }
+
 
     public  String getUv(Cookie[] cookies){
         for(Cookie cookie:cookies){

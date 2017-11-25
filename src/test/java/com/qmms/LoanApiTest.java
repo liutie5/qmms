@@ -41,7 +41,7 @@ public class LoanApiTest {
         SerLoanType loanType = new SerLoanType();
         loanType.setKey("d1");
         typeSet.add(loanType);
-        List<SerLoanProduct> productList = serLoanProductDao.findAllByLoanTypeListInAndStatus(typeSet,1);
+        List<SerLoanProduct> productList = serLoanProductDao.findAllByLoanTypeListInAndStatusOrderByOrderedByDesc(typeSet,1);
         System.out.println(productList.size());
 
 
