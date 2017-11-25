@@ -29,8 +29,8 @@ public class ForwardController {
     @RequestMapping("/loan")
     public void forwardLoan(String pkgKey,String source,String type,String pid,@RequestParam("fallback")String fallback,HttpServletRequest request,HttpServletResponse response){
         //http://www.qmms.com/forward/loan?umeng=umeng123&mrid=xiaomi&type=product&pid=3&fallback=www.mi.com"}
-        String uv = getUv(request.getCookies());
         try{
+            String uv = getUv(request.getCookies());
             if(StringUtils.isBlank(uv)){
                 uv = setUv(response);
             }
@@ -57,8 +57,8 @@ public class ForwardController {
     @RequestMapping("/credit")
     public void forwardCredit(String pkgKey,String source,String type,String cardId,String bankId,@RequestParam("fallback")String fallback,HttpServletRequest request,HttpServletResponse response){
         //http://www.qmms.com/forward/loan?umeng=umeng123&mrid=xiaomi&type=product&pid=3&fallback=www.mi.com"}
-        String uv = getUv(request.getCookies());
         try{
+            String uv = getUv(request.getCookies());
             if(StringUtils.isBlank(uv)){
                 uv = setUv(response);
             }
@@ -83,9 +83,11 @@ public class ForwardController {
 
 
     public  String getUv(Cookie[] cookies){
-        for(Cookie cookie:cookies){
-            if(cookie.getName().equalsIgnoreCase("qmmsuv")){
-                return cookie.getValue();
+        if(cookies != null){
+            for(Cookie cookie:cookies){
+                if(cookie.getName().equalsIgnoreCase("qmmsuv")){
+                    return cookie.getValue();
+                }
             }
         }
         return "";
