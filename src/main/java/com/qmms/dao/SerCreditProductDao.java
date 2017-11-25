@@ -16,9 +16,9 @@ public interface SerCreditProductDao extends CrudRepository<SerCreditProduct,Lon
     @Modifying
     public void deleteByChannelId(Long channelId);
 
-    public List<SerCreditProduct> findAllByStatus(int status);
+    public List<SerCreditProduct> findAllByStatusOrderByOrderedByDesc(int status);
 
-    public List<SerCreditProduct> findAllByCreditTypeListInAndStatus(Set<SerCreditType> creditTypeSet, int status);
+    public List<SerCreditProduct> findAllByCreditTypeListInAndStatusOrderByOrderedByDesc(Set<SerCreditType> creditTypeSet, int status);
 
 
 }

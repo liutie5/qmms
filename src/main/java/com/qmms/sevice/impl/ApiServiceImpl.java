@@ -307,13 +307,13 @@ public class ApiServiceImpl implements ApiService{
 
         List<SerCreditProduct> serCreditProductList = null;
         if(StringUtils.isBlank(hotType)){
-            serCreditProductList = serCreditProductDao.findAllByStatus(1);
+            serCreditProductList = serCreditProductDao.findAllByStatusOrderByOrderedByDesc(1);
         }else{
             SerCreditType creditType = new SerCreditType();
             creditType.setKey(hotType);
             Set<SerCreditType> creditTypeSet = new HashSet<>();
             creditTypeSet.add(creditType);
-            serCreditProductList = serCreditProductDao.findAllByCreditTypeListInAndStatus(creditTypeSet,1);
+            serCreditProductList = serCreditProductDao.findAllByCreditTypeListInAndStatusOrderByOrderedByDesc(creditTypeSet,1);
         }
         data.setHotps(convertCreditProductList(domainName, pkgKey, source, serCreditProductList));
 
@@ -352,12 +352,44 @@ public class ApiServiceImpl implements ApiService{
 
     @Override
     public CreditDetail creditDetail(String domainName, String pkgName, String pkgKey, String source, String cardId) {
-        return null;
+        CreditDetail creditDetail = new CreditDetail();
+        if(StringUtils.isNotBlank(cardId) && StringUtils.isNumeric(cardId)){
+            SerCreditProduct product = serCreditProductDao.findOne(Long.parseLong(cardId));
+            if(product != null){
+                if(product.getStatus() == 1){
+                    creditDetail.setCode(CodeSuccess);
+                    creditDetail.setDesc("success");
+                    creditDetail.setData(convertCreditProduct(domainName,pkgKey,source,product));
+                }else{
+                    creditDetail.setCode(CodeFailed);
+                    creditDetail.setDesc("cardId status is not valid");
+                }
+            }else{
+                creditDetail.setCode(CodeFailed);
+                creditDetail.setDesc("cardId is not valid");
+            }
+        }else{
+            creditDetail.setCode(CodeFailed);
+            creditDetail.setDesc("cardId is not valid");
+        }
+        return creditDetail;
     }
 
     @Override
     public CreditTypes creditTypes(String domainName, String pkgName, String pkgKey, String source, String group) {
-        return null;
+        if(StringUtils.isBlank(group)){
+            group = "default";
+        }
+        CreditTypes creditTypes = new CreditTypes();
+        SerCreditGroup creditGroup = serCreditGroupDao.findOne(group);
+        List<CreditType> type = new ArrayList<>();
+        if(creditGroup != null){
+            type = convertCreditType(domainName,creditGroup.getCreditTypeList());
+            creditTypes.setData(type);
+        }
+        creditTypes.setCode(CodeSuccess);
+        creditTypes.setDesc("success");
+        return creditTypes;
     }
 
 

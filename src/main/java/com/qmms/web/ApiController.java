@@ -134,5 +134,38 @@ public class ApiController {
         return  creditList;
     }
 
+    @RequestMapping("credit/creditDetail.go")
+    @ResponseBody
+    public CreditDetail creditDetail(HttpServletRequest request, String cardId) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        CreditDetail creditDetail = null;
+        try{
+            creditDetail =  apiService.creditDetail(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource(), cardId);
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            creditDetail = new CreditDetail();
+            creditDetail.setCode(1);
+            creditDetail.setDesc(e.getMessage());
+        }
+        return  creditDetail;
+    }
+
+    @RequestMapping("credit/creditTypes.go")
+    @ResponseBody
+    public CreditTypes creditTypes(HttpServletRequest request, String group) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        CreditTypes creditTypes = null;
+        try{
+            creditTypes =  apiService.creditTypes(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource(), group);
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            creditTypes = new CreditTypes();
+            creditTypes.setCode(1);
+            creditTypes.setDesc(e.getMessage());
+        }
+        return  creditTypes;
+    }
 
 }
