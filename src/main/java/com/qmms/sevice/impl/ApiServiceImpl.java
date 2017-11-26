@@ -284,8 +284,8 @@ public class ApiServiceImpl implements ApiService{
         List<LoanType> type = new ArrayList<>();
         if(loanGroup != null){
             type = convertLoanType(domainName,loanGroup.getLoanTypeList());
-            loanTypes.setData(type);
         }
+        loanTypes.setData(type);
         loanTypes.setCode(CodeSuccess);
         loanTypes.setDesc("success");
         return loanTypes;
@@ -390,8 +390,8 @@ public class ApiServiceImpl implements ApiService{
         List<CreditType> type = new ArrayList<>();
         if(creditGroup != null){
             type = convertCreditType(domainName,creditGroup.getCreditTypeList());
-            creditTypes.setData(type);
         }
+        creditTypes.setData(type);
         creditTypes.setCode(CodeSuccess);
         creditTypes.setDesc("success");
         return creditTypes;
@@ -507,12 +507,65 @@ public class ApiServiceImpl implements ApiService{
     @Override
     public ChangeShow changeShow(String domainName, String pkgName, String pkgKey, String source) {
         ChangeShow changeShow = new ChangeShow();
-
+        ChangeShowData data = new ChangeShowData();
+        SerChangeShow serData = null;
+        //如果没有传入source值 取默认全部渠道的
+        if(StringUtils.isBlank(source)){
+            serData = serChangeShowDao.findOneByUmengAndMarketId(pkgKey,"");
+        }else{
+            //如果传入source值
+            //先取匹配umeng和marketId
+            serData = serChangeShowDao.findOneByUmengAndMarketId(pkgKey,source);
+            //获取不到 取默认全渠道的
+            if(serData == null){
+                serData = serChangeShowDao.findOneByUmengAndMarketId(pkgKey,"");
+            }
+        }
+        if(serData != null){
+            data.setType(serData.getType());
+            data.setUrl(serData.getUrl());
+            changeShow.setData(data);
+        }else{
+            changeShow.setData("");
+        }
+        changeShow.setCode(CodeSuccess);
+        changeShow.setDesc("success");
         return changeShow;
     }
 
     @Override
     public RnUpdate rnUpdate(String domainName, String pkgName, String pkgKey, String source,String version) {
-        return null;
+        RnUpdate rnUpdate = new RnUpdate();
+        if(StringUtils.isBlank(version) || !StringUtils.isNumeric(version)){
+            rnUpdate.setCode(CodeFailed);
+            rnUpdate.setDesc("version 不是数字");
+            rnUpdate.setData("");
+            return rnUpdate;
+        }
+        RnUpdateData data = new RnUpdateData();
+        SerRnUpdate serData = null;
+
+        //如果没有传入source值 取默认全部渠道的
+        if(StringUtils.isBlank(source)){
+            serData = serRnUpdateDao.findOneByUmengAndMarketIdAndVerson(pkgKey,"",Double.parseDouble(version));
+        }else{
+            //如果传入source值
+            //先取匹配umeng和marketId
+            serData = serRnUpdateDao.findOneByUmengAndMarketIdAndVerson(pkgKey,source,Double.parseDouble(version));
+            //获取不到 取默认全渠道的
+            if(serData == null){
+                serData = serRnUpdateDao.findOneByUmengAndMarketIdAndVerson(pkgKey,"",Double.parseDouble(version));
+            }
+        }
+        if(serData != null){
+            data.setDesc(serData.getDesc());
+            data.setUrl(domainName+"/"+serData.getUpdateFile());
+            rnUpdate.setData(data);
+        }else{
+            rnUpdate.setData("");
+        }
+        rnUpdate.setCode(CodeSuccess);
+        rnUpdate.setDesc("success");
+        return rnUpdate;
     }
 }

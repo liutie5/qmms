@@ -1,13 +1,13 @@
 package com.qmms.entity.api;
 
 public class RnUpdate extends CommonMain{
-    private RnUpdateData data;
+    private Object data;
 
-    public RnUpdateData getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(RnUpdateData data) {
+    public void setData(Object data) {
         this.data = data;
     }
 }

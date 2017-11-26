@@ -102,13 +102,10 @@
                 },
                 "version": {
                     validators: {
-                        notEmpty: {
-                            message: '版本不能为空'
-                        },
-                        stringLength: {
-                            min: 1,
-                            max: 255,
-                            message: '版本长度在1-255个字符'
+                        notEmpty: {message: '版本不能为空'},
+                        regexp: {
+                            regexp: /^[0-9]+.?[0-9]*$/,
+                            message: '版本必须为数字'
                         }
                     }
                 },
@@ -121,6 +118,17 @@
                             min: 1,
                             max: 255,
                             message: 'umeng长度在1-255个字符'
+                        }
+                    }
+                },
+                "updateFile": {
+                    required: "请上传下载文件",
+                    validators:{
+                        notEmpty: {message: '请上传下载文件'},
+                        stringLength: {
+                            min: 1,
+                            max: 1024,
+                            message: '请上传下载文件名称长度在1-1024个字符'
                         }
                     }
                 }
@@ -179,6 +187,8 @@
                         $("#updateFile").val(data.filePath);
                         $("#fileShow").attr("href", data.filePath);
                         $("#fileShow").text(data.filePath);
+                        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+                        bootstrapValidator.updateStatus('updateFile', 'NOT_VALIDATED').validateField('updateFile');
                     }else {
                         warningAlert(data.msg);
                     }

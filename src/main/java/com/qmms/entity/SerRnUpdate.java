@@ -11,7 +11,7 @@ public class SerRnUpdate implements Serializable {
     private Long id;
     @Column(name="`desc`")
     private String desc;
-    private String version;
+    private Double version;
     private String umeng;
     private String marketId;
     private String url;
@@ -39,11 +39,11 @@ public class SerRnUpdate implements Serializable {
         this.desc = desc;
     }
 
-    public String getVersion() {
+    public Double getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(Double version) {
         this.version = version;
     }
 

@@ -133,7 +133,10 @@
                 {"data": "umeng"},
                 {"data": "marketId"},
                 {"data": "updateDesc"},
-                {"data": "updateFile"},
+                {"data": "updateFile",
+                    render:function(data,type,row,meta){
+                        return '<a href="'+data+'">'+data+' </a>'
+                    }},
                 {
                     "data": "id",
                     render:function(data,type,row,meta){
