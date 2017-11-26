@@ -33,6 +33,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/forward/**", "anon");
         filterChainDefinitionMap.put("/api/**","anon");
+		filterChainDefinitionMap.put("/stat/**","anon");
 		filterChainDefinitionMap.put("/imgs/**","anon");
 		filterChainDefinitionMap.put("/files/**","anon");
 		//配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
