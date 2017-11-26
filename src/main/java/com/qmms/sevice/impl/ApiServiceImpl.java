@@ -592,6 +592,7 @@ public class ApiServiceImpl implements ApiService{
         if(serData != null){
             data.setDesc(serData.getDesc());
             data.setUrl(domainName+"/"+serData.getUpdateFile());
+            data.setVersion(String.valueOf(serData.getVersion().intValue()));
             rnUpdate.setData(data);
         }else{
             rnUpdate.setData("");

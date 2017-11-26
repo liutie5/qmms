@@ -3,6 +3,7 @@ package com.qmms.entity.api;
 public class RnUpdateData {
     private String desc;
     private String url;
+    private String version;
 
     public String getDesc() {
         return desc;
@@ -18,5 +19,13 @@ public class RnUpdateData {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }
