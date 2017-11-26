@@ -156,8 +156,7 @@
 
         $("#formSubmit").click(function(){
             var bootstrapValidator = $("#addForm").data('bootstrapValidator');
-            bootstrapValidator.enableFieldValidators("img",false);
-            bootstrapValidator.enableFieldValidators("img",true);
+            bootstrapValidator.updateStatus('img', 'NOT_VALIDATED').validateField('img');
             bootstrapValidator.updateStatus('pid', 'NOT_VALIDATED').validateField('pid');
             bootstrapValidator.updateStatus('url', 'NOT_VALIDATED').validateField('url');
             bootstrapValidator.validate();

@@ -271,6 +271,7 @@ public class SerLoanServiceImpl implements SerLoanService {
     public SerLoanBanner editLoanBanner(SerLoanBanner banner) throws Exception {
         SerLoanBanner rawBanner = serLoanBannerDao.findOne(banner.getId());
         UpdateUtils.updateNotNullField(rawBanner,banner);
+        rawBanner.setPid(banner.getPid());
         SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
         int currentTime = (int)(new Date().getTime()/1000);
         rawBanner.setUpdateUserId(currentUser.getUserId());

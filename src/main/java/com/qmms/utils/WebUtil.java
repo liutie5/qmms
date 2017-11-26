@@ -28,8 +28,8 @@ public class WebUtil {
     }
 
     public static HeaderMsg getHeadMsg(HttpServletRequest request){
-        String pkgName = request.getHeader("pkgName");
-        String pkgKey = request.getHeader("pkgKey");
+        String pkgName = request.getHeader("pkgname");
+        String pkgKey = request.getHeader("pkgkey");
         String source = request.getHeader("source");
         if(pkgName == null){
             pkgName = "";

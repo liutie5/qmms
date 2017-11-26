@@ -222,6 +222,7 @@ public class SerCreditServiceImpl implements SerCreditService{
     public SerCreditBanner editCreditBanner(SerCreditBanner banner) throws Exception {
         SerCreditBanner rawObj = serCreditBannerDao.findOne(banner.getId());
         UpdateUtils.updateNotNullField(rawObj,banner);
+        rawObj.setPid(banner.getPid());
         SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
         int currentTime = (int)(new Date().getTime()/1000);
         rawObj.setUpdateUserId(currentUser.getUserId());
@@ -262,20 +263,24 @@ public class SerCreditServiceImpl implements SerCreditService{
     @Override
     public SerCreditProduct addCreditProduct(SerCreditProduct product, String[] creditTypes, String[] channelUrls) {
         Set<SerCreditType> creditTypeList = new HashSet<>();
-        for(String creditType:creditTypes){
-            SerCreditType serCreditType = new SerCreditType();
-            serCreditType.setKey(creditType);
-            creditTypeList.add(serCreditType);
+        if(creditTypes != null){
+            for(String creditType:creditTypes){
+                SerCreditType serCreditType = new SerCreditType();
+                serCreditType.setKey(creditType);
+                creditTypeList.add(serCreditType);
+            }
         }
         product.setCreditTypeList(creditTypeList);
         Set<SerCreditProductChannelUrl> channelUrlList = new HashSet<>();
-        for(String data:channelUrls){
-            String[] arr = data.split("\\$\\$");
-            SerCreditProductChannelUrl url = new SerCreditProductChannelUrl();
-            url.setChannelId(Long.parseLong(arr[0]));
-            url.setChannelUrl(arr[1]);
-            url.setCreditProduct(product);
-            channelUrlList.add(url);
+        if(channelUrls != null){
+            for(String data:channelUrls){
+                String[] arr = data.split("\\$\\$");
+                SerCreditProductChannelUrl url = new SerCreditProductChannelUrl();
+                url.setChannelId(Long.parseLong(arr[0]));
+                url.setChannelUrl(arr[1]);
+                url.setCreditProduct(product);
+                channelUrlList.add(url);
+            }
         }
         product.setChannelUrls(channelUrlList);
         SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
