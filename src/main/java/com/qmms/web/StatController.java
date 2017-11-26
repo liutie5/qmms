@@ -1,11 +1,13 @@
 package com.qmms.web;
 
+import com.qmms.entity.StatLoanUvChannel;
 import com.qmms.sevice.StatService;
 import com.qmms.utils.DateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -57,6 +59,23 @@ public class StatController {
         }
         return statService.clearLoanUv();
     }
+
+
+    @RequestMapping("loanUvStatList")
+    public String loanUvStatList(){
+        return "/stat/loanUvStatList";
+    }
+
+    @RequestMapping("getLoanUvChannelList")
+    @ResponseBody
+    public Page<StatLoanUvChannel> getLoanProductList(int page, int pageSize, String searchDate){
+        if(StringUtils.isBlank(searchDate)){
+            searchDate = DateUtil.date2str("yyyy-MM-dd",new Date());
+        }
+        Page p1 = statService.getLoanUvStatListWithCondition(page, pageSize, searchDate);
+        return p1;
+    }
+
 
 
     public String checkType(String type,String beginDate,String endDate){

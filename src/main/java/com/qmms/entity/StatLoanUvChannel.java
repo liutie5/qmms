@@ -20,6 +20,9 @@ public class StatLoanUvChannel implements Serializable {
     private Long uv;
     private int addTime;
 
+    @Transient
+    private String channelName;
+
     public Date getStatDate() {
         return statDate;
     }
@@ -74,5 +77,13 @@ public class StatLoanUvChannel implements Serializable {
 
     public void setAddTime(int addTime) {
         this.addTime = addTime;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 }

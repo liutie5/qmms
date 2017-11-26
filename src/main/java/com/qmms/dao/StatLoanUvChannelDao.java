@@ -38,7 +38,7 @@ public interface StatLoanUvChannelDao extends CrudRepository<StatLoanUvChannel,S
             "insert into stat_loan_uv_channel(stat_date,channel_id,pkg_key,source,pv,uv,add_time)"+
                     "(SELECT " +
                     " from_unixtime(t1.add_time,'%Y-%m-%d'), " +
-                    " '0', " +
+                    " '-100', " +
                     " '', " +
                     " '', " +
                     " count(*), " +
@@ -47,7 +47,7 @@ public interface StatLoanUvChannelDao extends CrudRepository<StatLoanUvChannel,S
                     " stat_loan_uv t1 where from_unixtime(t1.add_time,'%Y-%m-%d') >= ?1 and from_unixtime(t1.add_time,'%Y-%m-%d') <= ?2 " +
                     " GROUP BY " +
                     " from_unixtime(t1.add_time,'%Y-%m-%d'), " +
-                    " '0', " +
+                    " '-100', " +
                     " '', " +
                     " '' )",nativeQuery = true)
     @Modifying

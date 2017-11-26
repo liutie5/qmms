@@ -1,0 +1,161 @@
+<div class="row">
+    <div id="breadcrumb" class="col-xs-12">
+        <a href="#" class="show-sidebar">
+            <i class="fa fa-bars"></i>
+        </a>
+        <ol class="breadcrumb pull-left">
+            <li><a href="#">信息统计</a></li>
+            <li><a href="#">贷款UV统计</a></li>
+        </ol>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <div class="box-name">
+                    <i class="fa"></i>
+                    <span>贷款UV统计</span>
+                </div>
+
+                <div class="no-move"></div>
+            </div>
+            <div class="box-content">
+                <table class="table table-bordered table-striped table-hover table-heading table-datatable" id="listTable">
+                    <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>渠道</th>
+                        <th>UV</th>
+                        <th>PV</th>
+                        <th>pkeKey</th>
+                        <th>Source</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="plugins/jquery-ui/i18n/jquery.ui.datepicker-zh-CN.min.js"></script>
+<script type="text/javascript">
+    // Run Datables plugin and create 3 variants of settings
+    function AllTables(){
+        loanBannerListTable();
+        LoadSelect2Script(MakeSelect2);
+    }
+
+    var lang = {
+        "sProcessing": "处理中...",
+        "sLengthMenu": "_MENU_",
+        "sZeroRecords": "没有匹配结果",
+        "sInfo": "当前显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项。",
+        "sInfoEmpty": "当前显示第 0 至 0 项，共 0 项",
+        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+        "sInfoPostFix": "",
+        "sSearch": "ID:",
+        "sUrl": "",
+        "sEmptyTable": "表中数据为空",
+        "sLoadingRecords": "载入中...",
+        "sInfoThousands": ",",
+        "searching": false,
+        "oPaginate": {
+            "sFirst": "首页",
+            "sPrevious": "上页",
+            "sNext": "下页",
+            "sLast": "末页",
+            "sJump": "跳转"
+        },
+        "oAria": {
+            "sSortAscending": ": 以升序排列此列",
+            "sSortDescending": ": 以降序排列此列"
+        }
+    };
+    function loanBannerListTable(){
+        $('#listTable').dataTable({
+            "aaSorting": [[ 0, "asc" ]],
+            "sDom": "<'box-content'<'#searchDate.col-sm-5'><'col-sm-3 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
+            "sPaginationType": "bootstrap",
+            "oLanguage": lang,
+            ordering:false,
+            serverSide: true,  //启用服务器端分页
+            ajax: function (data, callback, settings) {//封装请求参数
+
+                var param = {};
+                param.pageSize= data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+//                param.page = data.start;//开始的记录序号
+                param.page = (data.start / data.length);//当前页码
+                param.context = data.search.value;
+                //ajax请求数据方法
+                var searchDate = $('#dateSelect').val();
+                param.searchDate = searchDate;
+                $.ajax({
+                    type: "GET",
+                    url: "stat/getLoanUvChannelList",//url请求的地址
+                    cache: false,  //禁用缓存
+                    data: param,  //传入组装的参数
+                    dataType: "json",
+                    success: function (result) {
+                        //封装返回数据重要
+                        var returnData = {};
+                        //这里直接自行返回了draw计数器,应该由后台返回
+                        returnData.draw = data.draw;
+                        //返回数据全部记录
+                        returnData.recordsTotal = result.totalElements;
+                        //后台不实现过滤功能，每次查询均视作全部结果
+                        returnData.recordsFiltered = result.totalElements;
+                        //返回的数据列表
+                        returnData.data = result.content;
+
+                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                        callback(returnData);
+                    }
+                });
+            },
+            columns: [
+                {"data": "statDate",
+                    render: function (data, type, row, meta) {
+                        return new Date(data).Format('yyyy-MM-dd');
+                    }},
+                {"data": "channelName"},
+                {"data": "uv"},
+                {"data": "pv"},
+                {"data": "pkgKey"},
+                {"data": "source"}
+
+            ],
+            initComplete: function () {
+//            $("#searchDate").append('<button id="addLoanTypeBtn" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>添加</button>');
+            $('#searchDate').append('<input type="text" class="form-control" id="dateSelect" />');
+            $('#dateSelect').datepicker({
+                defaultDate : new Date(), //还可以是时间字符串，当前日期对应的时间数值搜索
+                onSelect: function(selectedDate) {//选择日期后执行的操作
+                    $("#listTable").dataTable().fnDraw(0);
+                }
+            });
+            $('#dateSelect').val(new Date().Format("yyyy-MM-dd"));
+        }
+        }).api();
+
+    }
+
+
+
+
+    function MakeSelect2(){
+        $('select').select2();
+        $('.dataTables_filter').each(function(){
+            $(this).find('label input[type=text]').attr('placeholder', '搜索');
+        });
+    }
+    $(document).ready(function() {
+        // Load Datatables and run plugin on tables
+        AllTables();
+        // Add Drag-n-Drop feature
+        WinMove();
+    });
+</script>
