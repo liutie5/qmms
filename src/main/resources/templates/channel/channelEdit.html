@@ -200,8 +200,7 @@
             }
             $('#umengmarket').val(hadValue);
             var bootstrapValidator = $("#editForm").data('bootstrapValidator');
-            bootstrapValidator.enableFieldValidators("umengmarket",false);
-            bootstrapValidator.enableFieldValidators("umengmarket",true);
+            bootstrapValidator.updateStatus('umengmarket', 'NOT_VALIDATED').validateField('umengmarket')
             bootstrapValidator.validate();
         }else{
             warningAlert("请填写umengkey");

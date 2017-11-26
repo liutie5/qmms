@@ -116,7 +116,10 @@
                 "umengmarket": {
                     required: "请生成渠道映射",
                     validators:{
-                        notEmpty: {message: '请生成渠道映射'}
+                        notEmpty: {message: '请生成渠道映射'},
+                        callback: {
+                            message: '请生成渠道映射'
+                        }
                     }
                 }
             }
@@ -124,8 +127,8 @@
 
         $("#formSubmit").click(function(){
             var bootstrapValidator = $("#addForm").data('bootstrapValidator');
-            bootstrapValidator.enableFieldValidators("umengmarket",true);
-            bootstrapValidator.validate();
+//            bootstrapValidator.enableFieldValidators("umengmarket",true);
+//            bootstrapValidator.validate();
             var us = $("input[name='addumm']");
             var ums = "";
             us.each(function(i){
@@ -138,6 +141,9 @@
 
             });
             $('#umengmarket').val(ums);
+            bootstrapValidator.enableFieldValidators("umengmarket",true);
+            bootstrapValidator.updateStatus('umengmarket', 'NOT_VALIDATED').validateField('umengmarket')
+            bootstrapValidator.validate();
             if(bootstrapValidator.isValid()){
                 $("#formSubmit").attr("disabled", true);
                 var param = $("#addForm").serialize();
@@ -152,7 +158,6 @@
                         return false;
                     }
                 },"json");
-
 
             }else{
                 return false;
@@ -196,8 +201,7 @@
             }
             $('#umengmarket').val(hadValue);
             var bootstrapValidator = $("#addForm").data('bootstrapValidator');
-            bootstrapValidator.enableFieldValidators("umengmarket",false);
-            bootstrapValidator.enableFieldValidators("umengmarket",true);
+            bootstrapValidator.updateStatus('umengmarket', 'NOT_VALIDATED').validateField('umengmarket')
             bootstrapValidator.validate();
         }else{
             warningAlert("请填写umengkey");
