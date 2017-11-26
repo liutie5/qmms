@@ -59,7 +59,7 @@
                                 <input type="hidden" class="form-control" id="subImg" name="subImg" th:value="${creditType.subImg}"/>
                                 <p><input type="file" class="form-control" id="subImgFile" name="subImgFile"/></p>
                                 <input type="button" id="uploadSubFile" value="上传" onclick="ajaxFileUploadSub()" />
-                                <p><img id="subImgShow" alt="" th:src="${creditType.subImg}" width="100px" height="100px"/></p>
+                                <p id="subImgShowP"><img id="subImgShow" alt="" th:src="${creditType.subImg}" width="100px" height="100px"/>&nbsp;&nbsp;&nbsp;<a th:if="${creditType.subImg} !='' " id='subImgDel' onclick='delSubImg()'>删除</a></p>
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -260,8 +260,8 @@
                     if(data.success){
                         $("#subImg").val(data.imgPath);
                         $("#subImgShow").attr("src", data.imgPath);
-                        var bootstrapValidator = $("#addForm").data('bootstrapValidator');
-                        bootstrapValidator.updateStatus('subImg', 'NOT_VALIDATED').validateField('subImg');
+                        $("#subImgShowP").append("&nbsp;&nbsp;&nbsp;<a id='subImgDel' onclick='delSubImg()'>删除</a>");
+
                     }else {
                         warningAlert(data.msg);
                     }
