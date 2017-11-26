@@ -37,7 +37,7 @@ public class ApiServiceImpl implements ApiService{
     @Resource
     private SerCreditBannerDao serCreditBannerDao;
     @Resource
-    private SerCreditTypeDao serCreditTypeDao;
+    private SerCreditBankDao serCreditBankDao;
     @Resource
     private SerCreditProductDao serCreditProductDao;
     @Resource
@@ -318,6 +318,9 @@ public class ApiServiceImpl implements ApiService{
         List<CreditBanner> banner = convertCreditBanner(domainName,pkgKey,source ,bannerList);
         data.setBanner(banner);
 
+        List<SerCreditBank> bankList = serCreditBankDao.findAll();
+        data.setBanks(convertCreditBank(domainName,bankList));
+
         List<SerCreditProduct> serCreditProductList = null;
         if(StringUtils.isBlank(hotType)){
             serCreditProductList = serCreditProductDao.findAllByStatusOrderByOrderedByDesc(1);
@@ -405,7 +408,20 @@ public class ApiServiceImpl implements ApiService{
         return creditTypes;
     }
 
-
+    public List<CreditBank> convertCreditBank(String domainName,List<SerCreditBank> list){
+        List<CreditBank> rs = new ArrayList<>();
+        if(list != null){
+            for(SerCreditBank data:list){
+                CreditBank target = new CreditBank();
+                target.setBankId(data.getBankId());
+                target.setBankName(data.getBankName());
+                target.setBankDesc(data.getBankDesc());
+                target.setBankLogo(domainName+"/"+data.getBankLogo());
+                rs.add(target);
+            }
+        }
+        return rs;
+    }
     public  List<CreditType> convertCreditType(String domainName,List<SerCreditType> list){
         List<CreditType> rs = new ArrayList<>();
         if(list != null){
