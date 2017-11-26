@@ -105,7 +105,7 @@ public class ApiServiceImpl implements ApiService{
                 target.setDesc(data.getDesc());
                 target.setImg(domainName+"/"+data.getImg());
                 target.setTitle(data.getTitle());
-                if(data.getSubImg() == null){
+                if(StringUtils.isBlank(data.getSubImg())){
                     target.setSubImg("");
                 }else{
                     target.setSubImg(domainName+"/"+data.getSubImg());
@@ -431,7 +431,7 @@ public class ApiServiceImpl implements ApiService{
                 target.setDesc(data.getDesc());
                 target.setImg(domainName+"/"+data.getImg());
                 target.setTitle(data.getTitle());
-                if(data.getSubImg() == null){
+                if(StringUtils.isBlank(data.getSubImg())){
                     target.setSubImg("");
                 }else{
                     target.setSubImg(domainName+"/"+data.getSubImg());
