@@ -77,7 +77,7 @@
     function loanBannerListTable(){
         $('#listTable').dataTable({
             "aaSorting": [[ 0, "asc" ]],
-            "sDom": "<'box-content'<'#searchDate.col-sm-5'><'col-sm-3 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
+            "sDom": "<'box-content'<'#searchDate.col-sm-6'><'col-sm-3 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-3'i><'col-sm-3 text-right'p><'clearfix'>>",
             "sPaginationType": "bootstrap",
             "oLanguage": lang,
             ordering:false,
@@ -90,8 +90,10 @@
                 param.page = (data.start / data.length);//当前页码
                 param.context = data.search.value;
                 //ajax请求数据方法
-                var searchDate = $('#dateSelect').val();
-                param.searchDate = searchDate;
+                var dateBegin = $('#dateBegin').val();
+                var dateEnd = $('#dateEnd').val();
+                param.beginDate = dateBegin;
+                param.endDate = dateEnd;
                 $.ajax({
                     type: "GET",
                     url: "stat/getLoanUvChannelList",//url请求的地址
@@ -130,14 +132,21 @@
             ],
             initComplete: function () {
 //            $("#searchDate").append('<button id="addLoanTypeBtn" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>添加</button>');
-            $('#searchDate').append('<input type="text" class="form-control" id="dateSelect" />');
-            $('#dateSelect').datepicker({
-                defaultDate : new Date(), //还可以是时间字符串，当前日期对应的时间数值搜索
-                onSelect: function(selectedDate) {//选择日期后执行的操作
-                    $("#listTable").dataTable().fnDraw(0);
-                }
-            });
-            $('#dateSelect').val(new Date().Format("yyyy-MM-dd"));
+                $('#searchDate').append('<div style="width:70%;display:inline" class="form-inline"><input class="form-control" style="width:100px;float:left" type="text" id="dateBegin" /><label style="float: left;">&nbsp;至&nbsp;</nb></label> <input class="form-control" style="width:100px;float: left;"  type="text" id="dateEnd" /></div>');
+                $('#dateBegin').datepicker({
+                    defaultDate : new Date(), //还可以是时间字符串，当前日期对应的时间数值搜索
+                    onSelect: function(selectedDate) {//选择日期后执行的操作
+                        $("#listTable").dataTable().fnDraw(0);
+                    }
+                });
+                $('#dateEnd').datepicker({
+                    defaultDate : new Date(), //还可以是时间字符串，当前日期对应的时间数值搜索
+                    onSelect: function(selectedDate) {//选择日期后执行的操作
+                        $("#listTable").dataTable().fnDraw(0);
+                    }
+                });
+                $('#dateBegin').val(new Date().Format("yyyy-MM-dd"));
+                $('#dateEnd').val(new Date().Format("yyyy-MM-dd"));
         }
         }).api();
 

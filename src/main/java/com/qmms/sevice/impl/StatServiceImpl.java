@@ -61,7 +61,13 @@ public class StatServiceImpl implements StatService{
 
     @Override
     public Page<StatLoanUvChannel> getLoanUvStatListWithCondition(int page, int pageSize, final String beginDate,final String endDate) {
-        Pageable pageable = new PageRequest(page,pageSize,new Sort(Sort.Direction.ASC,"channelId"));
+
+        Sort.Order order1 = new Sort.Order(Sort.Direction.ASC, "statDate");
+        Sort.Order order2 = new Sort.Order(Sort.Direction.ASC, "channelId");
+        ArrayList<Sort.Order> orders = new ArrayList<>();
+        orders.add(order1);
+        orders.add(order2);
+        Pageable pageable = new PageRequest(page,pageSize,new Sort(orders));
         Page<StatLoanUvChannel> pageList = statLoanUvChannelDao.findAll(new Specification<StatLoanUvChannel>(){
             @Override
             public Predicate toPredicate(Root<StatLoanUvChannel> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
