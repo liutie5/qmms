@@ -8,5 +8,5 @@ public interface StatService {
 
     public String clearLoanUv();
 
-    Page<StatLoanUvChannel> getLoanUvStatListWithCondition(int page, int pageSize, String date);
+    Page<StatLoanUvChannel> getLoanUvStatListWithCondition(int page, int pageSize, String beginDate,String endDate);
 }

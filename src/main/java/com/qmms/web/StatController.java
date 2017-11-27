@@ -68,11 +68,14 @@ public class StatController {
 
     @RequestMapping("getLoanUvChannelList")
     @ResponseBody
-    public Page<StatLoanUvChannel> getLoanProductList(int page, int pageSize, String searchDate){
-        if(StringUtils.isBlank(searchDate)){
-            searchDate = DateUtil.date2str("yyyy-MM-dd",new Date());
+    public Page<StatLoanUvChannel> getLoanProductList(int page, int pageSize, String beginDate,String endDate){
+        if(StringUtils.isBlank(beginDate)){
+            beginDate = DateUtil.date2str("yyyy-MM-dd",new Date());
         }
-        Page p1 = statService.getLoanUvStatListWithCondition(page, pageSize, searchDate);
+        if(StringUtils.isBlank(endDate)){
+            endDate = DateUtil.date2str("yyyy-MM-dd",new Date());
+        }
+        Page p1 = statService.getLoanUvStatListWithCondition(page, pageSize, beginDate,endDate);
         return p1;
     }
 
