@@ -56,6 +56,22 @@ public class StatTest extends BasicJPATest{
 
     }
 
+    @Test
+    public void selectServicePid(){
+        String beginDate = "2017-11-28";
+        String endDate = "2017-11-28";
+        if(StringUtils.isBlank(beginDate)){
+            beginDate = DateUtil.date2str("yyyy-MM-dd",new Date());
+        }
+        if(StringUtils.isBlank(endDate)){
+            endDate = DateUtil.date2str("yyyy-MM-dd",new Date());
+        }
+        Page p1 = statService.getLoanUvStatByPidDetailListWithCondition(0, 10,1L, beginDate, endDate);
+        List<StatLoanUvChannel> channelList = p1.getContent();
+        System.out.println(p1.getContent().size());
+
+    }
+
 
 
 }

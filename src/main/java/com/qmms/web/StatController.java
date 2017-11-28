@@ -81,6 +81,19 @@ public class StatController {
     }
 
 
+    @RequestMapping("getLoanUvPidDetailList")
+    @ResponseBody
+    public Page<StatLoanUvChannel> getLoanUvPidDetailList(int page, int pageSize,Long pid, String beginDate,String endDate){
+        if(StringUtils.isBlank(beginDate)){
+            return null;
+        }
+        if(StringUtils.isBlank(endDate)){
+            return null;
+        }
+        Page p1 = statService.getLoanUvStatByPidDetailListWithCondition(page, pageSize,pid, beginDate, endDate);
+        return p1;
+    }
+
 
     public String checkType(String type,String beginDate,String endDate){
         if(StringUtils.isBlank(type)||(!"today".equals(type) && !"yesterday".equals(type) && !"range3".equals(type) && !"range".equals(type))){

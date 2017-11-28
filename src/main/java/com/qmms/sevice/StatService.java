@@ -10,4 +10,6 @@ public interface StatService {
     public String clearLoanUv();
 
     Page<StatLoanUvSumByProduct> getLoanUvStatByPidListWithCondition(int page, int pageSize, String beginDate,String endDate);
+
+    Page<StatLoanUvChannel> getLoanUvStatByPidDetailListWithCondition(int page, int pageSize, Long productId, String beginDate,String endDate);
 }

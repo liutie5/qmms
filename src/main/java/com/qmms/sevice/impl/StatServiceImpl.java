@@ -83,4 +83,22 @@ public class StatServiceImpl implements StatService{
         }
         return pageList;
     }
+
+    @Override
+    public Page<StatLoanUvChannel> getLoanUvStatByPidDetailListWithCondition(int page, int pageSize, final  Long productId, final String beginDate, final String endDate) {
+        Pageable pageable = new PageRequest(page,pageSize);
+        Page<StatLoanUvChannel> pageList = statLoanUvChannelDao.findAll(new Specification<StatLoanUvChannel>(){
+            @Override
+            public Predicate toPredicate(Root<StatLoanUvChannel> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<Predicate>();
+                list.add(criteriaBuilder.equal(root.get("productId").as(Long.class),productId));
+                list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("statDate").as(Date.class),DateUtil.strToDate("yyyy-MM-dd",beginDate)));
+                list.add(criteriaBuilder.lessThanOrEqualTo(root.get("statDate").as(Date.class),DateUtil.strToDate("yyyy-MM-dd",endDate)));
+                Predicate[] predicates = new Predicate[list.size()];
+                predicates = list.toArray(predicates);
+                return criteriaBuilder.and(predicates);
+            }
+        },pageable);
+        return pageList;
+    }
 }
