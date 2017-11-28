@@ -42,7 +42,11 @@ public class ForwardController {
             response.sendRedirect(fallback);
             //add info
             //String pkgKey,String source,String type,String pid,String fallback,String deviceId
-            StatLoanUv loanUv = new StatLoanUv(pkgKey,source,type,pid,fallback,uv);
+            long pidLong = -1;
+            if(StringUtils.isNotBlank(pid) && StringUtils.isNumeric(pid) && pid.length() <= 15){
+                pidLong = Long.parseLong(pid);
+            }
+            StatLoanUv loanUv = new StatLoanUv(pkgKey,source,type,pidLong,fallback,uv);
             statLoanUvDao.save(loanUv);
 
         }catch (Exception e){

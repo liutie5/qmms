@@ -1,6 +1,7 @@
 package com.qmms.web;
 
 import com.qmms.entity.StatLoanUvChannel;
+import com.qmms.entity.StatLoanUvSumByProduct;
 import com.qmms.sevice.StatService;
 import com.qmms.utils.DateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -66,16 +67,16 @@ public class StatController {
         return "/stat/loanUvStatList";
     }
 
-    @RequestMapping("getLoanUvChannelList")
+    @RequestMapping("getLoanUvPidList")
     @ResponseBody
-    public Page<StatLoanUvChannel> getLoanProductList(int page, int pageSize, String beginDate,String endDate){
+    public Page<StatLoanUvSumByProduct> getLoanUvProductChannelList(int page, int pageSize, String beginDate,String endDate){
         if(StringUtils.isBlank(beginDate)){
             beginDate = DateUtil.date2str("yyyy-MM-dd",new Date());
         }
         if(StringUtils.isBlank(endDate)){
             endDate = DateUtil.date2str("yyyy-MM-dd",new Date());
         }
-        Page p1 = statService.getLoanUvStatListWithCondition(page, pageSize, beginDate,endDate);
+        Page p1 = statService.getLoanUvStatByPidListWithCondition(page, pageSize, beginDate, endDate);
         return p1;
     }
 

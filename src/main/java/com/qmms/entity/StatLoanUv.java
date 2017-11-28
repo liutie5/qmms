@@ -13,13 +13,13 @@ public class StatLoanUv implements Serializable {
     private String pkgKey;
     private String source;
     private String type;
-    private String pid;
+    private Long pid;
     private String fallback;
     private String deviceId;
     private int addTime;
 
     public StatLoanUv(){}
-    public StatLoanUv(String pkgKey,String source,String type,String pid,String fallback,String deviceId){
+    public StatLoanUv(String pkgKey,String source,String type,Long pid,String fallback,String deviceId){
         this.pkgKey = pkgKey;
         this.source = source;
         this.type = type;
@@ -61,11 +61,11 @@ public class StatLoanUv implements Serializable {
         this.type = type;
     }
 
-    public String getPid() {
+    public Long getPid() {
         return pid;
     }
 
-    public void setPid(String pid) {
+    public void setPid(Long pid) {
         this.pid = pid;
     }
 

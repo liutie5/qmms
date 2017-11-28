@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class StatUvKey implements Serializable {
     private Date statDate;
+    private Long productId;
     private Long channelId;
     private String pkgKey;
     private String source;

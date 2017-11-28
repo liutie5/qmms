@@ -1,10 +1,13 @@
 package com.qmms.sevice.impl;
 
 import com.qmms.dao.SerChannelDao;
+import com.qmms.dao.SerLoanProductDao;
 import com.qmms.dao.StatLoanUvChannelDao;
 import com.qmms.dao.StatLoanUvDao;
 import com.qmms.entity.SerChannel;
+import com.qmms.entity.SerLoanProduct;
 import com.qmms.entity.StatLoanUvChannel;
+import com.qmms.entity.StatLoanUvSumByProduct;
 import com.qmms.sevice.StatService;
 import com.qmms.utils.DateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +37,8 @@ public class StatServiceImpl implements StatService{
     private StatLoanUvDao statLoanUvDao;
     @Resource
     private SerChannelDao serChannelDao;
+    @Resource
+    private SerLoanProductDao serLoanProductDao;
 
     @Override
     @Transactional
@@ -60,37 +65,20 @@ public class StatServiceImpl implements StatService{
 
 
     @Override
-    public Page<StatLoanUvChannel> getLoanUvStatListWithCondition(int page, int pageSize, final String beginDate,final String endDate) {
-
-        Sort.Order order1 = new Sort.Order(Sort.Direction.ASC, "statDate");
-        Sort.Order order2 = new Sort.Order(Sort.Direction.ASC, "channelId");
-        ArrayList<Sort.Order> orders = new ArrayList<>();
-        orders.add(order1);
-        orders.add(order2);
-        Pageable pageable = new PageRequest(page,pageSize,new Sort(orders));
-        Page<StatLoanUvChannel> pageList = statLoanUvChannelDao.findAll(new Specification<StatLoanUvChannel>(){
-            @Override
-            public Predicate toPredicate(Root<StatLoanUvChannel> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> list = new ArrayList<Predicate>();
-                list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("statDate").as(Date.class),DateUtil.strToDate("yyyy-MM-dd",beginDate)));
-                list.add(criteriaBuilder.lessThanOrEqualTo(root.get("statDate").as(Date.class),DateUtil.strToDate("yyyy-MM-dd",endDate)));
-                Predicate[] predicates = new Predicate[list.size()];
-                predicates = list.toArray(predicates);
-                return criteriaBuilder.and(predicates);
-
-            }
-        },pageable);
+    public Page<StatLoanUvSumByProduct> getLoanUvStatByPidListWithCondition(int page, int pageSize, final String beginDate,final String endDate) {
+        Pageable pageable = new PageRequest(page,pageSize);
+        Page<StatLoanUvSumByProduct> pageList = statLoanUvChannelDao.selectByPid(DateUtil.strToDate("yyyy-MM-dd",beginDate),DateUtil.strToDate("yyyy-MM-dd",beginDate),pageable);
         if(pageList.getContent() != null){
-            for(StatLoanUvChannel data:pageList.getContent()){
-                SerChannel channel = serChannelDao.findOne(data.getChannelId());
-                String channelName = "未知";
-                if(channel != null){
-                    channelName = channel.getName();
+            for(StatLoanUvSumByProduct data:pageList.getContent()){
+                SerLoanProduct product = serLoanProductDao.findOne(data.getProductId());
+                String pname = "未知";
+                if(product != null){
+                    pname = product.getName();
                 }
-                if(data.getChannelId() == -100){
-                    channelName="汇总";
+                if(data.getProductId() == -100){
+                    pname="汇总";
                 }
-                data.setChannelName(channelName);
+                data.setProductName(pname);
             }
         }
         return pageList;
