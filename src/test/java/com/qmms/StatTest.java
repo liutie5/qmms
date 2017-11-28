@@ -2,7 +2,6 @@ package com.qmms;
 
 import com.qmms.dao.StatLoanUvChannelDao;
 import com.qmms.entity.StatLoanUvChannel;
-import com.qmms.entity.StatLoanUvSumByProduct;
 import com.qmms.sevice.StatService;
 import com.qmms.utils.DateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -10,9 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -21,7 +17,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class StatTest extends BasicJPATest{
+public class StatTest{
     @Resource
     StatLoanUvChannelDao loanUvChannelDao;
     @Resource

@@ -67,7 +67,7 @@ public class StatServiceImpl implements StatService{
     @Override
     public Page<StatLoanUvSumByProduct> getLoanUvStatByPidListWithCondition(int page, int pageSize, final String beginDate,final String endDate) {
         Pageable pageable = new PageRequest(page,pageSize);
-        Page<StatLoanUvSumByProduct> pageList = statLoanUvChannelDao.selectByPid(DateUtil.strToDate("yyyy-MM-dd",beginDate),DateUtil.strToDate("yyyy-MM-dd",beginDate),pageable);
+        Page<StatLoanUvSumByProduct> pageList = statLoanUvChannelDao.selectByPid(DateUtil.strToDate("yyyy-MM-dd",beginDate),DateUtil.strToDate("yyyy-MM-dd",endDate),pageable);
         if(pageList.getContent() != null){
             for(StatLoanUvSumByProduct data:pageList.getContent()){
                 SerLoanProduct product = serLoanProductDao.findOne(data.getProductId());
@@ -99,6 +99,17 @@ public class StatServiceImpl implements StatService{
                 return criteriaBuilder.and(predicates);
             }
         },pageable);
+        if(pageList != null && pageList.getContent() != null){
+            for(StatLoanUvChannel data:pageList.getContent()){
+                String channelName= "未知";
+                SerChannel channel = serChannelDao.findOne(data.getChannelId());
+                if(channel != null){
+                    channelName = channel.getName();
+                }
+                data.setChannelName(channelName);
+            }
+        }
+
         return pageList;
     }
 }
