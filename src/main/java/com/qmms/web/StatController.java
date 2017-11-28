@@ -2,6 +2,7 @@ package com.qmms.web;
 
 import com.qmms.entity.StatLoanUvChannel;
 import com.qmms.entity.StatLoanUvSumByProduct;
+import com.qmms.entity.StatLoanUvSumByProductDetail;
 import com.qmms.sevice.StatService;
 import com.qmms.utils.DateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -83,7 +84,7 @@ public class StatController {
 
     @RequestMapping("getLoanUvPidDetailList")
     @ResponseBody
-    public Page<StatLoanUvChannel> getLoanUvPidDetailList(int page, int pageSize,Long pid, String beginDate,String endDate){
+    public Page<StatLoanUvSumByProductDetail> getLoanUvPidDetailList(int page, int pageSize, Long pid, String beginDate, String endDate){
         if(StringUtils.isBlank(beginDate)){
             return null;
         }

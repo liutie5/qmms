@@ -4,10 +4,7 @@ import com.qmms.dao.SerChannelDao;
 import com.qmms.dao.SerLoanProductDao;
 import com.qmms.dao.StatLoanUvChannelDao;
 import com.qmms.dao.StatLoanUvDao;
-import com.qmms.entity.SerChannel;
-import com.qmms.entity.SerLoanProduct;
-import com.qmms.entity.StatLoanUvChannel;
-import com.qmms.entity.StatLoanUvSumByProduct;
+import com.qmms.entity.*;
 import com.qmms.sevice.StatService;
 import com.qmms.utils.DateUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -85,22 +82,11 @@ public class StatServiceImpl implements StatService{
     }
 
     @Override
-    public Page<StatLoanUvChannel> getLoanUvStatByPidDetailListWithCondition(int page, int pageSize, final  Long productId, final String beginDate, final String endDate) {
+    public Page<StatLoanUvSumByProductDetail> getLoanUvStatByPidDetailListWithCondition(int page, int pageSize, final  Long productId, final String beginDate, final String endDate) {
         Pageable pageable = new PageRequest(page,pageSize);
-        Page<StatLoanUvChannel> pageList = statLoanUvChannelDao.findAll(new Specification<StatLoanUvChannel>(){
-            @Override
-            public Predicate toPredicate(Root<StatLoanUvChannel> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                List<Predicate> list = new ArrayList<Predicate>();
-                list.add(criteriaBuilder.equal(root.get("productId").as(Long.class),productId));
-                list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("statDate").as(Date.class),DateUtil.strToDate("yyyy-MM-dd",beginDate)));
-                list.add(criteriaBuilder.lessThanOrEqualTo(root.get("statDate").as(Date.class),DateUtil.strToDate("yyyy-MM-dd",endDate)));
-                Predicate[] predicates = new Predicate[list.size()];
-                predicates = list.toArray(predicates);
-                return criteriaBuilder.and(predicates);
-            }
-        },pageable);
+        Page<StatLoanUvSumByProductDetail> pageList = statLoanUvChannelDao.selectByPidDetail(DateUtil.strToDate("yyyy-MM-dd",beginDate),DateUtil.strToDate("yyyy-MM-dd",endDate),productId,pageable);
         if(pageList != null && pageList.getContent() != null){
-            for(StatLoanUvChannel data:pageList.getContent()){
+            for(StatLoanUvSumByProductDetail data:pageList.getContent()){
                 String channelName= "未知";
                 SerChannel channel = serChannelDao.findOne(data.getChannelId());
                 if(channel != null){
