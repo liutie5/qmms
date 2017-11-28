@@ -37,7 +37,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="detailModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="detailModel" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 70%;" id="detailContext">
         <div class="modal-content" >
 
@@ -266,7 +266,9 @@
             initComplete: function () {
                 $("#detailModel").modal({
                     show:true,
-                    backdrop:"static"
+                    backdrop:"static",
+                    backdrop: 'static',
+                    keyboard: false
                 });
             }
         }).api();
