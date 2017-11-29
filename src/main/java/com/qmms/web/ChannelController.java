@@ -5,6 +5,7 @@ import com.qmms.entity.SerChannel;
 import com.qmms.entity.SerChannelUmeng;
 import com.qmms.sevice.SerCfgMarketService;
 import com.qmms.sevice.SerChannelService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -73,6 +74,11 @@ public class ChannelController {
     public Map<String,String> channelAdd(String name,String desc,String[] umengmarket){
         Map<String,String> data = new HashMap<>();
         try{
+            String umCheckMsg = serChannelService.addChannelUmengMarketExistCheck(umengmarket);
+            if(StringUtils.isNotBlank(umCheckMsg)){
+                data.put("success","0");
+                data.put("msg",umCheckMsg);
+            }
             SerChannel channel = new SerChannel();
             channel.setName(name);
             channel.setDesc(desc);
@@ -110,6 +116,11 @@ public class ChannelController {
     public Map<String,String> channelEdit(SerChannel channel,String[] umengmarket){
         Map<String,String> data = new HashMap<>();
         try{
+            String umCheckMsg = serChannelService.editChannelUmengMarketExistCheck(channel.getId(),umengmarket);
+            if(StringUtils.isNotBlank(umCheckMsg)){
+                data.put("success","0");
+                data.put("msg",umCheckMsg);
+            }
             serChannelService.editChannel(channel,umengmarket);
             data.put("success","1");
         }catch (Exception e){

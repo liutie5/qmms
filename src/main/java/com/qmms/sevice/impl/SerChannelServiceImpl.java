@@ -1,8 +1,10 @@
 package com.qmms.sevice.impl;
 
+import com.qmms.dao.SerCfgMarketDao;
 import com.qmms.dao.SerChannelDao;
 import com.qmms.dao.SerChannelUmengDao;
 import com.qmms.dao.SerLoanProductDao;
+import com.qmms.entity.SerCfgMarket;
 import com.qmms.entity.SerChannel;
 import com.qmms.entity.SerChannelUmeng;
 import com.qmms.entity.SysUserInfo;
@@ -33,6 +35,8 @@ public class SerChannelServiceImpl implements SerChannelService {
     private SerChannelUmengDao serChannelUmengDao;
     @Resource
     private SerLoanProductDao serLoanProductDao;
+    @Resource
+    private SerCfgMarketDao serCfgMarketDao;
     /**
      * 分页查找
      * @param page
@@ -169,5 +173,45 @@ public class SerChannelServiceImpl implements SerChannelService {
     @Override
     public List<SerChannel> getAllChannel() {
         return serChannelDao.findAll();
+    }
+
+    @Override
+    public String addChannelUmengMarketExistCheck(String[] umengmarkets) {
+        StringBuffer bf = new StringBuffer();
+        if(umengmarkets != null){
+            for(String umengmarket:umengmarkets) {
+                String[] arr = umengmarket.split("_");
+                String umengKey = arr[0];
+                String marketId = "";
+                if (arr.length >= 2) {
+                    marketId = arr[1];
+                }
+                SerChannelUmeng umeng = serChannelUmengDao.findFirstByUmengKeyAndMarketId(umengKey,marketId);
+                if(umeng != null){
+                    bf.append("渠道映射:").append(umengKey).append("_").append(marketId).append(" 已经存在</br>");
+                }
+            }
+        }
+        return bf.toString();
+    }
+
+    @Override
+    public String editChannelUmengMarketExistCheck(Long channelId, String[] umengmarkets) {
+        StringBuffer bf = new StringBuffer();
+        if(umengmarkets != null){
+            for(String umengmarket:umengmarkets) {
+                String[] arr = umengmarket.split("_");
+                String umengKey = arr[0];
+                String marketId = "";
+                if (arr.length >= 2) {
+                    marketId = arr[1];
+                }
+                SerChannelUmeng umeng = serChannelUmengDao.findFirstByUmengKeyAndMarketIdAndChannelIdNot(umengKey,marketId,channelId);
+                if(umeng != null){
+                    bf.append("渠道映射:").append(umengKey).append("_").append(marketId).append(" 已经存在</br>");
+                }
+            }
+        }
+        return bf.toString();
     }
 }

@@ -26,6 +26,13 @@ public interface SerChannelService {
     public SerChannel addChannel(SerChannel channel,String[] umengmarkets);
 
     /**
+     * 添加时校验umeng和market是否已经存在
+     * @param umengmarket
+     * @return
+     */
+    public String addChannelUmengMarketExistCheck(String[] umengmarket);
+
+    /**
      * 获取
      * @param id
      * @return
@@ -46,6 +53,13 @@ public interface SerChannelService {
      */
     public SerChannel editChannel(SerChannel channel,String[] umengmarkets);
 
+    /**
+     * 编辑时校验umeng和market是否已经存在
+     * @param channelId
+     * @param umengmarket
+     * @return
+     */
+    public String editChannelUmengMarketExistCheck(Long channelId,String[] umengmarket);
     /**
      * 获取所有渠道
      * @return

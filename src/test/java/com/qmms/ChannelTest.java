@@ -1,6 +1,8 @@
 package com.qmms;
 
+import com.qmms.dao.SerChannelUmengDao;
 import com.qmms.entity.SerChannel;
+import com.qmms.entity.SerChannelUmeng;
 import com.qmms.sevice.SerChannelService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +16,8 @@ import javax.annotation.Resource;
 public class ChannelTest extends BasicJPATest{
     @Resource
     SerChannelService serChannelService;
-
+    @Resource
+    SerChannelUmengDao serChannelUmengDao;
 
     @Test
     public void add(){
@@ -26,6 +29,14 @@ public class ChannelTest extends BasicJPATest{
 
     @Test
     public void edit() throws Exception{
+//        SerChannelUmeng umeng = serChannelUmengDao.findFirstByUmengKeyAndMarketId("um123", "");
+//        System.out.println(umeng==null);
+//        SerChannelUmeng um = serChannelUmengDao.findFirstByUmengKeyAndMarketIdAndChannelIdNot("um123","",1l);
+//        System.out.println(um != null);
+
+        String umengStr = "um123_,um123_xiaomi";
+//        System.out.println(serChannelService.addChannelUmengMarketExistCheck(umengStr.split(",")));
+        System.out.println(serChannelService.editChannelUmengMarketExistCheck(2l,umengStr.split(",")));
 
     }
 
