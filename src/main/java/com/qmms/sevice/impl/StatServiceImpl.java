@@ -68,7 +68,7 @@ public class StatServiceImpl implements StatService{
         if(pageList.getContent() != null){
             for(StatLoanUvSumByProduct data:pageList.getContent()){
                 SerLoanProduct product = serLoanProductDao.findOne(data.getProductId());
-                String pname = "未知";
+                String pname = "未知产品";
                 if(product != null){
                     pname = product.getName();
                 }
@@ -87,7 +87,7 @@ public class StatServiceImpl implements StatService{
         Page<StatLoanUvSumByProductDetail> pageList = statLoanUvChannelDao.selectByPidDetail(DateUtil.strToDate("yyyy-MM-dd",beginDate),DateUtil.strToDate("yyyy-MM-dd",endDate),productId,pageable);
         if(pageList != null && pageList.getContent() != null){
             for(StatLoanUvSumByProductDetail data:pageList.getContent()){
-                String channelName= "未知";
+                String channelName= "默认";
                 SerChannel channel = serChannelDao.findOne(data.getChannelId());
                 if(channel != null){
                     channelName = channel.getName();
