@@ -147,7 +147,7 @@
                 $("#formSubmit").attr("disabled", true);
                 var param = $("#editForm").serializeArray();
                 $.post("channel/channelEdit",param,function(data){
-                    if(data.success){
+                    if(data.success==1){
                         successAlert("编辑成功")
                         $("#addModal").modal("hide");
                         LoadAjaxContent("channel/channelList");
@@ -166,6 +166,7 @@
     var addNum = 1000000;
     function mappAdd() {
         var umengKey = $('#umengkey').val();
+        console.log(umengKey);
         if(umengKey != ''){
             if(umengKey.indexOf('_') !=-1){
                 warningAlert("umengKey不能包含_字符")
@@ -177,6 +178,7 @@
                 var haveValue = $(this).val();
                 var arr = haveValue.split('_');
                 if(arr[0]==umengKey && market==arr[1]){
+                    console.log(arr[0]+","+arr[1]);
                     haveSame = true;
                 }
 
@@ -200,8 +202,7 @@
             }
             $('#umengmarket').val(hadValue);
             var bootstrapValidator = $("#editForm").data('bootstrapValidator');
-            bootstrapValidator.updateStatus('umengmarket', 'NOT_VALIDATED').validateField('umengmarket')
-            bootstrapValidator.validate();
+            bootstrapValidator.updateStatus('umengmarket', 'NOT_VALIDATED').validateField('umengmarket');
         }else{
             warningAlert("请填写umengkey");
         }

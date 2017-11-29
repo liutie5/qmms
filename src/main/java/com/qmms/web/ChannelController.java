@@ -78,6 +78,7 @@ public class ChannelController {
             if(StringUtils.isNotBlank(umCheckMsg)){
                 data.put("success","0");
                 data.put("msg",umCheckMsg);
+                return data;
             }
             SerChannel channel = new SerChannel();
             channel.setName(name);
@@ -120,6 +121,7 @@ public class ChannelController {
             if(StringUtils.isNotBlank(umCheckMsg)){
                 data.put("success","0");
                 data.put("msg",umCheckMsg);
+                return  data;
             }
             serChannelService.editChannel(channel,umengmarket);
             data.put("success","1");

@@ -148,7 +148,7 @@
                 $("#formSubmit").attr("disabled", true);
                 var param = $("#addForm").serialize();
                 $.post("channel/channelAdd",param,function(data){
-                    if(data.success){
+                    if(data.success==1){
                         successAlert("添加成功")
                         $("#addModal").modal("hide");
                         LoadAjaxContent("channel/channelList");
@@ -202,7 +202,6 @@
             $('#umengmarket').val(hadValue);
             var bootstrapValidator = $("#addForm").data('bootstrapValidator');
             bootstrapValidator.updateStatus('umengmarket', 'NOT_VALIDATED').validateField('umengmarket')
-            bootstrapValidator.validate();
         }else{
             warningAlert("请填写umengkey");
         }
