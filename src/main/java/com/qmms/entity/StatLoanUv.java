@@ -10,6 +10,7 @@ public class StatLoanUv implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String channelName;
     private String pkgKey;
     private String source;
     private String type;
@@ -19,7 +20,8 @@ public class StatLoanUv implements Serializable {
     private int addTime;
 
     public StatLoanUv(){}
-    public StatLoanUv(String pkgKey,String source,String type,Long pid,String fallback,String deviceId){
+    public StatLoanUv(String channelName,String pkgKey,String source,String type,Long pid,String fallback,String deviceId){
+        this.channelName = channelName;
         this.pkgKey = pkgKey;
         this.source = source;
         this.type = type;
@@ -27,6 +29,14 @@ public class StatLoanUv implements Serializable {
         this.fallback = fallback;
         this.deviceId = deviceId;
         this.addTime =(int)(System.currentTimeMillis()/1000);
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 
     public Long getId() {

@@ -6,9 +6,7 @@ import java.util.Date;
 public class StatUvKey implements Serializable {
     private Date statDate;
     private Long productId;
-    private Long channelId;
-    private String pkgKey;
-    private String source;
+    private String channelName;
 
     public Date getStatDate() {
         return statDate;
@@ -18,27 +16,19 @@ public class StatUvKey implements Serializable {
         this.statDate = statDate;
     }
 
-    public Long getChannelId() {
-        return channelId;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
-    public String getPkgKey() {
-        return pkgKey;
+    public String getChannelName() {
+        return channelName;
     }
 
-    public void setPkgKey(String pkgKey) {
-        this.pkgKey = pkgKey;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
     }
 }

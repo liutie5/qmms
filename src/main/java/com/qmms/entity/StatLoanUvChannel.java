@@ -13,17 +13,11 @@ public class StatLoanUvChannel implements Serializable {
     @Id
     private Long productId;
     @Id
-    private Long channelId;
-    @Id
-    private String pkgKey;
-    @Id
-    private String source;
+    private String channelName;
     private Long pv;
     private Long uv;
     private int addTime;
 
-    @Transient
-    private String channelName;
     @Transient
     private String productName;
 
@@ -41,30 +35,6 @@ public class StatLoanUvChannel implements Serializable {
 
     public void setProductId(Long productId) {
         this.productId = productId;
-    }
-
-    public Long getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getPkgKey() {
-        return pkgKey;
-    }
-
-    public void setPkgKey(String pkgKey) {
-        this.pkgKey = pkgKey;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
     }
 
     public Long getPv() {
@@ -106,4 +76,5 @@ public class StatLoanUvChannel implements Serializable {
     public void setProductName(String productName) {
         this.productName = productName;
     }
+
 }

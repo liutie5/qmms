@@ -179,7 +179,11 @@ public class ApiServiceImpl implements ApiService{
         target.setProductProcess(data.getProductProcess());
         target.setImg(domainName+"/"+data.getImg());
         target.setSuccessRate(data.getSuccessRate());
-        target.setHotLevel(data.getHotLevel().toString());
+        String hotLevel="0";
+        if(data.getHotLevel()!=null){
+            hotLevel = data.getHotLevel().toString();
+        }
+        target.setHotLevel(hotLevel);
         String urlRs = "";
         String allUrlRs = "";
         List<SerLoanProductChannelUrl> channelUrlList = data.getChannelUrls();

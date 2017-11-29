@@ -85,17 +85,6 @@ public class StatServiceImpl implements StatService{
     public Page<StatLoanUvSumByProductDetail> getLoanUvStatByPidDetailListWithCondition(int page, int pageSize, final  Long productId, final String beginDate, final String endDate) {
         Pageable pageable = new PageRequest(page,pageSize);
         Page<StatLoanUvSumByProductDetail> pageList = statLoanUvChannelDao.selectByPidDetail(DateUtil.strToDate("yyyy-MM-dd",beginDate),DateUtil.strToDate("yyyy-MM-dd",endDate),productId,pageable);
-        if(pageList != null && pageList.getContent() != null){
-            for(StatLoanUvSumByProductDetail data:pageList.getContent()){
-                String channelName= "默认";
-                SerChannel channel = serChannelDao.findOne(data.getChannelId());
-                if(channel != null){
-                    channelName = channel.getName();
-                }
-                data.setChannelName(channelName);
-            }
-        }
-
         return pageList;
     }
 }

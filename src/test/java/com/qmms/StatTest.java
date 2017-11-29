@@ -1,6 +1,7 @@
 package com.qmms;
 
 import com.qmms.dao.StatLoanUvChannelDao;
+import com.qmms.dao.StatLoanUvDao;
 import com.qmms.entity.StatLoanUvChannel;
 import com.qmms.sevice.StatService;
 import com.qmms.utils.DateUtil;
@@ -22,6 +23,8 @@ public class StatTest{
     StatLoanUvChannelDao loanUvChannelDao;
     @Resource
     StatService statService;
+    @Resource
+    StatLoanUvDao statLoanUvDao;
 
     @Test
     public void select(){
@@ -65,6 +68,13 @@ public class StatTest{
         Page p1 = statService.getLoanUvStatByPidDetailListWithCondition(0, 10,1L, beginDate, endDate);
         List<StatLoanUvChannel> channelList = p1.getContent();
         System.out.println(p1.getContent().size());
+
+    }
+
+    @Test
+    public void selectChannelName(){
+       String channelName = statLoanUvDao.findChannelName(1L,"um123","xiaomi");
+        System.out.println(channelName);
 
     }
 
