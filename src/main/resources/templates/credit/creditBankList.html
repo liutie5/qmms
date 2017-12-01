@@ -194,12 +194,12 @@
             var param={}
             param.id = id;
             $.post("credit/creditBankDel",param,function(data){
-                if(data.success){
+                if(data.success==1){
                     successAlert("删除成功")
                 }else{
                     errorAlert(data.msg);
                 }
-                LoadAjaxContent("credit/loaList");
+                LoadAjaxContent("credit/creditBankList");
 
             },"json");
         }, function(e,btn){

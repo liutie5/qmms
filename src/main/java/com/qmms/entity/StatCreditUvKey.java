@@ -3,9 +3,9 @@ package com.qmms.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-public class StatUvKey implements Serializable {
+public class StatCreditUvKey implements Serializable {
     private Date statDate;
-    private Long productId;
+    private Long bankId;
     private String channelName;
 
     public Date getStatDate() {
@@ -16,12 +16,12 @@ public class StatUvKey implements Serializable {
         this.statDate = statDate;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getBankId() {
+        return bankId;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setBankId(Long bankId) {
+        this.bankId = bankId;
     }
 
     public String getChannelName() {

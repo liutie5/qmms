@@ -283,6 +283,12 @@ public class SerCreditServiceImpl implements SerCreditService{
             }
         }
         product.setChannelUrls(channelUrlList);
+        SerCreditBank bank = serCreditBankDao.findOne(product.getCardBankId());
+        String bankName = "";
+        if(bank != null){
+            bankName = bank.getBankName();
+        }
+        product.setCardBankName(bankName);
         SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
         int currentTime = (int)(new Date().getTime()/1000);
         product.setAddTime(currentTime);
@@ -323,7 +329,12 @@ public class SerCreditServiceImpl implements SerCreditService{
                 channelUrlList.add(url);
             }
         }
-
+        SerCreditBank bank = serCreditBankDao.findOne(product.getCardBankId());
+        String bankName = "";
+        if(bank != null){
+            bankName = bank.getBankName();
+        }
+        rawObject.setCardBankName(bankName);
         SysUserInfo currentUser = (SysUserInfo) SecurityUtils.getSubject().getPrincipal();
         int currentTime = (int)(new Date().getTime()/1000);
         rawObject.setUpdateUserId(currentUser.getUserId());

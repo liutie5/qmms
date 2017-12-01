@@ -5,14 +5,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name="stat_loan_uv_channel")
-@IdClass(StatLoanUvKey.class)
-public class StatLoanUvChannel implements Serializable {
+@Table(name="stat_credit_uv_channel")
+@IdClass(StatCreditUvKey.class)
+public class StatCreditUvChannel implements Serializable {
     @Id
     @Column(columnDefinition="date")
     private Date statDate;
     @Id
-    private Long productId;
+    private Long bankId;
     @Id
     private String channelName;
     private Long pv;
@@ -30,12 +30,12 @@ public class StatLoanUvChannel implements Serializable {
         this.statDate = statDate;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Long getBankId() {
+        return bankId;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setBankId(Long bankId) {
+        this.bankId = bankId;
     }
 
     public Long getPv() {

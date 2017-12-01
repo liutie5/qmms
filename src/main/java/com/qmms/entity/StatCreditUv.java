@@ -9,6 +9,7 @@ public class StatCreditUv implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private String channelName;
     private String pkgKey;
     private String source;
     private String type;
@@ -19,7 +20,8 @@ public class StatCreditUv implements Serializable {
     private int addTime;
 
     public StatCreditUv(){}
-    public StatCreditUv(String pkgKey, String source, String type, String cardId,String bankId, String fallback, String deviceId){
+    public StatCreditUv(String channelName,String pkgKey, String source, String type, String cardId,String bankId, String fallback, String deviceId){
+        this.channelName = channelName;
         this.pkgKey = pkgKey;
         this.source = source;
         this.type = type;

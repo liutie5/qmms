@@ -152,7 +152,7 @@
                 {
                     "data": "cardId",
                     render:function(data,type,row,meta){
-                        return '<a href="#" onclick=toEdit("'+data+'")><span class="glyphicon glyphicon-edit">编辑</span></a> &nbsp;&nbsp;<a href="#" onclick=toDel("'+data+'","'+row.name+'")><span class="glyphicon glyphicon-remove-sign">删除</span></a>'
+                        return '<a href="#" onclick=toEdit("'+data+'")><span class="glyphicon glyphicon-edit">编辑</span></a> &nbsp;&nbsp;<a href="#" onclick=toDel("'+data+'","'+row.cardName+'")><span class="glyphicon glyphicon-remove-sign">删除</span></a>'
                     }
                 },
 
@@ -207,13 +207,13 @@
         confirm("确定删除信用卡产品："+name,function(e,btn){ //event + button clicked
             var param={}
             param.id = id;
-            $.post("credit/editProductDel",param,function(data){
+            $.post("credit/creditProductDel",param,function(data){
                 if(data.success){
                     successAlert("删除成功")
                 }else{
                     errorAlert(data.msg);
                 }
-                LoadAjaxContent("credit/editProductList");
+                LoadAjaxContent("credit/creditProductList");
 
             },"json");
         }, function(e,btn){

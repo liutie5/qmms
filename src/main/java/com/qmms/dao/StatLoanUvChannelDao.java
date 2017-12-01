@@ -3,7 +3,7 @@ package com.qmms.dao;
 import com.qmms.entity.StatLoanUvChannel;
 import com.qmms.entity.StatLoanUvSumByProduct;
 import com.qmms.entity.StatLoanUvSumByProductDetail;
-import com.qmms.entity.StatUvKey;
+import com.qmms.entity.StatLoanUvKey;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,9 +13,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Date;
-import java.util.List;
 
-public interface StatLoanUvChannelDao extends CrudRepository<StatLoanUvChannel,StatUvKey>,JpaRepository<StatLoanUvChannel,StatUvKey>,JpaSpecificationExecutor<StatLoanUvChannel> {
+public interface StatLoanUvChannelDao extends CrudRepository<StatLoanUvChannel,StatLoanUvKey>,JpaRepository<StatLoanUvChannel,StatLoanUvKey>,JpaSpecificationExecutor<StatLoanUvChannel> {
     @Query(value = "DELETE  from stat_loan_uv_channel where stat_date >= ?1 and stat_date <= ?2 ",nativeQuery = true)
     @Modifying
     public Integer deleteByStatDateBetween(String beginDate,String endDate);

@@ -71,14 +71,22 @@ public class ForwardController {
                 uv = setUv(response);
             }
             fallback = fallback.trim();
-//            String ft = fallback.toLowerCase();
-//            if(!ft.startsWith("http://") && !ft.startsWith("https://")){
-//                fallback = "http://"+fallback;
-//            }
+            String ft = fallback.toLowerCase();
+            if(!ft.startsWith("http://") && !ft.startsWith("https://")){
+                fallback = "http://"+fallback;
+            }
             response.sendRedirect(fallback);
             //add info
             //String pkgKey,String source,String type,String pid,String fallback,String deviceId
-            StatCreditUv creditUv = new StatCreditUv(pkgKey,source,type,cardId,bankId,fallback,uv);
+            long cardIdLong = -1;
+            if(StringUtils.isNotBlank(cardId) && StringUtils.isNumeric(cardId) && cardId.length() <= 15){
+                cardIdLong = Long.parseLong(cardId);
+            }
+            String channelName = statCreditUvDao.findChannelName(cardIdLong,pkgKey,source);
+            if(StringUtils.isBlank(channelName)){
+                channelName ="默认渠道";
+            }
+            StatCreditUv creditUv = new StatCreditUv(channelName,pkgKey,source,type,cardId,bankId,fallback,uv);
             statCreditUvDao.save(creditUv);
 
         }catch (Exception e){
