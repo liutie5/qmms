@@ -21,6 +21,8 @@ public interface ApiService {
 
     public CreditTypes creditTypes(String domainName, String pkgName,String pkgKey,String source,String group);
 
+    public CreditBanks creditBanks(String domainName, String pkgName,String pkgKey,String source);
+
     public ChangeShow changeShow(String domainName,String pkgName,String pkgKey,String source);
 
     public RnUpdate rnUpdate(String domainName,String pkgName,String pkgKey,String source,String version);

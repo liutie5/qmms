@@ -59,6 +59,12 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">优先级:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="priority" placeholder="必须为数字 数值越大，优先级越高" />
+                            </div>
+                        </div>
                         <div class="clearfix"></div>
                         <div class="form-group pull-right form-inline">
                             <div class="col-sm-12">
@@ -119,6 +125,21 @@
                 "isJoin": {
                     validators:{
                         notEmpty: {message: '请选择是否合作'}
+                    }
+                },
+                "priority": {
+                    validators:{
+                        notEmpty: {message: '请填写优先级'}
+                    },
+                    regexp: {
+                        regexp: /^[1-9]\d*$/,
+                        message: '优先级必须为数字'
+                    },
+                    callback: {
+                        message: '优先级在0到1000000000之间',
+                        callback:function(value, validator,$field){
+                            return value>=0&&value<=1000000000;
+                        }
                     }
                 }
             }

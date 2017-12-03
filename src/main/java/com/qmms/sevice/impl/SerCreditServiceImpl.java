@@ -38,7 +38,7 @@ public class SerCreditServiceImpl implements SerCreditService{
     
     @Override
     public Page<SerCreditBank> getCreditBankListWithCondition(int page, int pageSize, final String bankName) {
-        Pageable pageable = new PageRequest(page,pageSize);
+        Pageable pageable = new PageRequest(page,pageSize,new Sort(Sort.Direction.DESC,"priority"));
         Page<SerCreditBank> pageList = serCreditBankDao.findAll(new Specification<SerCreditBank>(){
             @Override
             public Predicate toPredicate(Root<SerCreditBank> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {

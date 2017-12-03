@@ -168,6 +168,24 @@ public class ApiController {
         return  creditTypes;
     }
 
+
+    @RequestMapping("credit/creditBanks.go")
+    @ResponseBody
+    public CreditBanks creditBanks(HttpServletRequest request) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        CreditBanks creditBanks = null;
+        try{
+            creditBanks =  apiService.creditBanks(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource());
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            creditBanks = new CreditBanks();
+            creditBanks.setCode(1);
+            creditBanks.setDesc(e.getMessage());
+        }
+        return  creditBanks;
+    }
+
     @RequestMapping("common/changeShow.go")
     @ResponseBody
     public ChangeShow changeShow(HttpServletRequest request, String group) {

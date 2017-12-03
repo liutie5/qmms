@@ -12,6 +12,7 @@ public class SerCreditBank {
     private String bankLogo;
     private String bankDesc;
     private int isJoin;
+    private int priority;
     private Integer addUserId;
     private Integer addTime;
     private Integer updateUserId;
@@ -55,6 +56,14 @@ public class SerCreditBank {
 
     public void setIsJoin(int isJoin) {
         this.isJoin = isJoin;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public Integer getAddUserId() {

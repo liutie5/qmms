@@ -265,6 +265,10 @@
                     validators:{
                         notEmpty: {message: '请填写排序设置'}
                     },
+                    regexp: {
+                        regexp: /^[1-9]\d*$/,
+                        message: '排序设置必须为数字'
+                    },
                     callback: {
                         message: '排序设置在0到1000000000之间',
                         callback:function(value, validator,$field){

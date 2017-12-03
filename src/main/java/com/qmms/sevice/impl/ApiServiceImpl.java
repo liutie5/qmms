@@ -322,7 +322,7 @@ public class ApiServiceImpl implements ApiService{
         List<CreditBanner> banner = convertCreditBanner(domainName,pkgKey,source ,bannerList);
         data.setBanner(banner);
 
-        List<SerCreditBank> bankList = serCreditBankDao.findAll();
+        List<SerCreditBank> bankList = serCreditBankDao.findAllByIsJoinOrderByPriorityDesc(1);
         data.setBanks(convertCreditBank(domainName,bankList));
 
         List<SerCreditProduct> serCreditProductList = null;
@@ -412,7 +412,17 @@ public class ApiServiceImpl implements ApiService{
         return creditTypes;
     }
 
-    public List<CreditBank> convertCreditBank(String domainName,List<SerCreditBank> list){
+    @Override
+    public CreditBanks creditBanks(String domainName, String pkgName, String pkgKey, String source) {
+        CreditBanks creditBanks = new CreditBanks();
+        List<SerCreditBank> banks = serCreditBankDao.findAllByOrderByPriorityDesc();
+        creditBanks.setData(convertCreditBank(domainName,banks));
+        creditBanks.setCode(CodeSuccess);
+        creditBanks.setDesc("success");
+        return creditBanks;
+    }
+
+    public List<CreditBank> convertCreditBank(String domainName, List<SerCreditBank> list){
         List<CreditBank> rs = new ArrayList<>();
         if(list != null){
             for(SerCreditBank data:list){
