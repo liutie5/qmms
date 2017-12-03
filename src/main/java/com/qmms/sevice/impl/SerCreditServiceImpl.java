@@ -4,8 +4,10 @@ import com.qmms.dao.*;
 import com.qmms.entity.*;
 import com.qmms.sevice.SerCreditService;
 import com.qmms.utils.UpdateUtils;
+import com.qmms.utils.UploadUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,9 @@ import java.util.*;
 
 @Service
 public class SerCreditServiceImpl implements SerCreditService{
+    @Value("${web.upload-path}")
+    private String webUploadPath;
+
     @Resource
     private SerCreditBankDao serCreditBankDao;
     @Resource
@@ -73,7 +78,11 @@ public class SerCreditServiceImpl implements SerCreditService{
 
     @Override
     public void delCreditBank(Long id) {
+        SerCreditBank bank = serCreditBankDao.findOne(id);
         serCreditBankDao.delete(id);
+        if(bank != null){
+            UploadUtil.rmUploadFile(webUploadPath+bank.getBankLogo());
+        }
     }
 
     @Override
@@ -141,9 +150,16 @@ public class SerCreditServiceImpl implements SerCreditService{
      * 删除
      * @param key
      */
-    @Transactional
     public void delCreditType(String key){
+        SerCreditType creditType = serCreditTypeDao.findOne(key);
         serCreditTypeDao.delete(key);
+        if(creditType != null){
+            UploadUtil.rmUploadFile(webUploadPath+creditType.getImg());
+            if(StringUtils.isNotBlank(creditType.getSubImg())){
+                UploadUtil.rmUploadFile(webUploadPath+creditType.getSubImg());
+            }
+
+        }
     }
 
     /**
@@ -232,7 +248,11 @@ public class SerCreditServiceImpl implements SerCreditService{
 
     @Override
     public void delCreditBanner(Long id) {
+        SerCreditBanner banner = serCreditBannerDao.findOne(id);
         serCreditBannerDao.delete(id);
+        if(banner != null){
+            UploadUtil.rmUploadFile(webUploadPath+banner.getImg());
+        }
     }
 
     //信用卡产品
@@ -344,7 +364,11 @@ public class SerCreditServiceImpl implements SerCreditService{
 
     @Override
     public void delCreditProduct(Long cardId) {
+        SerCreditProduct product = serCreditProductDao.findOne(cardId);
         serCreditProductDao.delete(cardId);
+        if(product != null){
+            UploadUtil.rmUploadFile(webUploadPath+product.getCardImg());
+        }
     }
 
     @Override

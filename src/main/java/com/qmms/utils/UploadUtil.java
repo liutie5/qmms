@@ -87,7 +87,7 @@ public class UploadUtil {
     public static void rmUploadFile(String filePath){
         try{
             File dest = new File(filePath);
-            if(!dest.isDirectory()){
+            if(dest.exists() && !dest.isDirectory()){
                 dest.delete();
             }
         }catch (Exception e){

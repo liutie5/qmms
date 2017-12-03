@@ -31,12 +31,6 @@ public class SerLoanServiceImpl implements SerLoanService {
 
     @Value("${web.upload-path}")
     private String webUploadPath;
-    @Value("${loanType.img.path}")
-    private String loanTypeImgPath;
-    @Value("${loanProduct.img.path}")
-    private String loanProdutImgPath;
-    @Value("${loanBanner.img.path}")
-    private String loanBannerImgPath;
 
     @Resource
     private SerLoanTypeDao serLoanTypeDao;
@@ -98,14 +92,17 @@ public class SerLoanServiceImpl implements SerLoanService {
      * 删除
      * @param key
      */
-    @Transactional
     public void delLoanType(String key){
         SerLoanType loanType = serLoanTypeDao.findOne(key);
-        String img = loanType.getImg();
-        String subImg = loanType.getSubImg();
-        UploadUtil.rmUploadFile(webUploadPath+loanTypeImgPath+img);
-        UploadUtil.rmUploadFile(webUploadPath+loanTypeImgPath+subImg);
         serLoanTypeDao.delete(key);
+        if(loanType != null){
+            String img = loanType.getImg();
+            UploadUtil.rmUploadFile(webUploadPath+img);
+            String subImg = loanType.getSubImg();
+            if(StringUtils.isNotBlank(subImg)){
+                UploadUtil.rmUploadFile(webUploadPath+subImg);
+            }
+        }
     }
 
     /**
@@ -223,7 +220,11 @@ public class SerLoanServiceImpl implements SerLoanService {
 
     @Override
     public void delLoanProduct(Long productId) {
+        SerLoanProduct product = serLoanProductDao.findOne(productId);
         serLoanProductDao.delete(productId);
+        if(product != null){
+            UploadUtil.rmUploadFile(webUploadPath+product.getImg());
+        }
     }
 
     @Override
@@ -281,7 +282,11 @@ public class SerLoanServiceImpl implements SerLoanService {
 
     @Override
     public void delLoanBanner(Long id) {
+        SerLoanBanner banner = serLoanBannerDao.findOne(id);
         serLoanBannerDao.delete(id);
+        if(banner != null){
+            UploadUtil.rmUploadFile(webUploadPath+banner.getImg());
+        }
     }
 
     @Override
