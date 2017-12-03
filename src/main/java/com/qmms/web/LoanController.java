@@ -124,6 +124,7 @@ public class LoanController {
             data.put("success","1");
             data.put("msg","删除成功");
         }catch (Exception e){
+            e.printStackTrace();
             data.put("msg","删除失败："+e.getMessage());
         }
         return data;
@@ -216,6 +217,7 @@ public class LoanController {
             data.put("success","1");
             data.put("msg","删除成功");
         }catch (Exception e){
+            e.printStackTrace();
             data.put("msg","删除失败："+e.getMessage());
         }
         return data;

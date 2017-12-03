@@ -152,7 +152,7 @@ public class SerCreditServiceImpl implements SerCreditService{
      */
     public void delCreditType(String key){
         SerCreditType creditType = serCreditTypeDao.findOne(key);
-        serCreditTypeDao.delete(key);
+        delCreditTypeTrans(key);
         if(creditType != null){
             UploadUtil.rmUploadFile(webUploadPath+creditType.getImg());
             if(StringUtils.isNotBlank(creditType.getSubImg())){
@@ -160,6 +160,12 @@ public class SerCreditServiceImpl implements SerCreditService{
             }
 
         }
+    }
+
+    public void delCreditTypeTrans(String key){
+        serCreditTypeDao.deleteCreditGroupType(key);
+        serCreditTypeDao.deleteCreditProductType(key);
+        serCreditTypeDao.delete(key);
     }
 
     /**

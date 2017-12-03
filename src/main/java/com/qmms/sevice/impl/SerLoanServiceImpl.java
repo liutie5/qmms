@@ -94,7 +94,7 @@ public class SerLoanServiceImpl implements SerLoanService {
      */
     public void delLoanType(String key){
         SerLoanType loanType = serLoanTypeDao.findOne(key);
-        serLoanTypeDao.delete(key);
+        delLoanTypeTrans(key);
         if(loanType != null){
             String img = loanType.getImg();
             UploadUtil.rmUploadFile(webUploadPath+img);
@@ -103,6 +103,13 @@ public class SerLoanServiceImpl implements SerLoanService {
                 UploadUtil.rmUploadFile(webUploadPath+subImg);
             }
         }
+    }
+
+    @Transactional
+    public void delLoanTypeTrans(String key){
+        serLoanTypeDao.deleteLoanGroupType(key);
+        serLoanTypeDao.deleteLoanProductType(key);
+        serLoanTypeDao.delete(key);
     }
 
     /**
