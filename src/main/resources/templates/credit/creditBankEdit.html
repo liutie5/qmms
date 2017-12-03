@@ -156,7 +156,7 @@
                 var param = $("#addForm").serialize();
                 $.post("credit/creditBankEdit",param,function(data){
                     if(data.success){
-                        successAlert("添加成功")
+                        successAlert("编辑成功")
                         $("#addModal").modal("hide");
                         LoadAjaxContent("credit/creditBankList");
                     }else{
