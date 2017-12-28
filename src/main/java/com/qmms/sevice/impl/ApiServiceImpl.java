@@ -359,7 +359,7 @@ public class ApiServiceImpl implements ApiService{
                 predicates = list.toArray(predicates);
                 return criteriaBuilder.and(predicates);
             }
-        });
+        },new Sort(Sort.Direction.DESC,"orderedBy"));
 
         CreditList creditList = new CreditList();
         if(list != null){
