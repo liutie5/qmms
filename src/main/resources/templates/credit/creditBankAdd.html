@@ -41,7 +41,6 @@
                                 <p><img id="imgshow" alt="" src="" width="100px" height="100px"/></p>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="col-sm-3 control-label">是否合作:</label>
                             <div class="col-sm-6 form-inline" >
@@ -63,6 +62,24 @@
                             <label class="col-sm-3 control-label">优先级:</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" name="priority" placeholder="必须为数字 数值越大，优先级越高" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">标签信息:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="bankTag" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">进度查询链接:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="processUrl" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">银行电话:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="bankPhone" />
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -129,16 +146,43 @@
                 },
                 "priority": {
                     validators:{
-                        notEmpty: {message: '请填写优先级'}
-                    },
-                    regexp: {
-                        regexp: /^[1-9]\d*$/,
-                        message: '优先级必须为数字'
-                    },
-                    callback: {
-                        message: '优先级在0到1000000000之间',
-                        callback:function(value, validator,$field){
-                            return value>=0&&value<=1000000000;
+                        notEmpty: {message: '请填写优先级'},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '优先级必须为数字'
+                        },
+                        callback: {
+                            message: '优先级在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
+                        }
+                    }
+                },
+                "bankTag": {
+                    validators:{
+                        stringLength: {
+                            min: 0,
+                            max: 1024,
+                            message: '标签信息最多1024个字符'
+                        }
+                    }
+                },
+                "processUrl": {
+                    validators:{
+                        stringLength: {
+                            min: 0,
+                            max: 1024,
+                            message: '进度查询链接最多1024个字符'
+                        }
+                    }
+                },
+                "bankPhone": {
+                    validators:{
+                        stringLength: {
+                            min: 0,
+                            max: 1024,
+                            message: '银行电话最多1024个字符'
                         }
                     }
                 }

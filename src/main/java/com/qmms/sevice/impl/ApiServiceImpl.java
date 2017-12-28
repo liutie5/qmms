@@ -416,7 +416,7 @@ public class ApiServiceImpl implements ApiService{
     public CreditBanks creditBanks(String domainName, String pkgName, String pkgKey, String source) {
         CreditBanks creditBanks = new CreditBanks();
         List<SerCreditBank> banks = serCreditBankDao.findAllByOrderByPriorityDesc();
-        creditBanks.setData(convertCreditBank(domainName,banks));
+        creditBanks.setData(convertCreditBanksData(domainName,banks));
         creditBanks.setCode(CodeSuccess);
         creditBanks.setDesc("success");
         return creditBanks;
@@ -430,12 +430,31 @@ public class ApiServiceImpl implements ApiService{
                 target.setBankId(data.getBankId());
                 target.setBankName(data.getBankName());
                 target.setBankDesc(data.getBankDesc());
+                target.setBankTag(data.getBankTag());
                 target.setBankLogo(domainName+"/"+data.getBankLogo());
                 rs.add(target);
             }
         }
         return rs;
     }
+
+    public List<CreditBanksData> convertCreditBanksData(String domainName, List<SerCreditBank> list){
+        List<CreditBanksData> rs = new ArrayList<>();
+        if(list != null){
+            for(SerCreditBank data:list){
+                CreditBanksData target = new CreditBanksData();
+                target.setBankId(data.getBankId());
+                target.setBankName(data.getBankName());
+                target.setBankDesc(data.getBankDesc());
+                target.setBankTag(data.getBankTag());
+                target.setBankLogo(domainName+"/"+data.getBankLogo());
+                target.setIsCOO(String.valueOf(data.getIsJoin()));
+                rs.add(target);
+            }
+        }
+        return rs;
+    }
+
     public  List<CreditType> convertCreditType(String domainName,List<SerCreditType> list){
         List<CreditType> rs = new ArrayList<>();
         if(list != null){

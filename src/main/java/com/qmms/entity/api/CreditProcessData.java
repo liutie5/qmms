@@ -1,12 +1,12 @@
 package com.qmms.entity.api;
 
 
-public class CreditBank {
+public class CreditProcessData {
     private Long bankId;
     private String bankName;
     private String bankLogo;
     private String bankDesc;
-    private String bankTag;
+    private String desc;
 
     public Long getBankId() {
         return bankId;
@@ -40,11 +40,11 @@ public class CreditBank {
         this.bankDesc = bankDesc;
     }
 
-    public String getBankTag() {
-        return bankTag;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setBankTag(String bankTag) {
-        this.bankTag = bankTag;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

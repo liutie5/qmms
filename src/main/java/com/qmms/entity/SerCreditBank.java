@@ -13,6 +13,12 @@ public class SerCreditBank {
     private String bankDesc;
     private int isJoin;
     private int priority;
+    @Column(length = 1024)
+    private String bankTag;
+    @Column(length = 1024)
+    private String bankPhone;
+    @Column(length = 1024)
+    private String processUrl;
     private Integer addUserId;
     private Integer addTime;
     private Integer updateUserId;
@@ -96,5 +102,29 @@ public class SerCreditBank {
 
     public void setUpdateTime(Integer updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getBankTag() {
+        return bankTag;
+    }
+
+    public void setBankTag(String bankTag) {
+        this.bankTag = bankTag;
+    }
+
+    public String getBankPhone() {
+        return bankPhone;
+    }
+
+    public void setBankPhone(String bankPhone) {
+        this.bankPhone = bankPhone;
+    }
+
+    public String getProcessUrl() {
+        return processUrl;
+    }
+
+    public void setProcessUrl(String processUrl) {
+        this.processUrl = processUrl;
     }
 }

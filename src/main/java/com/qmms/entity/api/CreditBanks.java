@@ -3,13 +3,13 @@ package com.qmms.entity.api;
 import java.util.List;
 
 public class CreditBanks extends CommonMain{
-    private List<CreditBank> data;
+    private List<CreditBanksData> data;
 
-    public List<CreditBank> getData() {
+    public List<CreditBanksData> getData() {
         return data;
     }
 
-    public void setData(List<CreditBank> data) {
+    public void setData(List<CreditBanksData> data) {
         this.data = data;
     }
 }

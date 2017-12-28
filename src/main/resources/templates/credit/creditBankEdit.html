@@ -1,5 +1,5 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
-<form id="addForm" name="addForm" method="post"  class="form-horizontal">
+<form id="editForm" name="editForm" method="post"  class="form-horizontal">
 <div class="row">
     <div class="col-xs-12 col-sm-12">
         <div class="box">
@@ -66,6 +66,24 @@
                                 <input type="text" class="form-control" name="priority"  th:value="${bank.priority}" placeholder="必须为数字 数值越大，优先级越高" />
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">标签信息:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="bankTag" th:value="${bank.bankTag}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">进度查询链接:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="processUrl" th:value="${bank.processUrl}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">银行电话:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="bankPhone" th:value="${bank.bankPhone}"/>
+                            </div>
+                        </div>
                         <div class="clearfix"></div>
                         <div class="form-group pull-right form-inline">
                             <div class="col-sm-12">
@@ -89,7 +107,7 @@
 <script src="js/ajaxfileupload.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
-        var addVlidator = $('#addForm').bootstrapValidator({
+        var addVlidator = $('#editForm').bootstrapValidator({
             excluded:[":disabled"],//关键配置，表示只对于禁用域不进行验证，其他的表单元素都要验证
             message: '校验不合法',
             fields: {
@@ -130,16 +148,43 @@
                 },
                 "priority": {
                     validators:{
-                        notEmpty: {message: '请填写优先级'}
-                    },
-                    regexp: {
-                        regexp: /^[1-9]\d*$/,
-                        message: '优先级必须为数字'
-                    },
-                    callback: {
-                        message: '优先级在0到1000000000之间',
-                        callback:function(value, validator,$field){
-                            return value>=0&&value<=1000000000;
+                        notEmpty: {message: '请填写优先级'},
+                        regexp: {
+                            regexp: /^[1-9]\d*$/,
+                            message: '优先级必须为数字'
+                        },
+                        callback: {
+                            message: '优先级在0到1000000000之间',
+                            callback:function(value, validator,$field){
+                                return value>=0&&value<=1000000000;
+                            }
+                        }
+                    }
+                },
+                "bankTag": {
+                    validators:{
+                        stringLength: {
+                            min: 0,
+                            max: 1024,
+                            message: '标签信息最多1024个字符'
+                        }
+                    }
+                },
+                "processUrl": {
+                    validators:{
+                        stringLength: {
+                            min: 0,
+                            max: 1024,
+                            message: '进度查询链接最多1024个字符'
+                        }
+                    }
+                },
+                "bankPhone": {
+                    validators:{
+                        stringLength: {
+                            min: 0,
+                            max: 1024,
+                            message: '银行电话最多1024个字符'
                         }
                     }
                 }
@@ -147,13 +192,13 @@
         });
 
         $("#formSubmit").click(function(){
-            var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+            var bootstrapValidator = $("#editForm").data('bootstrapValidator');
             bootstrapValidator.enableFieldValidators("bankLogo",false);
             bootstrapValidator.enableFieldValidators("bankLogo",true);
             bootstrapValidator.validate();
             if(bootstrapValidator.isValid()){
                 $("#formSubmit").attr("disabled", true);
-                var param = $("#addForm").serialize();
+                var param = $("#editForm").serialize();
                 $.post("credit/creditBankEdit",param,function(data){
                     if(data.success){
                         successAlert("编辑成功")
@@ -201,7 +246,7 @@
                 if(data.success){
                     $("#img").val(data.imgPath);
                     $("#imgshow").attr("src", data.imgPath);
-                    var bootstrapValidator = $("#addForm").data('bootstrapValidator');
+                    var bootstrapValidator = $("#editForm").data('bootstrapValidator');
                     bootstrapValidator.updateStatus('bankLogo', 'NOT_VALIDATED').validateField('bankLogo');
 
                 }else {
