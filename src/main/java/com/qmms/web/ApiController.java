@@ -186,6 +186,40 @@ public class ApiController {
         return  creditBanks;
     }
 
+    @RequestMapping("credit/creditProgress.go")
+    @ResponseBody
+    public CreditProgress creditProgess(HttpServletRequest request) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        CreditProgress creditProgress = null;
+        try{
+            creditProgress =  apiService.creditProgress(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource());
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            creditProgress = new CreditProgress();
+            creditProgress.setCode(1);
+            creditProgress.setDesc(e.getMessage());
+        }
+        return  creditProgress;
+    }
+
+    @RequestMapping("credit/creditPhone.go")
+    @ResponseBody
+    public CreditPhone creditPhone(HttpServletRequest request) {
+        String domainName = WebUtil.getDomainName(request);
+        HeaderMsg headerMsg = WebUtil.getHeadMsg(request);
+        CreditPhone creditPhone = null;
+        try{
+            creditPhone =  apiService.creditPhone(domainName, headerMsg.getPkgName(), headerMsg.getPkgKey(), headerMsg.getSource());
+        }catch (Exception e){
+            logger.error("loanMain Error:",e);
+            creditPhone = new CreditPhone();
+            creditPhone.setCode(1);
+            creditPhone.setDesc(e.getMessage());
+        }
+        return  creditPhone;
+    }
+
     @RequestMapping("common/changeShow.go")
     @ResponseBody
     public ChangeShow changeShow(HttpServletRequest request, String group) {

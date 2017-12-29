@@ -1,12 +1,12 @@
 package com.qmms.entity.api;
 
 
-public class CreditProcessData {
+public class CreditProgressData {
     private Long bankId;
     private String bankName;
     private String bankLogo;
     private String bankDesc;
-    private String desc;
+    private String url;
 
     public Long getBankId() {
         return bankId;
@@ -40,11 +40,11 @@ public class CreditProcessData {
         this.bankDesc = bankDesc;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getUrl() {
+        return url;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

@@ -428,6 +428,26 @@ public class ApiServiceImpl implements ApiService{
         return creditBanks;
     }
 
+    @Override
+    public CreditProgress creditProgress(String domainName, String pkgName, String pkgKey, String source) {
+        CreditProgress creditProgress = new CreditProgress();
+        List<SerCreditBank> banks = serCreditBankDao.findAllUseProcessUrl();
+        creditProgress.setData(convertCreditProgressData(domainName,banks));
+        creditProgress.setCode(CodeSuccess);
+        creditProgress.setDesc("success");
+        return creditProgress;
+    }
+
+    @Override
+    public CreditPhone creditPhone(String domainName, String pkgName, String pkgKey, String source) {
+        CreditPhone CreditPhone = new CreditPhone();
+        List<SerCreditBank> banks = serCreditBankDao.findAllUseBankPhone();
+        CreditPhone.setData(convertCreditPhoneData(domainName,banks));
+        CreditPhone.setCode(CodeSuccess);
+        CreditPhone.setDesc("success");
+        return CreditPhone;
+    }
+
     public List<CreditBank> convertCreditBank(String domainName, List<SerCreditBank> list){
         List<CreditBank> rs = new ArrayList<>();
         if(list != null){
@@ -455,6 +475,37 @@ public class ApiServiceImpl implements ApiService{
                 target.setBankTag(data.getBankTag());
                 target.setBankLogo(domainName+"/"+data.getBankLogo());
                 target.setIsCOO(String.valueOf(data.getIsJoin()));
+                rs.add(target);
+            }
+        }
+        return rs;
+    }
+    public List<CreditProgressData> convertCreditProgressData(String domainName, List<SerCreditBank> list){
+        List<CreditProgressData> rs = new ArrayList<>();
+        if(list != null){
+            for(SerCreditBank data:list){
+                CreditProgressData target = new CreditProgressData();
+                target.setBankId(data.getBankId());
+                target.setBankName(data.getBankName());
+                target.setBankDesc(data.getBankDesc());
+                target.setBankLogo(domainName+"/"+data.getBankLogo());
+                target.setUrl(data.getProcessUrl());
+                rs.add(target);
+            }
+        }
+        return rs;
+    }
+
+    public List<CreditPhoneData> convertCreditPhoneData(String domainName, List<SerCreditBank> list){
+        List<CreditPhoneData> rs = new ArrayList<>();
+        if(list != null){
+            for(SerCreditBank data:list){
+                CreditPhoneData target = new CreditPhoneData();
+                target.setBankId(data.getBankId());
+                target.setBankName(data.getBankName());
+                target.setBankDesc(data.getBankDesc());
+                target.setBankLogo(domainName+"/"+data.getBankLogo());
+                target.setPhone(data.getBankPhone());
                 rs.add(target);
             }
         }

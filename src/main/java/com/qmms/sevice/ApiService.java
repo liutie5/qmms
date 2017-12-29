@@ -23,6 +23,10 @@ public interface ApiService {
 
     public CreditBanks creditBanks(String domainName, String pkgName,String pkgKey,String source);
 
+    public CreditProgress creditProgress(String domainName, String pkgName, String pkgKey, String source);
+
+    public CreditPhone creditPhone(String domainName, String pkgName, String pkgKey, String source);
+
     public ChangeShow changeShow(String domainName,String pkgName,String pkgKey,String source);
 
     public RnUpdate rnUpdate(String domainName,String pkgName,String pkgKey,String source,String version);
