@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
 
 @Controller
 @RequestMapping("/forward")
@@ -34,7 +35,7 @@ public class ForwardController {
             if(StringUtils.isBlank(uv)){
                 uv = setUv(response);
             }
-            fallback = fallback.trim();
+            fallback = URLDecoder.decode(fallback.trim(),"utf8");
             String ft = fallback.toLowerCase();
             if(!ft.startsWith("http://") && !ft.startsWith("https://")){
                 fallback = "http://"+fallback;
@@ -70,7 +71,7 @@ public class ForwardController {
             if(StringUtils.isBlank(uv)){
                 uv = setUv(response);
             }
-            fallback = fallback.trim();
+            fallback = URLDecoder.decode(fallback.trim(),"utf8");
             String ft = fallback.toLowerCase();
             if(!ft.startsWith("http://") && !ft.startsWith("https://")){
                 fallback = "http://"+fallback;

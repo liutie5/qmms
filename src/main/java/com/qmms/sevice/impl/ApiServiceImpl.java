@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -220,8 +221,13 @@ public class ApiServiceImpl implements ApiService{
 
     public String getLoanForwardUrl(String domainName,String pkgName,String source,String type,String pid,String url){
         StringBuffer buffer = new StringBuffer(domainName);
+        String encodeUrl = url;
+        try{
+            encodeUrl = URLEncoder.encode(url,"utf8");
+        }catch (Exception e){
+        }
         buffer.append("/forward/loan?pkgKey=").append(pkgName).append("&source=").append(source)
-                .append("&type=").append(type).append("&pid=").append(pid).append("&fallback="+url);
+                .append("&type=").append(type).append("&pid=").append(pid).append("&fallback="+ encodeUrl);
         return buffer.toString();
     }
 
@@ -506,8 +512,13 @@ public class ApiServiceImpl implements ApiService{
 
     public String getCreditForwardUrl(String domainName,String pkgName,String source,String type,String cardId,String bankId,String url){
         StringBuffer buffer = new StringBuffer(domainName);
+        String encodeUrl = url;
+        try{
+            encodeUrl = URLEncoder.encode(url,"utf8");
+        }catch (Exception e){
+        }
         buffer.append("/forward/credit?pkgKey=").append(pkgName).append("&source=").append(source)
-                .append("&type=").append(type).append("&cardId=").append(cardId).append("&bankId=").append(bankId).append("&fallback="+url);
+                .append("&type=").append(type).append("&cardId=").append(cardId).append("&bankId=").append(bankId).append("&fallback="+encodeUrl);
         return buffer.toString();
     }
 
