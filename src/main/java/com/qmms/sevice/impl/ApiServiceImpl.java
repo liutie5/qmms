@@ -472,7 +472,7 @@ public class ApiServiceImpl implements ApiService{
                 target.setBankId(data.getBankId());
                 target.setBankName(data.getBankName());
                 target.setBankDesc(data.getBankDesc());
-                target.setBankTag(data.getBankTag());
+                target.setBankTag(data.getBankTag()==null?"":data.getBankTag());
                 target.setBankLogo(domainName+"/"+data.getBankLogo());
                 target.setIsCOO(String.valueOf(data.getIsJoin()));
                 rs.add(target);
