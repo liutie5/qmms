@@ -549,8 +549,13 @@ public class ApiServiceImpl implements ApiService{
                 CreditBanner target = new CreditBanner();
                 if(pid != null && pid >0){
                     target.setPid(pid.toString());
+                    SerCreditProduct product = serCreditProductDao.findOne(pid);
+                    if(product != null){
+                        target.setBankId(product.getCardBankId().toString());
+                    }
                 }else{
                     target.setPid("");
+                    target.setBankId("");
                 }
                 target.setTitle(data.getTitle());
                 target.setImg(domainName+"/"+data.getImg());
