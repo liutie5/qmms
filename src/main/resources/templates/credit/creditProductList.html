@@ -26,6 +26,7 @@
                 <table class="table table-bordered table-striped table-hover table-heading table-datatable" id="listTable">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th>信用卡名称</th>
                         <th>所属银行</th>
                         <th>信用卡图片</th>
@@ -128,6 +129,7 @@
                 });
             },
             columns: [
+                { "data": "cardId" },
                 { "data": "cardName" },
                 { "data": "cardBankName" },
                 {
