@@ -3,9 +3,11 @@ package com.qmms.config;
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
@@ -81,8 +83,19 @@ public class ShiroConfig {
 	public SecurityManager securityManager(){
 		DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
 		securityManager.setRealm(myShiroRealm());
+        securityManager.setSessionManager(sessionManager());
 		return securityManager;
 	}
+
+    @Bean
+    public SessionManager sessionManager(){
+        DefaultWebSessionManager sessionManager =  new DefaultWebSessionManager();
+        //过期时间4个小时
+        sessionManager.setGlobalSessionTimeout(14400000);
+        //删除失效会话
+        sessionManager.setDeleteInvalidSessions(true);
+        return sessionManager;
+    }
 
 	/**
 	 *  开启shiro aop注解支持.
