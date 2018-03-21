@@ -75,7 +75,7 @@
         "sEmptyTable": "表中数据为空",
         "sLoadingRecords": "载入中...",
         "sInfoThousands": ",",
-        "aLengthMenu": [ 100,10, 25, 50 ],
+
         "oPaginate": {
             "sFirst": "首页",
             "sPrevious": "上页",
@@ -94,10 +94,10 @@
             "sDom": "<'box-content'<'col-sm-6'f><'#addBtn.col-sm-2'><'col-sm-3 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
             "sPaginationType": "bootstrap",
             "oLanguage": lang,
+            "pageLength":100,
             ordering:false,
             serverSide: true,  //启用服务器端分页
             ajax: function (data, callback, settings) {//封装请求参数
-
                 var param = {};
                 param.pageSize= data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
 //                param.page = data.start;//开始的记录序号
@@ -157,7 +157,7 @@
                     render:function(data,type,row,meta){
                         return '<a href="#" onclick=toEdit("'+data+'")><span class="glyphicon glyphicon-edit">编辑</span></a> &nbsp;&nbsp;<a href="#" onclick=toDel("'+data+'","'+row.name+'")><span class="glyphicon glyphicon-remove-sign">删除</span></a>'
                     }
-                },
+                }
 
             ],
             initComplete: function () {
