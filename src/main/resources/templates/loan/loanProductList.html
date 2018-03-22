@@ -91,7 +91,7 @@
     function loanProductListTable(){
         $('#listTable').dataTable({
             "aaSorting": [[ 0, "asc" ]],
-            "sDom": "<'box-content'<'col-sm-6'f><'#addBtn.col-sm-2'><'col-sm-3 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
+            "sDom": "<'box-content'<'col-sm-4'f><'#addBtn.col-sm-4'><'col-sm-2 text-right'l><'clearfix'>>rt<'box-content'<'col-sm-6'i><'col-sm-6 text-right'p><'clearfix'>>",
             "sPaginationType": "bootstrap",
             "oLanguage": lang,
             "pageLength":100,
@@ -103,6 +103,11 @@
 //                param.page = data.start;//开始的记录序号
                 param.page = (data.start / data.length);//当前页码
                 param.name = data.search.value;
+                var pstatus = $("#searchStatus").val();
+                if(pstatus == undefined){
+                    pstatus = 1;
+                }
+                param.status = pstatus;
                 //ajax请求数据方法
                 $.ajax({
                     type: "GET",
@@ -162,12 +167,17 @@
             ],
             initComplete: function () {
 
-                $("#addBtn").append('<button id="addModelButton" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>添加</button>');
+                $("#addBtn").append('<div style="width:20%;display:inline" class="form-inline">上架状态：<select id="searchStatus" name="status"> <option value="1">是</option><option value="0">否</option><option value="-1">全部</option></select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="addModelButton" type="button" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>添加</button></div>');
                 $("#addModelButton").on("click", toAdd);
+                $("#searchStatus").change(function () {
+                    $("#listTable").dataTable().fnDraw(0);
+                })
+
             }
         }).api();
 
     }
+
 
     function toAdd(){
         $("#addModal").modal({

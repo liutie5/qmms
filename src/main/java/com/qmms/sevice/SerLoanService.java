@@ -59,7 +59,7 @@ public interface SerLoanService {
      * @param name
      * @return
      */
-    public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, String name);
+    public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, String name,int status);
 
     /**
      * 获取

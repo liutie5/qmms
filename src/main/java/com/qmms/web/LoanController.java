@@ -203,8 +203,8 @@ public class LoanController {
 
     @RequestMapping("/getLoanProductList")
     @ResponseBody
-    public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, String name){
-        Page p1 = serLoanService.getLoanProductList(page, pageSize, name);
+    public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, String name,int status){
+        Page p1 = serLoanService.getLoanProductList(page, pageSize, name,status);
         return p1;
     }
 

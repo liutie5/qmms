@@ -1,0 +1,38 @@
+1：mvn clean install -Dmaven.test.skip=true
+
+2：上传至服务器目录/root/qmms/jar
+scp target/qmms-0.0.1-SNAPSHOT.jar root@39.106.122.139:/root/qmms/jar
+
+3：杀死原来进程  两个
+jps -m|grep qmms
+
+杀死8082端口进程
+kill -9 pid
+启动8082新进程
+./bin/start-8082.sh
+
+杀死8085端口进程
+kill -9 pid
+启动8085新进程
+./bin/start-8085
+
+start-8082.sh
+#!/bin/sh
+cp /root/qmms/jar/qmms-0.0.1-SNAPSHOT.jar /root/qmms/runjar/web/
+nohup java -jar /root/qmms/runjar/web/qmms-0.0.1-SNAPSHOT.jar --server.port=8082 --spring.profiles.active=prod > /root/qmms/log/qmms-web.log 2>&1 &
+echo $! > tpid-web
+echo Start Success!
+
+start-8085.sh
+#!/bin/sh
+cp /root/qmms/jar/qmms-0.0.1-SNAPSHOT.jar /root/qmms/runjar/api/
+nohup java -jar /root/qmms/runjar/api/qmms-0.0.1-SNAPSHOT.jar --server.port=8085 --spring.profiles.active=prod > /root/qmms/log/qmms-api.log 2>&1 &
+echo $! > tpid-api
+echo Start Success!
+
+
+
+
+
+
+

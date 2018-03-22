@@ -145,7 +145,7 @@ public class SerLoanServiceImpl implements SerLoanService {
 
     //贷款产品
     @Override
-    public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, final String name) {
+    public Page<SerLoanProduct> getLoanProductList(int page, int pageSize, final String name,final int status) {
         Pageable pageable = new PageRequest(page,pageSize,new Sort(Sort.Direction.DESC,"orderedBy"));
         Page<SerLoanProduct> pageList = serLoanProductDao.findAll(new Specification<SerLoanProduct>(){
             @Override
@@ -153,6 +153,9 @@ public class SerLoanServiceImpl implements SerLoanService {
                 List<Predicate> list = new ArrayList<Predicate>();
                 if(StringUtils.isNotBlank(name)){
                     list.add(criteriaBuilder.like(root.get("name").as(String.class),"%"+name+"%"));
+                }
+                if(status != -1){
+                    list.add(criteriaBuilder.equal(root.get("status").as(Integer.class),status));
                 }
                 Predicate[] predicates = new Predicate[list.size()];
                 predicates = list.toArray(predicates);
